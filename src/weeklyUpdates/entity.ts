@@ -1,40 +1,52 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from "typeorm";
-import { Exclude } from "class-transformer";
-import { MinLength, IsString, IsEmail, MaxLength, Length, IsNumber, IsDate } from "class-validator";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, JoinColumn } from "typeorm";
+import { IsString, MaxLength, Length, IsNumber, IsDate } from "class-validator";
+import User from "../users/entity"
+import Match from "../matches/entity"
+import Activity from "../activities/entity"
 
 @Entity()
 export default class WeeklyUpdate extends BaseEntity {
-  @PrimaryGeneratedColumn() id?: number;
+	
+	@PrimaryGeneratedColumn() 
+	id?: number;
 
-  @IsString()
-  @Length(4)
-  // @Length(4, { each: true })
-  @Column("text")
-  category: string;
+	@IsString()
+	@Length(4)
+	// @Length(4, { each: true })
+	@Column("text")
+	category: string;
 
-  @IsString()
-  @Length(3)
-  @Column("text")
-  connectionType: string;
+	@IsString()
+	@Length(3)
+	@Column("text")
+	connectionType: string;
 
-  @IsString()
-  @Length(3)
-  @Column("boolean")
-  postponedActivity: boolean;
+	@IsString()
+	@Length(3)
+	@Column("boolean")
+	postponedActivity: boolean;
 
-  @IsNumber()
-  @MaxLength(2)
-  @Column("int")
-  weekNumber: number;
+	@IsNumber()
+	@MaxLength(2)
+	@Column("int")
+	weekNumber: number;
 
-  @IsDate()
-  @Column()
-  time: Date;
+	@IsDate()
+	@Column()
+	time: Date;
 
-  @IsString()
-  @Length(2)
-  @Column("text")
-  status: string;
+	@IsString()
+	@Length(2)
+	@Column("text")
+	status: string;
   
-  
+	@ManyToOne(_ => User, user => user.id)
+  		user: User
+
+	@ManyToOne(_ => Match, match => match.id)
+  		match: Match
+
+	@OneToOne(_ => Activity)
+    @JoinColumn()
+    activity: Activity;
 }

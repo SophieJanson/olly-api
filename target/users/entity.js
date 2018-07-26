@@ -13,6 +13,9 @@ const typeorm_1 = require("typeorm");
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 const bcrypt = require("bcrypt");
+const entity_1 = require("../weeklyUpdates/entity");
+const entity_2 = require("../matches/entity");
+const entity_3 = require("../followups/entity");
 let User = class User extends typeorm_1.BaseEntity {
     async setPassword(rawPassword) {
         const hash = await bcrypt.hash(rawPassword, 10);
@@ -29,38 +32,38 @@ __decorate([
 __decorate([
     class_validator_1.IsString(),
     class_validator_1.MinLength(2),
-    typeorm_1.Column("text"),
+    typeorm_1.Column("text", { nullable: true }),
     __metadata("design:type", String)
 ], User.prototype, "firstName", void 0);
 __decorate([
     class_validator_1.IsString(),
     class_validator_1.MinLength(2),
-    typeorm_1.Column("text"),
+    typeorm_1.Column("text", { nullable: true }),
     __metadata("design:type", String)
 ], User.prototype, "lastName", void 0);
 __decorate([
     class_validator_1.IsString(),
-    typeorm_1.Column("text"),
+    typeorm_1.Column("text", { nullable: true }),
     __metadata("design:type", String)
 ], User.prototype, "department", void 0);
 __decorate([
     class_validator_1.IsString(),
-    typeorm_1.Column("text"),
+    typeorm_1.Column("text", { nullable: true }),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
 __decorate([
     class_validator_1.IsString(),
-    typeorm_1.Column("text"),
+    typeorm_1.Column("text", { nullable: true }),
     __metadata("design:type", String)
 ], User.prototype, "funFacts", void 0);
 __decorate([
     class_validator_1.IsString(),
-    typeorm_1.Column("text"),
+    typeorm_1.Column("text", { nullable: true }),
     __metadata("design:type", String)
 ], User.prototype, "interests", void 0);
 __decorate([
     class_validator_1.IsEmail(),
-    typeorm_1.Column("text"),
+    typeorm_1.Column("text", { nullable: true }),
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
@@ -70,6 +73,19 @@ __decorate([
     class_transformer_1.Exclude({ toPlainOnly: true }),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
+__decorate([
+    typeorm_1.OneToMany(_ => entity_1.default, WeeklyUpdate => WeeklyUpdate.user),
+    __metadata("design:type", Array)
+], User.prototype, "weeklyUpdate", void 0);
+__decorate([
+    typeorm_1.OneToMany(_ => entity_3.default, followUp => followUp.user),
+    __metadata("design:type", Array)
+], User.prototype, "followUps", void 0);
+__decorate([
+    typeorm_1.ManyToMany(_ => entity_2.default),
+    typeorm_1.JoinTable(),
+    __metadata("design:type", Array)
+], User.prototype, "matches", void 0);
 User = __decorate([
     typeorm_1.Entity()
 ], User);
