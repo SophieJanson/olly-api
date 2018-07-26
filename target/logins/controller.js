@@ -30,15 +30,15 @@ let LoginController = class LoginController {
     async authenticate({ email, password }) {
         const user = await entity_1.default.findOne({ where: { email } });
         if (!user || !user.id)
-            throw new routing_controllers_1.BadRequestError('A user with this email does not exist');
-        if (!await user.checkPassword(password))
-            throw new routing_controllers_1.BadRequestError('The password is not correct');
+            throw new routing_controllers_1.BadRequestError("A user with this email does not exist");
+        if (!(await user.checkPassword(password)))
+            throw new routing_controllers_1.BadRequestError("The password is not correct");
         const jwt = jwt_1.sign({ id: user.id });
         return { jwt };
     }
 };
 __decorate([
-    routing_controllers_1.Post('/logins'),
+    routing_controllers_1.Post("/logins"),
     __param(0, routing_controllers_1.Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [AuthenticatePayload]),

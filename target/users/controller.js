@@ -33,7 +33,7 @@ let UserController = class UserController {
     }
 };
 __decorate([
-    routing_controllers_1.Post('/users'),
+    routing_controllers_1.Post("/users"),
     __param(0, routing_controllers_1.Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [entity_1.default]),
