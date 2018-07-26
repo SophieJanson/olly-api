@@ -1,17 +1,10 @@
-import {
-  BaseEntity,
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  OneToMany
-} from "typeorm";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 import { Exclude } from "class-transformer";
 import { MinLength, IsString, IsEmail } from "class-validator";
 import * as bcrypt from "bcrypt";
-import WeeklyUpdate from "../weeklyUpdates/entity";
 
 @Entity()
-export default class User extends BaseEntity {
+export default class Activity extends BaseEntity {
   @PrimaryGeneratedColumn() id?: number;
 
   @IsString()
@@ -23,22 +16,6 @@ export default class User extends BaseEntity {
   @MinLength(2)
   @Column("text")
   lastName: string;
-
-  @IsString()
-  @Column("text")
-  department: string;
-
-  @IsString()
-  @Column("text")
-  role: string;
-
-  @IsString()
-  @Column("text")
-  funFacts: string;
-
-  @IsString()
-  @Column("text")
-  interests: string;
 
   @IsEmail()
   @Column("text")
@@ -58,9 +35,4 @@ export default class User extends BaseEntity {
   checkPassword(rawPassword: string): Promise<boolean> {
     return bcrypt.compare(rawPassword, this.password);
   }
-
-//   @OneToMany(_ => WeeklyUpdate, weeklyUpdate => weeklyUpdate.users, {
-//     eager: false
-//   })
-//   weeklyUpdates: WeeklyUpdate[];
 }

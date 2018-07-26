@@ -1,34 +1,31 @@
-import { JsonController, Post, Body } from 'routing-controllers'
-import User from './entity';
+import { JsonController, Post, Body } from "routing-controllers";
+import User from "./entity";
 
 @JsonController()
 export default class UserController {
+  //   @Authorized()
+  @Post("/users")
+  async signup(@Body() data: User) {
+    const { password, ...rest } = data;
+    const entity = User.create(rest);
+    await entity.setPassword(password);
 
-	//   @Authorized()
-	@Post('/users')
-	async signup(
-		@Body() data: User
-	) {
-		const {password, ...rest} = data
-		const entity = User.create(rest)
-		await entity.setPassword(password)
+    const user = await entity.save();
 
-		const user = await entity.save()
+    return user;
+  }
 
-		return user
-	}
+  //   @Authorized()
+  // @Get('/users/:id([0-9]+)')
+  // getUser(
+  // 	@Param('id') id: number
+  // ) {
+  // 	return User.findOne(id)
+  // }
 
-	//   @Authorized()
-	// @Get('/users/:id([0-9]+)')
-	// getUser(
-	// 	@Param('id') id: number
-	// ) {
-	// 	return User.findOne(id)
-	// }
-
-	// @Authorized()
-	// @Get('/users')
-	// allUsers() {
-	// 	return User.find()
-	// }
+  // @Authorized()
+  // @Get('/users')
+  // allUsers() {
+  // 	return User.find()
+  // }
 }

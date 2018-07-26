@@ -29,24 +29,44 @@ __decorate([
 __decorate([
     class_validator_1.IsString(),
     class_validator_1.MinLength(2),
-    typeorm_1.Column('text'),
+    typeorm_1.Column("text"),
     __metadata("design:type", String)
 ], User.prototype, "firstName", void 0);
 __decorate([
     class_validator_1.IsString(),
     class_validator_1.MinLength(2),
-    typeorm_1.Column('text'),
+    typeorm_1.Column("text"),
     __metadata("design:type", String)
 ], User.prototype, "lastName", void 0);
 __decorate([
+    class_validator_1.IsString(),
+    typeorm_1.Column("text"),
+    __metadata("design:type", String)
+], User.prototype, "department", void 0);
+__decorate([
+    class_validator_1.IsString(),
+    typeorm_1.Column("text"),
+    __metadata("design:type", String)
+], User.prototype, "role", void 0);
+__decorate([
+    class_validator_1.IsString(),
+    typeorm_1.Column("text"),
+    __metadata("design:type", String)
+], User.prototype, "funFacts", void 0);
+__decorate([
+    class_validator_1.IsString(),
+    typeorm_1.Column("text"),
+    __metadata("design:type", String)
+], User.prototype, "interests", void 0);
+__decorate([
     class_validator_1.IsEmail(),
-    typeorm_1.Column('text'),
+    typeorm_1.Column("text"),
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
     class_validator_1.IsString(),
     class_validator_1.MinLength(8),
-    typeorm_1.Column('text'),
+    typeorm_1.Column("text"),
     class_transformer_1.Exclude({ toPlainOnly: true }),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
