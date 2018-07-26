@@ -14,9 +14,9 @@ export default class Match extends BaseEntity {
   @Column("integer")
   users: number[];
 
-  @Column("array") categories: string[];
+  @Column("text") categories: string[];
 
-  @Column("array") activities: string[];
+  @Column("text") activities: string[];
 
-  @Column("string") status: string;
+  @Column("text") status: string;
 }
