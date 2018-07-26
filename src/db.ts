@@ -6,6 +6,7 @@ import User from "./users/entity";
 import Activity from "./activities/entity";
 import Match from "./matches/entity";
 import WeeklyUpdate from "./weeklyUpdates/entity";
+import FollowUp from "./followups/entity";
 
 class CustomNamingStrategy extends DefaultNamingStrategy implements NamingStrategyInterface {
 
@@ -34,7 +35,8 @@ export default () =>
       WeeklyUpdate,
       Match,
       Activity,
-      User
+      User,
+	  FollowUp
     ],
     synchronize: true,
     logging: true,

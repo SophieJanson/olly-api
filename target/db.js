@@ -7,6 +7,7 @@ const entity_1 = require("./users/entity");
 const entity_2 = require("./activities/entity");
 const entity_3 = require("./matches/entity");
 const entity_4 = require("./weeklyUpdates/entity");
+const entity_5 = require("./followups/entity");
 class CustomNamingStrategy extends DefaultNamingStrategy_1.DefaultNamingStrategy {
     tableName(targetName, userSpecifiedName) {
         return userSpecifiedName ? userSpecifiedName : StringUtils_1.snakeCase(targetName) + 's';
@@ -28,7 +29,8 @@ exports.default = () => typeorm_1.createConnection({
         entity_4.default,
         entity_3.default,
         entity_2.default,
-        entity_1.default
+        entity_1.default,
+        entity_5.default
     ],
     synchronize: true,
     logging: true,
