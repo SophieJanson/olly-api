@@ -70,12 +70,6 @@ __decorate([
     class_transformer_1.Exclude({ toPlainOnly: true }),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
-__decorate([
-    typeorm_1.OneToMany(_ => WeeklyUpdate, weeklyUpdate => weeklyUpdate.users, {
-        eager: false
-    }),
-    __metadata("design:type", Array)
-], User.prototype, "weeklyUpdates", void 0);
 User = __decorate([
     typeorm_1.Entity()
 ], User);

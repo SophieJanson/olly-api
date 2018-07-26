@@ -8,6 +8,7 @@ import {
 import { Exclude } from "class-transformer";
 import { MinLength, IsString, IsEmail } from "class-validator";
 import * as bcrypt from "bcrypt";
+import WeeklyUpdate from "../weeklyUpdates/entity";
 
 @Entity()
 export default class User extends BaseEntity {
@@ -58,8 +59,8 @@ export default class User extends BaseEntity {
     return bcrypt.compare(rawPassword, this.password);
   }
 
-  @OneToMany(_ => WeeklyUpdate, weeklyUpdate => weeklyUpdate.users, {
-    eager: false
-  })
-  weeklyUpdates: WeeklyUpdate[];
+//   @OneToMany(_ => WeeklyUpdate, weeklyUpdate => weeklyUpdate.users, {
+//     eager: false
+//   })
+//   weeklyUpdates: WeeklyUpdate[];
 }
