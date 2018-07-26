@@ -38,5 +38,7 @@ export default class User extends BaseEntity {
 		return bcrypt.compare(rawPassword, this.password)
 	}
 	
+
+	
 }
 
