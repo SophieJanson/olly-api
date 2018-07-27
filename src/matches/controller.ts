@@ -3,12 +3,12 @@ import {
   Get,
   Param,
   Authorized
-  //   Post,
-  //   CurrentUser,
-  //   HttpCode
+  // Post,
+  // CurrentUser,
+  // HttpCode
 } from "routing-controllers";
 import Match from "./entity";
-//import User from "../users/entity";
+// import User from "../users/entity";
 
 @JsonController()
 export default class MatchController {
@@ -24,7 +24,7 @@ export default class MatchController {
   //   async createMatch(@CurrentUser() user: User) {
   //     const entity = await Match.create().save();
 
-  //     await MatchedPerson.create({
+  //     await MatchedUser.create({
   //       match: entity,
   //       user
   //     }).save();

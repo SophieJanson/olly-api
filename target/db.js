@@ -26,7 +26,7 @@ exports.default = () => typeorm_1.createConnection({
     type: "postgres",
     url: process.env.DATABASE_URL ||
         "postgres://postgres:secret@localhost:5432/postgres",
-    entities: [entity_4.default, entity_3.default, entity_2.default, entity_1.default, entity_5.default, entity_3.MatchedUser],
+    entities: [entity_4.default, entity_3.default, entity_2.default, entity_1.default, entity_5.default],
     synchronize: true,
     logging: true,
     namingStrategy: new CustomNamingStrategy()

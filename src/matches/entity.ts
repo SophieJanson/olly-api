@@ -4,9 +4,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToMany,
-  OneToMany,
-  //Index,
-  ManyToOne
+  OneToMany
 } from "typeorm";
 import User from "./entity";
 import WeeklyUpdate from "../weeklyUpdates/entity";
@@ -31,19 +29,4 @@ export default class Match extends BaseEntity {
 
   @OneToMany(_ => FollowUp, followUp => followUp.match)
   followUps: number[];
-
-  @OneToMany(_ => MatchedUser, matchedUser => matchedUser.match)
-  matchedUser: number[];
-}
-
-@Entity()
-//@Index(["match", "user"], { unique: true })
-export class MatchedUser extends BaseEntity {
-  @PrimaryGeneratedColumn() id?: number;
-
-  @ManyToOne(_ => User, user => user.matchedUser)
-  user: User;
-
-  @ManyToOne(_ => Match, match => match.matchedUser)
-  match: Match;
 }

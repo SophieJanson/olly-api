@@ -4,7 +4,7 @@ import { NamingStrategyInterface } from "typeorm/naming-strategy/NamingStrategyI
 import { snakeCase } from "typeorm/util/StringUtils";
 import User from "./users/entity";
 import Activity from "./activities/entity";
-import Match, { MatchedUser } from "./matches/entity";
+import Match from "./matches/entity";
 import WeeklyUpdate from "./weeklyUpdates/entity";
 import FollowUp from "./followups/entity";
 
@@ -39,7 +39,7 @@ export default () =>
     url:
       process.env.DATABASE_URL ||
       "postgres://postgres:secret@localhost:5432/postgres",
-    entities: [WeeklyUpdate, Match, Activity, User, FollowUp, MatchedUser],
+    entities: [WeeklyUpdate, Match, Activity, User, FollowUp],
     synchronize: true,
     logging: true,
     namingStrategy: new CustomNamingStrategy()
