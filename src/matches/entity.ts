@@ -26,12 +26,12 @@ export default class Match extends BaseEntity {
 	status: string;
 	
 	@ManyToMany(_ => User, user => user.id)
-	@Column("integer")
+	@Column({type: 'integer', array: true})
 	users: number[];
 
 	@OneToMany(_ => WeeklyUpdate, weeklyUpdate => weeklyUpdate.match) 
   	weeklyUpdate: number[]
 
-	@OneToMany(_ => FollowUp, followUp => followUp.matches) 
+	@OneToMany(_ => FollowUp, followUp => followUp.match) 
   		followUps: number[]
 }
