@@ -82,8 +82,7 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "followUps", void 0);
 __decorate([
-    typeorm_1.ManyToMany(_ => entity_2.default),
-    typeorm_1.JoinTable(),
+    typeorm_1.ManyToMany(_ => entity_2.default, match => match.users),
     __metadata("design:type", Array)
 ], User.prototype, "matches", void 0);
 User = __decorate([
