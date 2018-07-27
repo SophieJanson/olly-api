@@ -8,7 +8,7 @@ import {
   JoinTable
 } from "typeorm";
 import { Exclude } from "class-transformer";
-import { MinLength, IsString, IsEmail } from "class-validator";
+import { MinLength, IsString, IsEmail, IsArray } from "class-validator";
 import * as bcrypt from "bcrypt";
 import WeeklyUpdate from "../weeklyUpdates/entity";
 import Match from "../matches/entity";
@@ -38,13 +38,18 @@ export default class User extends BaseEntity {
 	@Column("text", { nullable: true })
 	role: string;
 
+	// funFact should be ONLY ONE fun fact! (for now)
 	@IsString()
 	@Column("text", { nullable: true })
-	funFacts: string;
+	funFact: string;
 
-	@IsString()
+	@IsArray()
 	@Column("text", { nullable: true })
-	interests: string;
+	interests: string[];
+
+	@IsArray()
+	@Column("text", { nullable: true })
+	skills: string[];
 
 	@IsEmail()
 	@Column("text", { nullable: true })

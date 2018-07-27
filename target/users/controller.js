@@ -31,6 +31,21 @@ let UserController = class UserController {
         const user = await entity.save();
         return user;
     }
+    async updateUserInterest(userId, interests, funFact, skills, department, role) {
+        const user = await entity_1.default.findOne(userId);
+        if (!user)
+            throw new routing_controllers_1.NotFoundError("There's no user with the given ID, man! #CYBYWY");
+        if (!interests && !funFact && !skills && !department && !role) {
+            throw new routing_controllers_1.NotFoundError("Nothing to update here, bro!");
+        }
+        skills ? user.skills = skills.split(",") : user.skills;
+        interests ? user.interests = interests.split(",") : user.interests;
+        funFact ? user.funFact = funFact : user.funFact;
+        department ? user.department = department : user.department;
+        role ? user.role = role : user.role;
+        let updatedUser = await user.save();
+        return updatedUser;
+    }
 };
 __decorate([
     routing_controllers_1.Post("/users"),
@@ -39,6 +54,19 @@ __decorate([
     __metadata("design:paramtypes", [entity_1.default]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "signup", null);
+__decorate([
+    routing_controllers_1.Patch("/users/:userid/"),
+    routing_controllers_1.HttpCode(200),
+    __param(0, routing_controllers_1.Param("userid")),
+    __param(1, routing_controllers_1.BodyParam("interests")),
+    __param(2, routing_controllers_1.BodyParam("funFact")),
+    __param(3, routing_controllers_1.BodyParam("skills")),
+    __param(4, routing_controllers_1.BodyParam("department")),
+    __param(5, routing_controllers_1.BodyParam("role")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [entity_1.default, String, String, String, String, String]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "updateUserInterest", null);
 UserController = __decorate([
     routing_controllers_1.JsonController()
 ], UserController);
