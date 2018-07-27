@@ -5,7 +5,7 @@ import {
   Column,
   ManyToMany,
   OneToMany,
-  Index,
+  //Index,
   ManyToOne
 } from "typeorm";
 import User from "./entity";
@@ -37,7 +37,7 @@ export default class Match extends BaseEntity {
 }
 
 @Entity()
-@Index(["match", "user"], { unique: true })
+//@Index(["match", "user"], { unique: true })
 export class MatchedUser extends BaseEntity {
   @PrimaryGeneratedColumn() id?: number;
 
@@ -46,6 +46,4 @@ export class MatchedUser extends BaseEntity {
 
   @ManyToOne(_ => Match, match => match.matchedUser)
   match: Match;
-
-  @Column() userId: number;
 }
