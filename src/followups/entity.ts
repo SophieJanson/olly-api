@@ -19,7 +19,7 @@ export default class FollowUp extends BaseEntity {
 	rating: string
 	
 	@ManyToOne(_ => Match, match => match.id)
-	matches: number;
+	match: number;
 
 	@ManyToOne(_ => User, user => user.id) 
 	user: number;

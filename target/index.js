@@ -11,6 +11,7 @@ const controller_2 = require("./logins/controller");
 const controller_3 = require("./weeklyUpdates/controller");
 const controller_4 = require("./matches/controller");
 const controller_5 = require("./activities/controller");
+const controller_6 = require("./followups/controller");
 const app = new Koa();
 const port = process.env.PORT || 4000;
 let time = `${new Date().getHours()}:${new Date().getMinutes()}`;
@@ -21,7 +22,8 @@ routing_controllers_1.useKoaServer(app, {
         controller_2.default,
         controller_3.default,
         controller_4.default,
-        controller_5.default
+        controller_5.default,
+        controller_6.default
     ],
     authorizationChecker: (action) => {
         const header = action.request.headers.authorization;
