@@ -8,7 +8,7 @@ import {
   JoinTable
 } from "typeorm";
 import { Exclude } from "class-transformer";
-import { MinLength, IsString, IsEmail } from "class-validator";
+import { MinLength, IsString, IsEmail, IsOptional } from "class-validator";
 import * as bcrypt from "bcrypt";
 import WeeklyUpdate from "../weeklyUpdates/entity";
 import Match from "../matches/entity";
@@ -30,21 +30,25 @@ export default class User extends BaseEntity {
 	@Column("text", { nullable: true })
 	lastName: string;
 
+	
 	@IsString()
 	@Column("text", { nullable: true })
-	department: string;
+	department?: string;
 
+	
 	@IsString()
 	@Column("text", { nullable: true })
-	role: string;
+	role?: string;
 
+	
 	@IsString()
 	@Column("text", { nullable: true })
-	funFacts: string;
+	funFacts?: string;
 
+	@IsOptional()
 	@IsString()
 	@Column("text", { nullable: true })
-	interests: string;
+	interests?: string;
 
 	@IsEmail()
 	@Column("text", { nullable: true })
