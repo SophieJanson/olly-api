@@ -6,7 +6,9 @@ import User from "./entity";
 export default class UserController {
 	//   @Authorized()
 	@Post("/users")
-	async signup(@Body() data: User) {
+	async signup(
+    @Body() data: User
+  ) {
 		const { password, ...rest } = data;
 		const entity = User.create(rest);
 		await entity.setPassword(password);

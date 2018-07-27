@@ -8,7 +8,7 @@ import {
   JoinTable
 } from "typeorm";
 import { Exclude } from "class-transformer";
-import { MinLength, IsString, IsEmail, IsOptional, IsArray } from "class-validator";
+import { MinLength, IsString, IsEmail, IsArray } from "class-validator";
 import * as bcrypt from "bcrypt";
 import WeeklyUpdate from "../weeklyUpdates/entity";
 import Match from "../matches/entity";
@@ -52,7 +52,7 @@ export default class User extends BaseEntity {
 
 	@IsArray()
 	@Column("text", { nullable: true })
-	skills: string[];
+	skills?: string[];
 
 
 	@IsEmail()
