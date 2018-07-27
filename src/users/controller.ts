@@ -1,3 +1,4 @@
+
 import { JsonController, Post, Body, Patch, HttpCode, Param, BodyParam, NotFoundError } from "routing-controllers";
 import User from "./entity";
 
@@ -32,9 +33,6 @@ export default class UserController {
 				throw new NotFoundError("Nothing to update here, bro!")
 			}
 
-			// let skillsArray = 
-			// let interestsArray = 
-
 			skills ? user.skills = skills.split(",") : user.skills
 			interests ? user.interests = interests.split(",") : user.interests
 			funFact ? user.funFact = funFact : user.funFact
@@ -45,17 +43,22 @@ export default class UserController {
 			return updatedUser
 		}
 
-	//   @Authorized()
-	// @Get('/users/:id([0-9]+)')
-	// getUser(
-	// 	@Param('id') id: number
-	// ) {
-	// 	return User.findOne(id)
-	// }
+	
+  @Get('/users/:userId')
+  async getUser(
+    @Param('userId') userId: number
+  ) {
+    const user = await User.findOne(userId)
+    return user
+  }
 
-	// @Authorized()
-	// @Get('/users')
-	// allUsers() {
-	// 	return User.find()
-	// }
+
+  @Get('/users')
+  async allUsers() {
+    const users = await User.find()
+    return { users }
+  }
+
+
+  
 }

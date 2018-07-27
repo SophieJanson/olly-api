@@ -15,11 +15,11 @@ export default class FollowUp extends BaseEntity {
 	@PrimaryGeneratedColumn() 
 	id?: number;
 
-	@Column("text")
-	rating: string
+	@Column("integer")
+	rating: number
 	
 	@ManyToOne(_ => Match, match => match.id)
-	matches: number;
+	match: number;
 
 	@ManyToOne(_ => User, user => user.id) 
 	user: number;
