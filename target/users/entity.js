@@ -55,13 +55,19 @@ __decorate([
     class_validator_1.IsString(),
     typeorm_1.Column("text", { nullable: true }),
     __metadata("design:type", String)
-], User.prototype, "funFacts", void 0);
+], User.prototype, "funFact", void 0);
 __decorate([
+
     class_validator_1.IsOptional(),
     class_validator_1.IsString(),
     typeorm_1.Column("text", { nullable: true }),
-    __metadata("design:type", String)
+    __metadata("design:type", Array)
 ], User.prototype, "interests", void 0);
+__decorate([
+    class_validator_1.IsArray(),
+    typeorm_1.Column("text", { nullable: true }),
+    __metadata("design:type", Array)
+], User.prototype, "skills", void 0);
 __decorate([
     class_validator_1.IsEmail(),
     typeorm_1.Column("text", { nullable: true }),
