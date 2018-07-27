@@ -41,10 +41,10 @@ export default class Match extends BaseEntity {
 export class MatchedUser extends BaseEntity {
   @PrimaryGeneratedColumn() id?: number;
 
-  @ManyToOne(_ => User, user => user.matchedUsers)
+  @ManyToOne(_ => User, user => user.matchedUser)
   user: User;
 
-  @ManyToOne(_ => Match, match => match.matchedUsers)
+  @ManyToOne(_ => Match, match => match.matchedUser)
   match: Match;
 
   @Column() userId: number;
