@@ -4,9 +4,10 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToMany,
-  OneToMany
+  OneToMany,
+  JoinTable
 } from "typeorm";
-import User from "./entity";
+import User from "../users/entity";
 import WeeklyUpdate from "../weeklyUpdates/entity";
 import FollowUp from "../followups/entity";
 
@@ -20,9 +21,10 @@ export default class Match extends BaseEntity {
 
   @Column("text") status: string;
 
-  @ManyToMany(_ => User, user => user.id)
-  @Column({ type: "integer", array: true })
-  users: number[];
+  @ManyToMany(_ => User, user => user.matches)
+  //@Column({ type: "integer", array: true })
+  @JoinTable()
+  users: User[];
 
   @OneToMany(_ => WeeklyUpdate, weeklyUpdate => weeklyUpdate.match)
   weeklyUpdate: number[];
