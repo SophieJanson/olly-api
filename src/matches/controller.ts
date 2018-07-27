@@ -7,7 +7,8 @@ import {
   CurrentUser,
   HttpCode,
   Body,
-  NotFoundError
+  NotFoundError,
+  BadRequestError
 } from "routing-controllers";
 import Match from "./entity";
 import User from "../users/entity";
@@ -27,38 +28,19 @@ export default class MatchController {
   @Post("/matches")
   @HttpCode(201)
   async createMatch(
-    @CurrentUser() user: User, 
-    @Body() body: any) {
-      console.log(body)
-    const usertwo = await User.findOne(2)
-    if(!usertwo) throw NotFoundError
-    const newMatch = new Match()
-    newMatch.activities = ["swimming"]
-    newMatch.categories = ["learn"]
-    newMatch.status = "pending"
-    newMatch.users = [user, usertwo]
-    // await getConnection()
-    //   .createQueryBuilder()
-    //   .relation(Match, "users")
-    //   .relation(User, "matches")
-    //   .of(body.match)
-    //   .add(user);
+    @Body() match: Match) {
+      if(!match.users) throw new BadRequestError("No users specified")
+      if(!match.activities) throw new BadRequestError("No activity specified")
+      if(!match.categories) throw new BadRequestError("No category specified")
+      if(!match.status) throw new BadRequestError("No status specified")
+    // const usertwo = await User.findOne(2)
+    // if(!usertwo) throw NotFoundError
+    // const newMatch = new Match()
+    // newMatch.activities = ["swimming"]
+    // newMatch.categories = ["learn"]
+    // newMatch.status = "pending"
+    // newMatch.users = [user, usertwo]
 
-    // let users = await connection
-    // .getRepository(User)
-    // .createQueryBuilder("user") // first argument is an alias. Alias is what you are selecting - photos. You must specify it.
-    // .innerJoinAndSelect("user.id", "userId")
-    // .leftJoinAndSelect("user.matches", "match")
-    // // .where("photo.isPublished = true")
-    // .andWhere("(photo.name = :photoName OR photo.name = :bearName)")
-    // .orderBy("photo.id", "DESC")
-    // .skip(5)
-    // .take(10)
-    // .setParameters({ photoName: "My", bearName: "Mishka" })
-    // .getMany();
-
-    // const match = await Match.find(users);
-
-    return newMatch.save();
+    return match.save();
   }
 }
