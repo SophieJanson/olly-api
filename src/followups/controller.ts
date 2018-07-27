@@ -6,7 +6,8 @@ import {
   Param,
   Authorized,
   HttpCode,
-  Get
+  Get,
+  BadRequestError
 } from "routing-controllers";
 import FollowUp from "./entity";
 import User from "../users/entity";
@@ -28,8 +29,10 @@ export default class FollowUpController {
 
     if (!followUp && changes.rating) {
       newFollowUp = new FollowUp();
-    } else {
+    } else if(changes.rating) {
       newFollowUp = followUp;
+    } else {
+      throw new BadRequestError("You haven't included a rating!")
     }
     return FollowUp.merge(newFollowUp, changes).save();
   }
