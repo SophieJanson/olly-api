@@ -16,13 +16,12 @@ console.log(status[neh])
 
 @JsonController()
 export default class WeeklyUpdateController {
-
+	
 	@Get("/weeklygoals")
 	// get weeklygoals should send a slack message to the user
 	// after choosing among options and submitting, the user will send the post request
 	// match and activity should be offered to the user as options in Slack
 	// they should be brought to the front-end from their respective tables in the back-end
-	
 	
 	@Post("/weeklygoals") 
 	async newWeeklyGoals(

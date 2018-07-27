@@ -42,28 +42,31 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "lastName", void 0);
 __decorate([
+    class_validator_1.IsOptional(),
     class_validator_1.IsString(),
     typeorm_1.Column("text", { nullable: true }),
     __metadata("design:type", String)
 ], User.prototype, "department", void 0);
 __decorate([
+    class_validator_1.IsOptional(),
     class_validator_1.IsString(),
     typeorm_1.Column("text", { nullable: true }),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
 __decorate([
+    class_validator_1.IsOptional(),
     class_validator_1.IsString(),
     typeorm_1.Column("text", { nullable: true }),
     __metadata("design:type", String)
 ], User.prototype, "funFact", void 0);
 __decorate([
-
     class_validator_1.IsOptional(),
-    class_validator_1.IsString(),
+    class_validator_1.IsArray(),
     typeorm_1.Column("text", { nullable: true }),
     __metadata("design:type", Array)
 ], User.prototype, "interests", void 0);
 __decorate([
+    class_validator_1.IsOptional(),
     class_validator_1.IsArray(),
     typeorm_1.Column("text", { nullable: true }),
     __metadata("design:type", Array)

@@ -1,5 +1,5 @@
 
-import { JsonController, Post, Body, Patch, HttpCode, Param, BodyParam, NotFoundError } from "routing-controllers";
+import { JsonController, Post, Body, Patch, HttpCode, Param, BodyParam, NotFoundError, Get } from "routing-controllers";
 import User from "./entity";
 
 @JsonController()
