@@ -32,13 +32,12 @@ export default class UsersController {
     return user
   }
 
-  //maybe we are not using it
 
-  // @Get('/users')
-  // async allUsers() {
-  //   const users = await User.find()
-  //   return { users }
-  // }
+  @Get('/users')
+  async allUsers() {
+    const users = await User.find()
+    return { users }
+  }
 
   
  

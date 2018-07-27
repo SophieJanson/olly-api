@@ -34,6 +34,10 @@ let UsersController = class UsersController {
         const user = await entity_1.default.findOne(userId);
         return user;
     }
+    async allUsers() {
+        const users = await entity_1.default.find();
+        return { users };
+    }
 };
 __decorate([
     routing_controllers_1.Post('/users'),
@@ -50,6 +54,12 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getUser", null);
+__decorate([
+    routing_controllers_1.Get('/users'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "allUsers", null);
 UsersController = __decorate([
     routing_controllers_1.JsonController()
 ], UsersController);
