@@ -1,31 +1,46 @@
-import { JsonController, Post, Body } from "routing-controllers";
+import { JsonController, Post, Body, Param, Get, NotFoundError, Put, HttpCode } from "routing-controllers";
 import User from "./entity";
 
 @JsonController()
-export default class UserController {
-  //   @Authorized()
-  @Post("/users")
-  async signup(@Body() data: User) {
-    const { password, ...rest } = data;
-    const entity = User.create(rest);
-    await entity.setPassword(password);
+export default class UsersController {
+  
+  @Post('/users')
+  @HttpCode(201)
+  async createUser(
+    @Body() user: User
+  ) {
+    const { password, ...rest } = user
+    const entity = User.create(rest)
+    await entity.setPassword(password)
+    return entity.save()
+  }
+  
+  // @Get('/users/:userId/stats')
+  // async getStats(
+  //   @Body() user: User
+  // ) {
+  //   const user = await User.findOne(user)
+  //   return user
+  // }
 
-    const user = await entity.save();
 
-    return user;
+  @Get('/users/:userId')
+  async getUser(
+    @Param('userId') userId: number
+  ) {
+    const user = await User.findOne(userId)
+    return user
   }
 
-  //   @Authorized()
-  // @Get('/users/:id([0-9]+)')
-  // getUser(
-  // 	@Param('id') id: number
-  // ) {
-  // 	return User.findOne(id)
+  //maybe we are not using it
+
+  // @Get('/users')
+  // async allUsers() {
+  //   const users = await User.find()
+  //   return { users }
   // }
 
-  // @Authorized()
-  // @Get('/users')
-  // allUsers() {
-  // 	return User.find()
-  // }
+  
+ 
+
 }
