@@ -1,4 +1,3 @@
-import { IsString } from "class-validator";
 import {
   JsonController,
   Post,
