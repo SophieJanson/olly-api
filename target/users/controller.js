@@ -23,24 +23,35 @@ var __rest = (this && this.__rest) || function (s, e) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const routing_controllers_1 = require("routing-controllers");
 const entity_1 = require("./entity");
-let UserController = class UserController {
-    async signup(data) {
-        const { password } = data, rest = __rest(data, ["password"]);
+let UsersController = class UsersController {
+    async createUser(user) {
+        const { password } = user, rest = __rest(user, ["password"]);
         const entity = entity_1.default.create(rest);
         await entity.setPassword(password);
-        const user = await entity.save();
+        return entity.save();
+    }
+    async getUser(userId) {
+        const user = await entity_1.default.findOne(userId);
         return user;
     }
 };
 __decorate([
-    routing_controllers_1.Post("/users"),
+    routing_controllers_1.Post('/users'),
+    routing_controllers_1.HttpCode(201),
     __param(0, routing_controllers_1.Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [entity_1.default]),
     __metadata("design:returntype", Promise)
-], UserController.prototype, "signup", null);
-UserController = __decorate([
+], UsersController.prototype, "createUser", null);
+__decorate([
+    routing_controllers_1.Get('/users/:userId'),
+    __param(0, routing_controllers_1.Param('userId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getUser", null);
+UsersController = __decorate([
     routing_controllers_1.JsonController()
-], UserController);
-exports.default = UserController;
+], UsersController);
+exports.default = UsersController;
 //# sourceMappingURL=controller.js.map
