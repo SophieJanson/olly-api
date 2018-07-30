@@ -20,21 +20,16 @@ import FollowUp from "../followups/entity";
 export default class LogicController {
 
 }
-console.log('hi i am logic')
+console.log(FollowUp)
 
 
 
 function department(department) {
 
-    // async let inputDepartment = WeeklyUpdate.find(department)
-    // async  let usersDepartment = User.find(department)
-    // await inputDepartment.find(usersDepartment)
-
-    // if (WeeklyUpdate.department === users.department) {
 
 
     }
-}
+
 
 // export function algolly(department, category, activitity) {
 
