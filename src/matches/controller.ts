@@ -5,13 +5,23 @@ import {
   Authorized,
   Post,
   CurrentUser,
-  HttpCode
+  HttpCode,
+  Body,
+  NotFoundError,
+  BadRequestError
 } from "routing-controllers";
 import Match from "./entity";
 import User from "../users/entity";
-import { getConnection } from "../../node_modules/typeorm";
-//import User from "../users/entity";
-//import { ConnectionManager } from "../../node_modules/typeorm";
+// import { getConnection } from "../../node_modules/typeorm";
+// import Activity from "../activities/entity";
+// import { ConnectionManager } from "../../node_modules/typeorm";
+
+interface MatchRequest {
+  users: User[],
+  activities: string[],
+  categories: string[],
+  status: string
+}
 
 @JsonController()
 export default class MatchController {
@@ -24,28 +34,8 @@ export default class MatchController {
   @Authorized()
   @Post("/matches")
   @HttpCode(201)
-  async createMatch(@CurrentUser() user: User, match: Match) {
-    await getConnection()
-      .createQueryBuilder()
-      .relation(Match, "users")
-      .of(match)
-      .add(user);
-
-    // let users = await connection
-    // .getRepository(User)
-    // .createQueryBuilder("user") // first argument is an alias. Alias is what you are selecting - photos. You must specify it.
-    // .innerJoinAndSelect("user.id", "userId")
-    // .leftJoinAndSelect("user.matches", "match")
-    // // .where("photo.isPublished = true")
-    // .andWhere("(photo.name = :photoName OR photo.name = :bearName)")
-    // .orderBy("photo.id", "DESC")
-    // .skip(5)
-    // .take(10)
-    // .setParameters({ photoName: "My", bearName: "Mishka" })
-    // .getMany();
-
-    // const match = await Match.find(users);
-
-    return match;
+  async createMatch(@Body() match: MatchRequest) {
+    const newMatch = new Match()
+    return Match.merge(newMatch, match).save();
   }
 }
