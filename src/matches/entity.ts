@@ -19,7 +19,7 @@ export default class Match extends BaseEntity {
 
   @Column("text") activities: string[];
 
-  @Column("text") status: string;
+  //@Column("text") status: string;
 
   @ManyToMany(_ => User, user => user.matches)
   //@Column({ type: "integer", array: true })

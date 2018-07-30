@@ -10,6 +10,7 @@ import WeeklyUpdateController from "./weeklyUpdates/controller";
 import MatchController from "./matches/controller";
 import ActivityController from "./activities/controller";
 import FollowUpController from "./followups/controller"
+import { bot } from "./slackbot"
 
 const app = new Koa();
 const port = process.env.PORT || 4000;
@@ -36,7 +37,6 @@ useKoaServer(app, {
         throw new BadRequestError(e);
       }
     }
-
     return false;
   },
   currentUserChecker: async (action: Action) => {
@@ -57,5 +57,8 @@ setupDb()
   .then(_ => {
     app.listen(port);
     console.log(`Listening on port ${port}  @ ${time}`);
+  })
+  .then(_ => {
+    bot
   })
   .catch(err => console.error(err));

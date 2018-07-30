@@ -4,17 +4,11 @@ import {
   Param,
   Authorized,
   Post,
-  CurrentUser,
   HttpCode,
-  Body,
-  NotFoundError,
-  BadRequestError
+  Body
 } from "routing-controllers";
 import Match from "./entity";
 import User from "../users/entity";
-// import { getConnection } from "../../node_modules/typeorm";
-// import Activity from "../activities/entity";
-// import { ConnectionManager } from "../../node_modules/typeorm";
 
 interface MatchRequest {
   users: User[],
