@@ -1,39 +1,57 @@
 import User from "../users/entity";
 import WeeklyUpdate from "../weeklyUpdates/entity";
-import FollowUp from "../followups/entity";
+//import Activity from "../activities/entity";
+import { getRepository } from "typeorm";
 
-//input :
-//list of departments
-//currentUser input on departments
-//list of activities
-//currentsUser input of activities
-//list of categories
-//currentUser input of categories
+export function getDepartment(inputDepartment) {
+  let departments = async () => {
+    return await getRepository(User)
+      .createQueryBuilder("user")
+      .where("user_department = :userDepartment", {
+        userDepartment: inputDepartment
+      })
+      .getMany();
+  };
+  return departments;
+}
 
-// @JsonController()
-// export default class LogicController {}
-export const logWeekly = () => WeeklyUpdate.find();
+export function getActivity(inputActivities) {
+  let activities = async () => {
+    return await getRepository(WeeklyUpdate)
+      .createQueryBuilder("activity")
+      .where("weeklyUpdate_activity = :weeklyUpdateActivity", {
+        weeklyActivity: inputActivities
+      })
+      .innerJoinAndSelect("weeklyUpdate.activity", "activity")
+      .getMany();
+  };
+  return activities;
+}
 
-// function department(department) {
+export function getCategory(inputCategory) {
+  let categories = async () => {
+    return await getRepository(WeeklyUpdate)
+      .createQueryBuilder("weeklyUpdate")
+      .where("weeklyUpdate_category = :weeklyUpdateCategory", {
+        weeklyCategory: inputCategory
+      })
+      .getMany();
+  };
+  return categories;
+}
 
-//     }
+export default function algolly(department, category, activity) {
+  if (department !== null) {
+    getDepartment(department);
+  }
 
-// export function algolly(department, category, activitity) {
+  if (category !== null) {
+    getCategory(category);
+  }
 
-//     switch () {
+  if (activity !== null) {
+    getActivity(activity);
+  }
+}
 
-//         case department:
-//             //  call function
-//             department(department)
-//             break;
-//         case activity:
-//             //  call function
-//             break;
-//         case category:
-//             //  call function
-//             break;
-//         default:
-//         //  call function
-//     }
-
-// }
+//export const logWeekly = () => WeeklyUpdate.find();

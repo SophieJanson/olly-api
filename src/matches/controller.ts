@@ -9,7 +9,8 @@ import {
 } from "routing-controllers";
 import Match from "./entity";
 import User from "../users/entity";
-import { logWeekly } from "./logic";
+import { getCategory, getActivity, getDepartment } from "./logic";
+import WeeklyUpdate from "../weeklyUpdates/entity";
 
 // import { getConnection } from "../../node_modules/typeorm";
 // import Activity from "../activities/entity";
@@ -38,10 +39,31 @@ export default class MatchController {
     return Match.merge(newMatch, match).save();
   }
 
-  @Get("/logic")
+  // @Get("/logic")
+  // @HttpCode(200)
+  // async getLogic() {
+  //   await console.log("logic");
+  //   return await logWeekly();
+  // }
+
+  @Get("/logic/categories")
   @HttpCode(200)
-  async getLogic() {
-    console.log("HEY");
-    return await logWeekly();
+  async getCategoryNow() {
+    // await console.log(getCategory("categories"));
+    return await getCategory("socialize");
+  }
+
+  @Get("/logic/activities")
+  @HttpCode(200)
+  async getActivityNow() {
+    //  await console.log(getActivity("activities"));
+    return await getActivity(1);
+  }
+
+  @Get("/logic/departments")
+  @HttpCode(200)
+  async getDepartmentNow() {
+    // await console.log(getDepartment("hi department"));
+    return await getDepartment("development");
   }
 }
