@@ -4,11 +4,9 @@ import {
   Param,
   Authorized,
   Post,
-  CurrentUser,
   HttpCode,
   Body,
-  NotFoundError,
-  BadRequestError
+
 } from "routing-controllers";
 import Match from "./entity";
 import User from "../users/entity";

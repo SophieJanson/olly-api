@@ -10,6 +10,7 @@ import WeeklyUpdateController from "./weeklyUpdates/controller";
 import MatchController from "./matches/controller";
 import ActivityController from "./activities/controller";
 import FollowUpController from "./followups/controller"
+import LogicController from "./matches/logic";
 
 const app = new Koa();
 const port = process.env.PORT || 4000;
@@ -23,7 +24,8 @@ useKoaServer(app, {
     WeeklyUpdateController,
     MatchController,
     ActivityController,
-    FollowUpController
+    FollowUpController,
+    LogicController
   ],
   authorizationChecker: (action: Action) => {
     const header: string = action.request.headers.authorization;

@@ -6,8 +6,8 @@ import Activity from "../activities/entity"
 
 @Entity()
 export default class WeeklyUpdate extends BaseEntity {
-	
-	@PrimaryGeneratedColumn() 
+
+	@PrimaryGeneratedColumn()
 	id?: number;
 
 	@IsString()
@@ -39,14 +39,14 @@ export default class WeeklyUpdate extends BaseEntity {
 	@Length(2)
 	@Column("text")
 	status: string;
-  
+
 	@ManyToOne(_ => User, user => user.id)
-  		user: User
+	user: User
 
 	@ManyToOne(_ => Match, match => match.id)
-  		match: Match
+	match: Match
 
 	@OneToOne(_ => Activity)
-    @JoinColumn()
-    activity: Activity;
+	@JoinColumn()
+	activity: Activity;
 }
