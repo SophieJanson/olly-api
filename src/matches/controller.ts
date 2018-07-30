@@ -5,20 +5,21 @@ import {
   Authorized,
   Post,
   HttpCode,
-  Body,
-
+  Body
 } from "routing-controllers";
 import Match from "./entity";
 import User from "../users/entity";
+import { logWeekly } from "./logic";
+
 // import { getConnection } from "../../node_modules/typeorm";
 // import Activity from "../activities/entity";
 // import { ConnectionManager } from "../../node_modules/typeorm";
 
 interface MatchRequest {
-  users: User[],
-  activities: string[],
-  categories: string[],
-  status: string
+  users: User[];
+  activities: string[];
+  categories: string[];
+  status: string;
 }
 
 @JsonController()
@@ -33,7 +34,14 @@ export default class MatchController {
   @Post("/matches")
   @HttpCode(201)
   async createMatch(@Body() match: MatchRequest) {
-    const newMatch = new Match()
+    const newMatch = new Match();
     return Match.merge(newMatch, match).save();
+  }
+
+  @Get("/logic")
+  @HttpCode(200)
+  async getLogic() {
+    console.log("HEY");
+    return await logWeekly();
   }
 }

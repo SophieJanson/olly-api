@@ -1,35 +1,22 @@
-import {
-    JsonController
-} from "routing-controllers";
-
-
 import User from "../users/entity";
 import WeeklyUpdate from "../weeklyUpdates/entity";
 import FollowUp from "../followups/entity";
 
-
-//input : 
-//list of departments 
+//input :
+//list of departments
 //currentUser input on departments
 //list of activities
 //currentsUser input of activities
 //list of categories
 //currentUser input of categories
 
-@JsonController()
-export default class LogicController {
+// @JsonController()
+// export default class LogicController {}
+export const logWeekly = () => WeeklyUpdate.find();
 
-}
-console.log(FollowUp)
+// function department(department) {
 
-
-
-function department(department) {
-
-
-
-    }
-
+//     }
 
 // export function algolly(department, category, activitity) {
 
@@ -48,8 +35,5 @@ function department(department) {
 //         default:
 //         //  call function
 //     }
-
-
-
 
 // }
