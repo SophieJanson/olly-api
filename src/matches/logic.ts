@@ -1,55 +1,41 @@
-import {
-    JsonController
-} from "routing-controllers";
+import User from '../users/entity'
+import WeeklyUpdate from '../weeklyUpdates/entity'
+import Activity from '../activities/entity'
+import { getRepository } from 'typeorm';
 
 
-import User from "../users/entity";
-import WeeklyUpdate from "../weeklyUpdates/entity";
-import FollowUp from "../followups/entity";
 
 
-//input : 
-//list of departments 
-//currentUser input on departments
-//list of activities
-//currentsUser input of activities
-//list of categories
-//currentUser input of categories
+function getDepartment(department) {
+    let departments = async () => { 
+        return await getRepository(User)
+            .createQueryBuilder("user")
+            .where("user_department = :userDepartment", { userDepartment: department })
+            .getMany()
+    }
+}   
 
-@JsonController()
-export default class LogicController {
+function getActivity(activity) {
 
 }
-console.log(FollowUp)
+
+function getCategory(category) {
+
+}
 
 
+export default function algolly(department, category, activity) {
 
-function department(department) {
-
-
-
+    if (department !== null) {
+        getDepartment(department)
+    }
+    
+    if (category !== null) {
+        getCategory(category)
+    }
+    
+    if (activity !== null) {
+        getActivity(activity)
     }
 
-
-// export function algolly(department, category, activitity) {
-
-//     switch () {
-
-//         case department:
-//             //  call function
-//             department(department)
-//             break;
-//         case activity:
-//             //  call function
-//             break;
-//         case category:
-//             //  call function
-//             break;
-//         default:
-//         //  call function
-//     }
-
-
-
-
-// }
+}
