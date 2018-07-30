@@ -7,7 +7,7 @@ import {
   OneToOne,
   JoinColumn
 } from "typeorm";
-import { IsString, MaxLength, Length, IsNumber } from "class-validator";
+import { MaxLength, Length, IsNumber } from "class-validator";
 import User from "../users/entity";
 import Match from "../matches/entity";
 import Activity from "../activities/entity";
@@ -16,18 +16,15 @@ import Activity from "../activities/entity";
 export default class WeeklyUpdate extends BaseEntity {
   @PrimaryGeneratedColumn() id?: number;
 
-  @IsString()
   @Length(4)
   // @Length(4, { each: true })
   @Column("text")
   category: string;
 
-  @IsString()
   @Length(3)
   @Column("text")
   connectionType: string;
 
-  @IsString()
   @Length(3)
   @Column("boolean")
   postponedActivity: boolean;
@@ -41,7 +38,7 @@ export default class WeeklyUpdate extends BaseEntity {
   // @Column()
   // time: Date;
 
-  @IsString()
+  //@IsString()
   @Length(2)
   @Column("text")
   status: string;

@@ -11,14 +11,8 @@ import User from "../users/entity";
 import WeeklyUpdate from "../weeklyUpdates/entity";
 import FollowUp from "../followups/entity";
 
-
-
-
-
 @Entity()
 export default class Match extends BaseEntity {
-
-
   @PrimaryGeneratedColumn() id?: number;
 
   @Column("text") categories: string[];
@@ -38,4 +32,3 @@ export default class Match extends BaseEntity {
   @OneToMany(_ => FollowUp, followUp => followUp.match)
   followUps: number[];
 }
-

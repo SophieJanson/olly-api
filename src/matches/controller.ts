@@ -10,7 +10,7 @@ import {
 import Match from "./entity";
 import User from "../users/entity";
 import { getCategory, getActivity, getDepartment } from "./logic";
-import WeeklyUpdate from "../weeklyUpdates/entity";
+//import WeeklyUpdate from "../weeklyUpdates/entity";
 
 // import { getConnection } from "../../node_modules/typeorm";
 // import Activity from "../activities/entity";
@@ -49,7 +49,7 @@ export default class MatchController {
   @Get("/logic/categories")
   @HttpCode(200)
   async getCategoryNow() {
-    // await console.log(getCategory("categories"));
+    console.log("socialize");
     return await getCategory("socialize");
   }
 

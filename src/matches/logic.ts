@@ -28,16 +28,19 @@ export function getActivity(inputActivities) {
   return activities;
 }
 
-export function getCategory(inputCategory) {
-  let categories = async () => {
-    return await getRepository(WeeklyUpdate)
-      .createQueryBuilder("weeklyUpdate")
-      .where("weeklyUpdate_category = :weeklyUpdateCategory", {
-        weeklyCategory: inputCategory
-      })
-      .getMany();
+export async function getCategory(inputCategory) {
+  let cat = async () => {
+    //  console.log(cat, "cat 1");
+    return await WeeklyUpdate.find({
+      select: ["category"],
+
+      where: {
+        category: inputCategory
+      }
+    });
+    console.log("cat 2");
   };
-  return categories;
+  return await cat();
 }
 
 export default function algolly(department, category, activity) {
