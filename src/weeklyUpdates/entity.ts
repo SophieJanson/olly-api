@@ -30,11 +30,6 @@ export default class WeeklyUpdate extends BaseEntity {
   @Column("int", {default: 1})
   weekNumber?: number;
 
-  // @IsDate()
-  // @Column()
-  // time: Date;
-
-  //@IsString()
   @Length(2)
   @Column("text", {default: "pending"})
   status?: string;
