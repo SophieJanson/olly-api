@@ -29,13 +29,14 @@ export default class WeeklyUpdateController {
   // match and activity should be offered to the user as options in Slack
   // they should be brought to the front-end from their respective tables in the back-end
   @Post("/weeklygoals")
-  async newWeeklyGoals(@Body() data: WeeklyUpdate, @CurrentUser() user: User) {
+  async newWeeklyGoals(@Body() data: WeeklyUpdate, 
+  @CurrentUser() user: User) {
     const entity = await WeeklyUpdate.create(data);
     if (!user.id) {
-      throw new BadRequestError();
+      throw new BadRequestError("No user");
     }
     entity.category = categories[blah];
-    entity.connectionType = connectionType[rah];
+    entity.department = connectionType[rah];
     entity.weekNumber = Math.floor(Math.random() * 52); // this WILL be the number of the current week
     entity.status = status[neh];
     entity.userId = user.id;
@@ -45,7 +46,6 @@ export default class WeeklyUpdateController {
     // entity.match =
 
     const weeklyUpdate = await entity.save();
-
-    return WeeklyUpdate.findOne(weeklyUpdate.id);
+    return await WeeklyUpdate.findOne(weeklyUpdate.id);
   }
 }

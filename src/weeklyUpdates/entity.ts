@@ -21,16 +21,14 @@ export default class WeeklyUpdate extends BaseEntity {
 
   @Length(3)
   @Column("text")
-  connectionType: string;
+  department: string;
 
-  @Length(3)
-  @Column("boolean")
+  @Column("boolean", {default: false})
   postponedActivity: boolean;
 
   @IsNumber()
-  @MaxLength(2)
-  @Column("int")
-  weekNumber: number;
+  @Column("int", {default: 1})
+  weekNumber?: number;
 
   // @IsDate()
   // @Column()
@@ -38,8 +36,8 @@ export default class WeeklyUpdate extends BaseEntity {
 
   //@IsString()
   @Length(2)
-  @Column("text")
-  status: string;
+  @Column("text", {default: "pending"})
+  status?: string;
 
   @ManyToOne(_ => User, user => user.id)
   userId: number;
