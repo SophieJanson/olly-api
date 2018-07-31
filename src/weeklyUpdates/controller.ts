@@ -1,21 +1,29 @@
 import { JsonController, Post, Body, CurrentUser, Get } from "routing-controllers";
 import WeeklyUpdate from "./entity"
 import User from "../users/entity"
+import { threeButtonsFunc } from "../bot-lib"
 // import cron from "node-cron"
 // cron.schedule(* 15 * * 2, () => {}
 
 const categories = ["socialize", "network", "learn", "teach"]
-const blah = Math.floor(Math.random() * categories.length)   
-console.log(categories[blah])              
-const connectionType = ["a team", "a randomPerson", "a group"]
-const rah = Math.floor(Math.random() * connectionType.length)
-console.log(connectionType[rah])      
-const status = ["pending", "matched"]
-const neh = Math.floor(Math.random() * connectionType.length)
-console.log(status[neh])      
+// const blah = Math.floor(Math.random() * categories.length)   
+// // console.log(categories[blah])              
+// const connectionType = ["a team", "a randomPerson", "a group"]
+// const rah = Math.floor(Math.random() * connectionType.length)
+// // console.log(connectionType[rah])      
+// const status = ["pending", "matched"]
+// const neh = Math.floor(Math.random() * connectionType.length)
+// console.log(status[neh])      
 
 @JsonController()
 export default class WeeklyUpdateController {
+	
+	
+	@Get("/test")
+	async test() {
+		const cats = await threeButtonsFunc()
+    	return {cats}
+	}
 	
 	@Get("/weeklygoals")
 	// get weeklygoals should send a slack message to the user
@@ -30,10 +38,10 @@ export default class WeeklyUpdateController {
 	) {
 		const entity = await WeeklyUpdate.create(data)
 
-		entity.category = categories[blah]
-		entity.connectionType = connectionType[rah]
-		entity.weekNumber = Math.floor(Math.random() * 52) // this WILL be the number of the current week
-		entity.status = status[neh]
+		entity.category = categories[0].toString()
+		// entity.connectionType = connectionType[rah]
+		// entity.weekNumber = Math.floor(Math.random() * 52) // this WILL be the number of the current week
+		// entity.status = status[neh]
 		entity.user = user 
 		// entity.activity = 
 		

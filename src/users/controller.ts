@@ -58,9 +58,8 @@ export default class UserController {
   @Get('/users')
   async allUsers() {
     const users = await User.find()
+	// const users = await User.find( { select: ["department"] } )
     return { users }
   }
 
-
-  
 }

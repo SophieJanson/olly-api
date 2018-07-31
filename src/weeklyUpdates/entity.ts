@@ -16,29 +16,29 @@ export default class WeeklyUpdate extends BaseEntity {
 	@Column("text")
 	category: string;
 
-	@IsString()
-	@Length(3)
-	@Column("text")
-	connectionType: string;
+	// @IsString()
+	// @Length(3)
+	// @Column("text")
+	// connectionType: string;
 
-	@IsString()
-	@Length(3)
-	@Column("boolean")
-	postponedActivity: boolean;
+	// @IsString()
+	// @Length(3)
+	// @Column("boolean")
+	// postponedActivity: boolean;
 
-	@IsNumber()
-	@MaxLength(2)
-	@Column("int")
-	weekNumber: number;
+	// @IsNumber()
+	// @MaxLength(2)
+	// @Column("int")
+	// weekNumber: number;
 
-	@IsDate()
-	@Column()
-	time: Date;
+	// @IsDate()
+	// @Column()
+	// time: Date;
 
-	@IsString()
-	@Length(2)
-	@Column("text")
-	status: string;
+	// @IsString()
+	// @Length(2)
+	// @Column("text")
+	// status: string;
   
 	@ManyToOne(_ => User, user => user.id)
   		user: User
