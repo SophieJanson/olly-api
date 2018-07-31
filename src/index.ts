@@ -3,7 +3,7 @@ import { Action, BadRequestError, useKoaServer } from "routing-controllers";
 import setupDb from "./db";
 import * as Koa from "koa";
 import { verify } from "./jwt";
-import User from "./users/entity";
+//import User from "./users/entity";
 import UserController from "./users/controller";
 import LoginController from "./logins/controller";
 import WeeklyUpdateController from "./weeklyUpdates/controller";
@@ -12,7 +12,6 @@ import ActivityController from "./activities/controller";
 import FollowUpController from "./followups/controller"
 import SlackbotController from "./slackbot/controller"
 import CompanyController from "./companies/controller";
-require('dotenv').config()
 
 const app = new Koa();
 const port = process.env.PORT || 4000;
@@ -43,18 +42,18 @@ useKoaServer(app, {
     }
     return false;
   },
-  currentUserChecker: async (action: Action) => {
-    const header: string = action.request.headers.authorization;
-    if (header && header.startsWith("Bearer ")) {
-      const [, token] = header.split(" ");
+  // currentUserChecker: async (action: Action) => {
+  //   const header: string = action.request.headers.authorization;
+  //   if (header && header.startsWith("Bearer ")) {
+  //     const [, token] = header.split(" ");
 
-      if (token) {
-        const { id } = verify(token);
-        return User.findOne(id);
-      }
-    }
-    return undefined;
-  }
+  //     if (token) {
+  //       const { id } = verify(token);
+  //       return User.findOne(id);
+  //     }
+  //   }
+  //   return undefined;
+  // }
 });
 
 setupDb()

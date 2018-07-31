@@ -16,13 +16,14 @@ const bcrypt = require("bcrypt");
 const entity_1 = require("../weeklyUpdates/entity");
 const entity_2 = require("../matches/entity");
 const entity_3 = require("../followups/entity");
+const entity_4 = require("../companies/entity");
 let User = class User extends typeorm_1.BaseEntity {
     async setPassword(rawPassword) {
         const hash = await bcrypt.hash(rawPassword, 10);
         this.password = hash;
     }
     checkPassword(rawPassword) {
-        return bcrypt.compare(rawPassword, this.password);
+        return this.password ? bcrypt.compare(rawPassword, this.password) : null;
     }
 };
 __decorate([
@@ -30,12 +31,14 @@ __decorate([
     __metadata("design:type", Number)
 ], User.prototype, "id", void 0);
 __decorate([
+    class_validator_1.IsOptional(),
     class_validator_1.IsString(),
     class_validator_1.MinLength(2),
     typeorm_1.Column("text", { nullable: true }),
     __metadata("design:type", String)
 ], User.prototype, "firstName", void 0);
 __decorate([
+    class_validator_1.IsOptional(),
     class_validator_1.IsString(),
     class_validator_1.MinLength(2),
     typeorm_1.Column("text", { nullable: true }),
@@ -78,8 +81,17 @@ __decorate([
 ], User.prototype, "email", void 0);
 __decorate([
     class_validator_1.IsString(),
+    typeorm_1.Column('text', { nullable: true }),
+    __metadata("design:type", String)
+], User.prototype, "slackId", void 0);
+__decorate([
+    typeorm_1.ManyToOne(_ => entity_4.default, company => company.users),
+    __metadata("design:type", String)
+], User.prototype, "company", void 0);
+__decorate([
+    class_validator_1.IsString(),
     class_validator_1.MinLength(8),
-    typeorm_1.Column("text"),
+    typeorm_1.Column("text", { nullable: true }),
     class_transformer_1.Exclude({ toPlainOnly: true }),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);

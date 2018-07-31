@@ -1,5 +1,6 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { MinLength, IsString } from "class-validator";
+import WeeklyUpdate from "../weeklyUpdates/entity";
 
 @Entity()
 export default class Activity extends BaseEntity {
@@ -10,6 +11,8 @@ export default class Activity extends BaseEntity {
 	@IsString()
 	@MinLength(2)
 	@Column("text")
-	activity: string[];
+	activityName: string;
 
+	@OneToMany(_ => WeeklyUpdate, weeklyUpdate => weeklyUpdate.activityId)
+	weeklyUpdates: number[]
 }

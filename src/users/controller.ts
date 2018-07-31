@@ -1,20 +1,15 @@
 
-import { JsonController, Post, Body, Patch, HttpCode, Param, BodyParam, NotFoundError, Get } from "routing-controllers";
+import { JsonController, Patch, HttpCode, Param, BodyParam, NotFoundError, Get } from "routing-controllers";
 import User from "./entity";
 
 @JsonController()
 export default class UserController {
-	//   @Authorized()
-	@Post("/users")
-	async signup(@Body() data: User) {
-		const { password, ...rest } = data;
-		const entity = User.create(rest);
-		await entity.setPassword(password);
-
+	async signup(userData: any) {
+    console.log("DATA", userData)
+		const entity = await User.create(userData);
 		const user = await entity.save();
-
-		return user;
-	}
+		return await user;
+	}a
 		
 	@Patch("/users/:userid/")
 		@HttpCode(200)
@@ -46,19 +41,16 @@ export default class UserController {
 	
   @Get('/users/:userId')
   async getUser(
+    userSlackId: number,
     @Param('userId') userId: number
   ) {
-    const user = await User.findOne(userId)
+    const user = await User.findOne((userId || userSlackId))
     return user
   }
-
 
   @Get('/users')
   async allUsers() {
     const users = await User.find()
     return { users }
   }
-
-
-  
 }

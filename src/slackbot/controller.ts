@@ -3,12 +3,14 @@ import {
   Post,
   Body,
   HttpCode,
-  BadRequestError
+  BadRequestError,
+  NotFoundError
 } from "routing-controllers";
 import * as request from 'superagent'
 import UserController from '../users/controller'
+import User from '../users/entity'
+import Company from "../companies/entity";
 
-const ollySecret = process.env.OLLY_SECRET || "xoxp-13649336358-342889958628-407205862387-250247745f6e6b17c47d00b401822361"
 const Users = new UserController()
 
 @JsonController()
@@ -18,17 +20,24 @@ export default class SlackbotController {
     @HttpCode(200)
     @Body() body: any
   ) {
+    console.log("HEEEEELLO", body)
+    if(body.event.subtype === 'bot_message') return "no bots allowed"
     if(!body.event) throw new BadRequestError
-    console.log("BOOOOOODY", body)
-    if(body.event.text.split(" ").includes("users")) {
-      const allUsers = await Users.allUsers()
-      return request
-        .post('https://slack.com/api/chat.postMessage')
-        .set('Authorization', `Bearer ${ollySecret}`)
-        .send({"text": `${await allUsers.users.map(user => user.firstName)}`, 
-          "channel": `${body.event.channel}`
-        })
-    }
+
+    const { user, channel } = body.event
+    const teamId = body.team_id
+    const userEntity = await User.find({slackId: user})
+    console.log(userEntity)
+    const companyToken = await Company.findOne({"teamId": teamId})
+    if(! companyToken) throw new NotFoundError
+    console.log("BODY EVENT", body.event)
+    return request
+      .post('https://slack.com/api/chat.postMessage')
+      .set('Authorization', `Bearer ${await companyToken.botAccessToken}`)
+      .send({"text": `<@${user}>`, 
+        "channel": `${channel}`
+      })
+      .then(res => console.log(res))
     return body.challenge
   }
 }
