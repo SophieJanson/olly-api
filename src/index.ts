@@ -33,7 +33,6 @@ useKoaServer(app, {
     const header: string = action.request.headers.authorization;
     if (header && header.startsWith("Bearer ")) {
       const [, token] = header.split(" ");
-
       try {
         return !!(token && verify(token));
       } catch (e) {

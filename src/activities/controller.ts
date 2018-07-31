@@ -1,7 +1,6 @@
-import { JsonController, Get, Body, Post, Param, NotFoundError, HttpCode, Put, Delete } from "routing-controllers";
+import { NotFoundError } from "routing-controllers";
 import Activity from "./entity";
 
-@JsonController()
 export default class ActivityController {
   async getActivities() {
     return await {
@@ -10,8 +9,7 @@ export default class ActivityController {
   }
 
   async addActivity(
-    @HttpCode(201)
-    @Body() activity: Activity
+    activity: Activity
   ) {
     return activity.save()
   }
