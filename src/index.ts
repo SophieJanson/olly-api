@@ -11,6 +11,7 @@ import MatchController from "./matches/controller";
 import ActivityController from "./activities/controller";
 import FollowUpController from "./followups/controller"
 import SlackbotController from "./slackbot/controller"
+import CompanyController from "./companies/controller";
 
 const app = new Koa();
 const port = process.env.PORT || 4000;
@@ -25,7 +26,8 @@ useKoaServer(app, {
     MatchController,
     ActivityController,
     FollowUpController,
-    SlackbotController
+    SlackbotController,
+    CompanyController
   ],
   authorizationChecker: (action: Action) => {
     const header: string = action.request.headers.authorization;

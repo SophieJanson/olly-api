@@ -1,31 +1,30 @@
-import { IsString } from "class-validator";
 import {
   JsonController,
   Post,
   Body,
-  BadRequestError
+  BadRequestError,
+  HeaderParam,
+  HeaderParams,
+  Req
 } from "routing-controllers";
-import { sign } from "../jwt";
-import User from "../users/entity";
-
-class AuthenticatePayload {
-  @IsString() email: string;
-
-  @IsString() password: string;
-}
+import Company from "../companies/entity";
 
 @JsonController()
 export default class LoginController {
   @Post("/logins")
-  async authenticate(@Body() { email, password }: AuthenticatePayload) {
-    const user = await User.findOne({ where: { email } });
-    if (!user || !user.id)
-      throw new BadRequestError("A user with this email does not exist");
+  async authenticate(
+    @HeaderParams() params: any,
+    @Body() body: any
+  ) {
+    console.log("APIKEY2", params.authorization)
+    console.log("BODY2", body)
 
-    if (!(await user.checkPassword(password)))
-      throw new BadRequestError("The password is not correct");
+    const company = await Company.findOne({ where: { name: body.name } });
+    if (!company)
+      throw new BadRequestError("Company not found");
 
-    const jwt = sign({ id: user.id });
-    return { jwt };
+    if (!(await company.checkApiKey(params.authorization))) throw new BadRequestError("TEST");
+
+    return "Signed in"
   }
 }
