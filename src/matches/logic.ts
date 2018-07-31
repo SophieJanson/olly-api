@@ -22,6 +22,7 @@ export async function getDepartment(inputDepartment) {
     //  console.log(cat, "cat 1");
     return await User.find({
       select: ["department", "id", "firstName", "lastName"],
+      relations: ["weeklyUpdate"],
       where: {
         department: inputDepartment
       }
@@ -45,28 +46,33 @@ export async function getActivity(inputActivities) {
   return await resultActivity();
 }
 
-export default function algolly(department, category, activity) {
-  const matchesResult = [] as any[];
-
-  if (department !== null) {
-    let departments = async () => {
-      return await getRepository(User)
-        .createQueryBuilder("user")
-        .where("user_department = :userDepartment", {
-          userDepartment: department
-        })
-        .getMany();
-    };
-    matchesResult.push(departments());
-
-    return matchesResult;
+export async function algolly(inputDepartment, inputActivities, inputCategory) {
+  //let matchesResult = [] as any[];
+  console.log("pietje", inputDepartment);
+  if (inputDepartment !== null) {
+    const departmentMatch = await getDepartment(inputDepartment);
+    console.log(departmentMatch, "depmatch");
+    return departmentMatch;
   }
 
-  if (category !== null) {
-    getCategory(category);
+  if (inputActivities !== null) {
+    const activityMatch = await getActivity(inputActivities);
+    console.log(activityMatch, "activityMatch");
+    return activityMatch;
   }
 
-  if (activity !== null) {
-    getActivity(activity);
+  if (inputCategory !== null) {
+    const categoryMatch = await getCategory(inputCategory);
+    console.log(categoryMatch, "categoryMatch");
+    return categoryMatch;
   }
+
+  // if (inputCategory) {
+  //   getCategory(category);
+  // }
+
+  // if (inputActivities) {
+  //   getActivity(activity);
+  // }
+  return "Sorry, can not find a match";
 }

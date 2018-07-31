@@ -9,7 +9,7 @@ import {
 } from "routing-controllers";
 import Match from "./entity";
 import User from "../users/entity";
-import { getCategory, getActivity, getDepartment } from "./logic";
+import { algolly, getCategory, getActivity, getDepartment } from "./logic";
 //import WeeklyUpdate from "../weeklyUpdates/entity";
 
 // import { getConnection } from "../../node_modules/typeorm";
@@ -57,7 +57,7 @@ export default class MatchController {
   @HttpCode(200)
   async getActivityNow() {
     //  await console.log(getActivity("activities"));
-    return await getActivity("volleyball");
+    return await getActivity("tennis");
   }
 
   @Get("/logic/departments")
@@ -65,5 +65,12 @@ export default class MatchController {
   async getDepartmentNow() {
     // await console.log(getDepartment("hi department"));
     return await getDepartment("development");
+  }
+
+  @Get("/logic/algolly")
+  @HttpCode(200)
+  async getalgollyNow() {
+    // await console.log(getDepartment("hi department"));
+    return await algolly(null, "tennis", null);
   }
 }
