@@ -48,31 +48,16 @@ export async function getActivity(inputActivities) {
 
 export async function algolly(inputDepartment, inputActivities, inputCategory) {
   //let matchesResult = [] as any[];
-  console.log("pietje", inputDepartment);
-  if (inputDepartment !== null) {
-    const departmentMatch = await getDepartment(inputDepartment);
-    console.log(departmentMatch, "depmatch");
-    return departmentMatch;
-  }
 
-  if (inputActivities !== null) {
-    const activityMatch = await getActivity(inputActivities);
-    console.log(activityMatch, "activityMatch");
-    return activityMatch;
-  }
-
-  if (inputCategory !== null) {
-    const categoryMatch = await getCategory(inputCategory);
-    console.log(categoryMatch, "categoryMatch");
-    return categoryMatch;
-  }
-
-  // if (inputCategory) {
-  //   getCategory(category);
-  // }
-
-  // if (inputActivities) {
-  //   getActivity(activity);
-  // }
-  return "Sorry, can not find a match";
+  const departmentMatch = await getDepartment(inputDepartment);
+  const activityMatch = await getActivity(inputActivities);
+  const categoryMatch = await getCategory(inputCategory);
+  console.log(departmentMatch.length);
+  if (departmentMatch.length === 0) {
+    if (activityMatch.length === 0) {
+      if (categoryMatch.length === 0) {
+        return "no match";
+      } else return categoryMatch;
+    } else return activityMatch;
+  } else return departmentMatch;
 }

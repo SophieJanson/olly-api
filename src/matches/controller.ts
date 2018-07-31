@@ -71,6 +71,6 @@ export default class MatchController {
   @HttpCode(200)
   async getalgollyNow() {
     // await console.log(getDepartment("hi department"));
-    return await algolly(null, "tennis", null);
+    return await algolly("development", "tens", "socialize");
   }
 }
