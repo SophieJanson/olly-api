@@ -19,6 +19,7 @@ export default class SlackbotController {
     @Body() body: any
   ) {
     if(!body.event) throw new BadRequestError
+    console.log("BOOOOOODY", body)
     if(body.event.text.split(" ").includes("users")) {
       const allUsers = await Users.allUsers()
       return request
