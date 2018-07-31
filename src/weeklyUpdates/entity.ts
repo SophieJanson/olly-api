@@ -3,9 +3,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
-  OneToOne,
-  JoinColumn
+  ManyToOne
 } from "typeorm";
 import { MaxLength, Length, IsNumber } from "class-validator";
 import User from "../users/entity";
@@ -44,7 +42,7 @@ export default class WeeklyUpdate extends BaseEntity {
   status: string;
 
   @ManyToOne(_ => User, user => user.id)
-  user: User;
+  userId: number;
 
   @ManyToOne(_ => Match, match => match.id)
   match: Match;

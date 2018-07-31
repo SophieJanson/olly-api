@@ -7,12 +7,11 @@ export async function getCategory(inputCategory) {
     //  console.log(cat, "cat 1");
     return await WeeklyUpdate.find({
       select: ["category", "id"],
-      relations: ["user"],
+      relations: ["userId"],
       where: {
         category: inputCategory
       }
     });
-    console.log("cat 2");
   };
   return await resultCat();
 }
@@ -27,7 +26,6 @@ export async function getDepartment(inputDepartment) {
         department: inputDepartment
       }
     });
-    console.log("cat dep");
   };
   return await resultDepartment();
 }
@@ -37,10 +35,13 @@ export async function getActivity(inputActivities) {
     console.log(inputActivities);
     return await getRepository(WeeklyUpdate)
       .createQueryBuilder("weeklyupdate")
+      .select("weeklyUpdate", "userId")
       .leftJoinAndSelect("weeklyupdate.activityId", "activity")
+
       .where("activity.activityName = :inputActivities")
       //  .andWhere('week = 1')
       .setParameter("inputActivities", inputActivities)
+
       .getMany();
   };
   return await resultActivity();
