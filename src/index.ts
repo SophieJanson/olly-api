@@ -9,7 +9,7 @@ import LoginController from "./logins/controller";
 import WeeklyUpdateController from "./weeklyUpdates/controller";
 import MatchController from "./matches/controller";
 import ActivityController from "./activities/controller";
-import FollowUpController from "./followups/controller"
+import FollowUpController from "./followups/controller";
 
 const app = new Koa();
 const port = process.env.PORT || 4000;

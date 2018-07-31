@@ -1,52 +1,52 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, JoinColumn } from "typeorm";
-import { IsString, MaxLength, Length, IsNumber, IsDate } from "class-validator";
-import User from "../users/entity"
-import Match from "../matches/entity"
-import Activity from "../activities/entity"
+import {
+  BaseEntity,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne
+} from "typeorm";
+import { MaxLength, Length, IsNumber } from "class-validator";
+import User from "../users/entity";
+import Match from "../matches/entity";
+import Activity from "../activities/entity";
 
 @Entity()
 export default class WeeklyUpdate extends BaseEntity {
-	
-	@PrimaryGeneratedColumn() 
-	id?: number;
+  @PrimaryGeneratedColumn() id?: number;
 
-	@IsString()
-	@Length(4)
-	// @Length(4, { each: true })
-	@Column("text")
-	category: string;
+  @Length(4)
+  // @Length(4, { each: true })
+  @Column("text")
+  category: string;
 
-	@IsString()
-	@Length(3)
-	@Column("text")
-	connectionType: string;
+  @Length(3)
+  @Column("text")
+  connectionType: string;
 
-	@IsString()
-	@Length(3)
-	@Column("boolean")
-	postponedActivity: boolean;
+  @Length(3)
+  @Column("boolean")
+  postponedActivity: boolean;
 
-	@IsNumber()
-	@MaxLength(2)
-	@Column("int")
-	weekNumber: number;
+  @IsNumber()
+  @MaxLength(2)
+  @Column("int")
+  weekNumber: number;
 
-	@IsDate()
-	@Column()
-	time: Date;
+  // @IsDate()
+  // @Column()
+  // time: Date;
 
-	@IsString()
-	@Length(2)
-	@Column("text")
-	status: string;
-  
-	@ManyToOne(_ => User, user => user.id)
-  		user: User
+  //@IsString()
+  @Length(2)
+  @Column("text")
+  status: string;
 
-	@ManyToOne(_ => Match, match => match.id)
-  		match: Match
+  @ManyToOne(_ => User, user => user.id)
+  userId: number;
 
-	@OneToOne(_ => Activity)
-    @JoinColumn()
-    activity: Activity;
+  @ManyToOne(_ => Match, match => match.id)
+  match: Match;
+
+  @ManyToOne(_ => Activity, activity => activity.id)
+  activityId: number;
 }

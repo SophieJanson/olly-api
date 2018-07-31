@@ -78,7 +78,7 @@ export default class User extends BaseEntity {
     return bcrypt.compare(rawPassword, this.password);
   }
 
-  @OneToMany(_ => WeeklyUpdate, WeeklyUpdate => WeeklyUpdate.user)
+  @OneToMany(_ => WeeklyUpdate, WeeklyUpdate => WeeklyUpdate.userId)
   weeklyUpdate: number[];
 
   @OneToMany(_ => FollowUp, followUp => followUp.user)
