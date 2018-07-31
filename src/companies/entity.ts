@@ -20,8 +20,21 @@ export default class Company extends BaseEntity {
   @Column("text") 
   apiKey: string;
 
+  @Column("text", {nullable: true}) 
+  teamId: string;
+
+  @Column("text", {nullable: true}) 
+  teamAccessToken: string;
+
+  @Column("text", {nullable: true}) 
+  botUserId: string;
+
+  @Column("text", {nullable: true}) 
+  botAccessToken: string;
+
   @OneToMany(_ => User, user => user.id)
   users: number[];
+
 
   async setApiKey() {
     const apiKey = randomString.generate(32)

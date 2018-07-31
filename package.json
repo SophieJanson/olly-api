@@ -20,6 +20,7 @@
     "@types/socket.io": "^1.4.32",
     "@types/superagent": "^3.8.3",
     "bcrypt": "^3.0.0",
+    "dotenv": "^6.0.0",
     "jsonwebtoken": "^8.3.0",
     "kcors": "^2.2.2",
     "koa": "^2.5.2",
