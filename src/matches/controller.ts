@@ -57,7 +57,7 @@ export default class MatchController {
   @HttpCode(200)
   async getActivityNow() {
     //  await console.log(getActivity("activities"));
-    return await getActivity(1);
+    return await getActivity("tennis");
   }
 
   @Get("/logic/departments")

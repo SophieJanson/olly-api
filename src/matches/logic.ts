@@ -1,38 +1,47 @@
 import User from "../users/entity";
 import WeeklyUpdate from "../weeklyUpdates/entity";
+import { getRepository } from "../../node_modules/typeorm";
 //import Activity from "../activities/entity";
-import { getRepository } from "typeorm";
+//import { getRepository } from "typeorm";
+//import Activity from "../activities/entity";
 
-export function getDepartment(inputDepartment) {
-  let departments = async () => {
-    return await getRepository(User)
-      .createQueryBuilder("user")
-      .where("user_department = :userDepartment", {
-        userDepartment: inputDepartment
-      })
-      .getMany();
+export async function getDepartment(inputDepartment) {
+  let resultDepartment = async () => {
+    //  console.log(cat, "cat 1");
+    return await User.find({
+      select: ["department", "id", "firstName", "lastName"],
+
+      where: {
+        department: inputDepartment
+      }
+    });
+    console.log("cat dep");
   };
-  return departments;
+  return await resultDepartment();
 }
 
-export function getActivity(inputActivities) {
-  let activities = async () => {
+export async function getActivity(inputActivities) {
+  let resultActivity = async () => {
+    console.log(inputActivities);
     return await getRepository(WeeklyUpdate)
-      .createQueryBuilder("activity")
-      .where("weeklyUpdate_activity = :weeklyUpdateActivity", {
-        weeklyActivity: inputActivities
-      })
-      .innerJoinAndSelect("weeklyUpdate.activity", "activity")
+      .createQueryBuilder("weeklyupdate")
+      .leftJoinAndSelect("weeklyupdate.activityId", "activity")
+      .where("activity.activityName = :inputActivities")
+      //  .andWhere('week = 1')
+      .setParameter("inputActivities", inputActivities)
       .getMany();
+    console.log(inputActivities);
   };
-  return activities;
+
+  return await resultActivity();
 }
 
 export async function getCategory(inputCategory) {
-  let cat = async () => {
+  let resultCat = async () => {
     //  console.log(cat, "cat 1");
     return await WeeklyUpdate.find({
-      select: ["category"],
+      select: ["category", "id"],
+      relations: ["user"],
 
       where: {
         category: inputCategory
@@ -40,7 +49,7 @@ export async function getCategory(inputCategory) {
     });
     console.log("cat 2");
   };
-  return await cat();
+  return await resultCat();
 }
 
 export default function algolly(department, category, activity) {
