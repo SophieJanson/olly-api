@@ -23,15 +23,15 @@ export default class WeeklyUpdate extends BaseEntity {
   @Column("text")
   department: string;
 
-  @Column("boolean", {default: false})
+  @Column("boolean", { default: false })
   postponedActivity: boolean;
 
   @IsNumber()
-  @Column("int", {default: 1})
+  @Column("int", { default: 1 })
   weekNumber?: number;
 
   @Length(2)
-  @Column("text", {default: "pending"})
+  @Column("text", { default: "pending" })
   status?: string;
 
   @ManyToOne(_ => User, user => user.id)

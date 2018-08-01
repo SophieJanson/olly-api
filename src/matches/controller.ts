@@ -33,19 +33,32 @@ export default class MatchController {
     return Match.findOne(matchId);
   }
 
-  @Authorized()
-  @Post("/matches")
-  @HttpCode(201)
-  async createMatch(@Body() match: MatchRequest) {
-    const newMatch = new Match();
-    return Match.merge(newMatch, match).save();
-  }
+  // @Authorized()
+  // @Post("/matches")
+  // @HttpCode(201)
+  // async createMatch(@Body() match: MatchRequest) {
+  //   const newMatch = new Match();
+  //   return Match.merge(newMatch, match).save();
+  // }
 
-  // @Get("/logic")
-  // @HttpCode(200)
-  // async getLogic() {
-  //   await console.log("logic");
-  //   return await logWeekly();
+  // @Authorized()
+  // @Post("/matches")
+  // @HttpCode(201)
+  // async createMatch(@QueryParams() params: any) {
+  //   const newMatch = new Match();
+  //   const AlgollyResult = await algolly(
+  //     params.department,
+  //     params.activity,
+  //     params.category
+  //   );
+  //   const match = Match.create(AlgollyResult);
+  //   newMatch.department = department;
+
+  //   return Match.merge(newMatch, match).save();
+
+  // async createMatch(@Body() match: MatchRequest) {
+  //   const newMatch = new Match();
+  //   return Match.merge(newMatch, match).save();
   // }
 
   @Get("/logic/categories")
@@ -71,9 +84,15 @@ export default class MatchController {
 
   @Get("/logic/algolly")
   @HttpCode(200)
-  async getalgollyNow(
-    @QueryParams() params: any
-  ) {
-    return await algolly(params.department, params.activity, params.category);
+  async getalgollyNow(@QueryParams() params: any) {
+    return await algolly("develment", "tennis", "soclize");
   }
+
+  // @Post("/logic/algolly")
+  // @HttpCode(200)
+  // async getalgollyNow(
+  //   @QueryParams() params: any
+  // ) {
+  //   return await algolly(params.department, params.activity, params.category);
+  // }
 }
