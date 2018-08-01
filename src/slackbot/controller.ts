@@ -25,7 +25,7 @@ export default class SlackbotController {
   }
 
   @Post('/slacktest')
-  getInfo(
+  async getInfo(
     @HttpCode(200)
     @Body() body: any
   ) {
@@ -33,11 +33,12 @@ export default class SlackbotController {
     console.log(data)
     //if(!data.actions) return "Something went wrong. Please try again."
     const userId = JSON.parse(data).user.id
-    WeeklyUpdates.newWeeklyGoals({
-      user: userId
+    const weeklyUpdate = await WeeklyUpdates.newWeeklyGoals({
+      user: userId,
+      [JSON.parse(data)['actions'][0].name]: [JSON.parse(data)['actions'][0]['selected_options'][0].value]
     })
     console.log("BOOOOOODY", JSON.parse(data)['actions'][0])
-    return ""
+    return weeklyUpdate || ""
   }
 
   @Post("/")

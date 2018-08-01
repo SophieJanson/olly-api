@@ -1,31 +1,76 @@
-// import {
-//   JsonController,
-//   Get,
-//   Param,
-//   Authorized,
-//   Post,
-//   HttpCode,
-//   Body
-// } from "routing-controllers";
+import {
+  JsonController,
+  Get,
+  Param,
+  Authorized,
+  Post,
+  HttpCode,
+  Body,
+  QueryParams
+} from "routing-controllers";
 import Match from "./entity";
 import User from "../users/entity";
+import { algolly, getCategory, getActivity, getDepartment } from "./logic";
+//import WeeklyUpdate from "../weeklyUpdates/entity";
+
+// import { getConnection } from "../../node_modules/typeorm";
+// import Activity from "../activities/entity";
+// import { ConnectionManager } from "../../node_modules/typeorm";
 
 interface MatchRequest {
-  users: User[],
-  activities: string[],
-  categories: string[],
-  status: string
+  users: User[];
+  activities: string[];
+  categories: string[];
+  status: string;
 }
 
+@JsonController()
 export default class MatchController {
-  async getMatch(
-    matchId: number) {
-    return await Match.findOne(matchId);
+  @Authorized()
+  @Get("/matches/:matchId")
+  getMatch(@Param("matchId") matchId: number) {
+    return Match.findOne(matchId);
   }
 
-  async createMatch(
-    match: MatchRequest) {
-    const newMatch = new Match()
-    return await Match.merge(newMatch, match).save();
+  @Authorized()
+  @Post("/matches")
+  @HttpCode(201)
+  async createMatch(@Body() match: MatchRequest) {
+    const newMatch = new Match();
+    return Match.merge(newMatch, match).save();
+  }
+
+  // @Get("/logic")
+  // @HttpCode(200)
+  // async getLogic() {
+  //   await console.log("logic");
+  //   return await logWeekly();
+  // }
+
+  @Get("/logic/categories")
+  @HttpCode(200)
+  async getCategoryNow() {
+    console.log("socialize");
+    return await getCategory("socialize");
+  }
+
+  @Get("/logic/activities")
+  @HttpCode(200)
+  async getActivityNow() {
+    return await getActivity("tennis");
+  }
+
+  @Get("/logic/departments")
+  @HttpCode(200)
+  async getDepartmentNow() {
+    return await getDepartment("development");
+  }
+
+  @Get("/logic/algolly")
+  @HttpCode(200)
+  async getalgollyNow(
+    @QueryParams() params: any
+  ) {
+    return await algolly(params.department, params.activity, params.category);
   }
 }
