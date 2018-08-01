@@ -52,7 +52,7 @@ export async function algolly(inputDepartment, inputActivities, inputCategory) {
     if (activityMatch.length === 0) {
       if (categoryMatch.length === 0) {
         return "no match";
-      } else return categoryMatch;
-    } else return activityMatch;
+      } else return Object.values(categoryMatch).map(catMatch => catMatch.id)
+    } else return Object.values(activityMatch).map(actMatch =>actMatch.id))
   } else return departmentMatch.map(depMatch => depMatch.id);
 }

@@ -85,7 +85,7 @@ export default class MatchController {
   @Get("/logic/algolly")
   @HttpCode(200)
   async getalgollyNow(@QueryParams() params: any) {
-    return await algolly("develment", "tennis", "soclize");
+    return await algolly("develssment", "tnis", "socialize");
   }
 
   // @Post("/logic/algolly")
