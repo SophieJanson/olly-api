@@ -25,17 +25,17 @@ import Company from "../companies/entity";
 export default class User extends BaseEntity {
   @PrimaryGeneratedColumn() id?: number;
 
-  @IsOptional()
-  @IsString()
-  @MinLength(2)
-  @Column("text", { nullable: true })
-  firstName?: string;
+  // @IsOptional()
+  // @IsString()
+  // @MinLength(2)
+  // @Column("text", { nullable: true })
+  // firstName?: string;
 
-  @IsOptional()
-  @IsString()
-  @MinLength(2)
-  @Column("text", { nullable: true })
-  lastName?: string;
+  // @IsOptional()
+  // @IsString()
+  // @MinLength(2)
+  // @Column("text", { nullable: true })
+  // lastName?: string;
 
   @IsOptional()
   @IsString()
@@ -63,31 +63,31 @@ export default class User extends BaseEntity {
   @Column("text", { nullable: true })
   skills?: string[];
 
-  @IsEmail()
-  @Column("text", { nullable: true })
-  email?: string;
+  // @IsEmail()
+  // @Column("text", { nullable: true })
+  // email?: string;
 
   @IsString()
   @Column('text', {nullable: true})
-  slackId?: string;
+  slackId: string;
 
-  @ManyToOne(_ => Company, company => company.users)
-  company?: string;
+  @ManyToOne(_ => Company, company => company.users, {eager: true})
+  company: string;
 
-  @IsString()
-  @MinLength(8)
-  @Column("text", {nullable: true})
-  @Exclude({ toPlainOnly: true})
-  password?: string;
+  // @IsString()
+  // @MinLength(8)
+  // @Column("text", {nullable: true})
+  // @Exclude({ toPlainOnly: true})
+  // password?: string;
 
-  async setPassword(rawPassword: string) {
-    const hash = await bcrypt.hash(rawPassword, 10);
-    this.password = hash;
-  }
+  // async setPassword(rawPassword: string) {
+  //   const hash = await bcrypt.hash(rawPassword, 10);
+  //   this.password = hash;
+  // }
 
-  checkPassword(rawPassword: string) {
-    return this.password ? bcrypt.compare(rawPassword, this.password): null;
-  }
+  // checkPassword(rawPassword: string) {
+  //   return this.password ? bcrypt.compare(rawPassword, this.password): null;
+  // }
 
   @OneToMany(_ => WeeklyUpdate, WeeklyUpdate => WeeklyUpdate.user)
   weeklyUpdate: number[];

@@ -33,7 +33,7 @@ export default class Company extends BaseEntity {
   botAccessToken: string;
 
   @OneToMany(_ => User, user => user.id)
-  users: number[];
+  users: string[];
 
 
   async setApiKey() {
