@@ -18,7 +18,7 @@ export default class WeeklyUpdate extends BaseEntity {
 
 	@IsString()
 	@Length(3)
-	@Column("text")
+	@Column("text", {nullable: true})
 	connectionType: string;
 
 	@IsString()

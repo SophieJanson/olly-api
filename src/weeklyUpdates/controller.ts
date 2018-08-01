@@ -35,11 +35,6 @@ export default class WeeklyUpdateController {
 		entity.weekNumber = Math.floor(Math.random() * 52) // this WILL be the number of the current week
 		entity.status = status[neh]
 		entity.user = user 
-		// entity.activity = 
-		
-		
-		// here the match algo runs, then assigns its value to entity.match
-		// entity.match = 
 
 		const weeklyUpdate = await entity.save()
 

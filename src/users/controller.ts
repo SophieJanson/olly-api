@@ -1,8 +1,8 @@
 
-import { JsonController, Patch, HttpCode, Param, BodyParam, NotFoundError, Get } from "routing-controllers";
+import { Param, NotFoundError } from "routing-controllers";
 import User from "./entity";
 
-@JsonController()
+// @JsonController()
 export default class UserController {
 	async signup(userData: any) {
     console.log("DATA", userData)
@@ -11,24 +11,22 @@ export default class UserController {
 		return await user;
 	}a
 		
-	@Patch("/users/:userid/")
-		@HttpCode(200)
+	// @Patch("/users/:userid/")
+	// 	@HttpCode(200)
 		async updateUserInterest(
-			@Param("userid") userId: User,
-			@BodyParam("interests") interests: string,
-			@BodyParam("funFact") funFact: string,
-			@BodyParam("skills") skills: string,
-			@BodyParam("department") department: string,
-			@BodyParam("role") role: string,
+			userId: User,
+			interests: string,
+			funFact: string,
+			department: string,
+			role: string,
 		) {	
 			const user = await User.findOne(userId)
 			
 			if (!user) throw new NotFoundError("There's no user with the given ID, man! #CYBYWY")
-			if ( !interests && !funFact && !skills && !department && !role ) {
+			if ( !interests && !funFact && !department && !role ) {
 				throw new NotFoundError("Nothing to update here, bro!")
 			}
 
-			skills ? user.skills = skills.split(",") : user.skills
 			interests ? user.interests = interests.split(",") : user.interests
 			funFact ? user.funFact = funFact : user.funFact
 			department ? user.department = department : user.department
@@ -39,7 +37,7 @@ export default class UserController {
 		}
 
 	
-  @Get('/users/:userId')
+  // @Get('/users/:userId')
   async getUser(
     userSlackId: number,
     @Param('userId') userId: number
@@ -48,8 +46,8 @@ export default class UserController {
     return user
   }
 
-  @Get('/users')
-  async allUsers() {
+  // @Get('/users')
+  async getAllUsers() {
     const users = await User.find()
     return { users }
   }

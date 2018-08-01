@@ -1,12 +1,12 @@
-import {
-  JsonController,
-  Get,
-  Param,
-  Authorized,
-  Post,
-  HttpCode,
-  Body
-} from "routing-controllers";
+// import {
+//   JsonController,
+//   Get,
+//   Param,
+//   Authorized,
+//   Post,
+//   HttpCode,
+//   Body
+// } from "routing-controllers";
 import Match from "./entity";
 import User from "../users/entity";
 
@@ -17,19 +17,15 @@ interface MatchRequest {
   status: string
 }
 
-@JsonController()
 export default class MatchController {
-  @Authorized()
-  @Get("/matches/:matchId")
-  getMatch(@Param("matchId") matchId: number) {
-    return Match.findOne(matchId);
+  async getMatch(
+    matchId: number) {
+    return await Match.findOne(matchId);
   }
 
-  @Authorized()
-  @Post("/matches")
-  @HttpCode(201)
-  async createMatch(@Body() match: MatchRequest) {
+  async createMatch(
+    match: MatchRequest) {
     const newMatch = new Match()
-    return Match.merge(newMatch, match).save();
+    return await Match.merge(newMatch, match).save();
   }
 }
