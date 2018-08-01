@@ -10,17 +10,34 @@ import UserController from "../users/controller";
 import MatchController from "../matches/controller";
 import FollowUpController from "../followups/controller";
 import Company from "../companies/entity";
+import WeeklyUpdateController from '../weeklyUpdates/controller'
 
 const Activities = new ActivityController()
 const Users = new UserController()
 const Matches = new MatchController()
 const FollowUps = new FollowUpController()
+const WeeklyUpdates = new WeeklyUpdateController()
 
 @JsonController()
 export default class SlackbotController {
   getTeam = (teamId) => {
     return Company.findOne({"teamId": teamId})
-  
+  }
+
+  @Post('/slacktest')
+  getInfo(
+    @HttpCode(200)
+    @Body() body: any
+  ) {
+    const data = body.payload
+    console.log(data)
+    //if(!data.actions) return "Something went wrong. Please try again."
+    const userId = JSON.parse(data).user.id
+    WeeklyUpdates.newWeeklyGoals({
+      user: userId
+    })
+    console.log("BOOOOOODY", JSON.parse(data)['actions'][0])
+    return ""
   }
 
   @Post("/")
@@ -56,14 +73,14 @@ export default class SlackbotController {
       default:
         data = "Request not understood, try again"
     }
-    return request
-      .post('https://slack.com/api/chat.postMessage')
-      .set('Authorization', `Bearer ${await company.botAccessToken}`)
-      .send({"text": `${await JSON.stringify(data)}`, 
-        "channel": `${channel}`
-      })
-      .then(res => res.body)
-      .catch(err => console.error(err))  
+    // return request
+    //   .post('https://slack.com/api/chat.postMessage')
+    //   .set('Authorization', `Bearer ${await company.botAccessToken}`)
+    //   .send({"text": `${await JSON.stringify(data)}`, 
+    //     "channel": `${channel}`
+    //   })
+    //   .then(res => res.body)
+    //   .catch(err => console.error(err))  
   }
 }
    

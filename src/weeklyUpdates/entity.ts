@@ -14,17 +14,17 @@ export default class WeeklyUpdate extends BaseEntity {
 	@Length(4)
 	// @Length(4, { each: true })
 	@Column("text")
-	category: string;
+	category?: string;
 
 	@IsString()
 	@Length(3)
 	@Column("text", {nullable: true})
-	connectionType: string;
+	department?: string;
 
 	@IsString()
 	@Length(3)
-	@Column("boolean")
-	postponedActivity: boolean;
+	@Column("boolean", {default: false})
+	postponedActivity?: boolean;
 
 	@IsNumber()
 	@MaxLength(2)
@@ -37,11 +37,11 @@ export default class WeeklyUpdate extends BaseEntity {
 	status: string;
   
 	@ManyToOne(_ => User, user => user.id)
-  		user: User
+  	user: number
 
 	@ManyToOne(_ => Match, match => match.id)
-  		match: Match
+  	match: Match
 
 	@ManyToOne(_ => Activity, activity => activity.id)
-    activityId: number;
+    activityId?: number;
 }

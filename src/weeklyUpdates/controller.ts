@@ -1,6 +1,7 @@
-import { JsonController, Post, Body, CurrentUser, Get } from "routing-controllers";
+import { JsonController, Post, Body, CurrentUser, Get, Patch, BadRequestError } from "routing-controllers";
 import WeeklyUpdate from "./entity"
 import User from "../users/entity"
+import { getRepository } from "../../node_modules/typeorm";
 // import cron from "node-cron"
 // cron.schedule(* 15 * * 2, () => {}
 
@@ -25,19 +26,55 @@ export default class WeeklyUpdateController {
 	
 	@Post("/weeklygoals") 
 	async newWeeklyGoals(
-		@Body() data: WeeklyUpdate,
-		@CurrentUser() user: User
+		@Body() data: any,
 	) {
-		const entity = await WeeklyUpdate.create(data)
+    if(!data.user) throw new BadRequestError()
+    const update = await getRepository(WeeklyUpdate)
+      .createQueryBuilder('weeklyupdate')
+      .leftJoinAndSelect('weeklyupdate.user', 'user')
+      .where("user.slackId = :userId")
+      .setParameter('userId', data.user)
+      .getOne()
 
-		entity.category = categories[blah]
-		entity.connectionType = connectionType[rah]
-		entity.weekNumber = Math.floor(Math.random() * 52) // this WILL be the number of the current week
-		entity.status = status[neh]
-		entity.user = user 
+      if(update) {
+        return await WeeklyUpdate.merge(update, data).save()
+      } else {
+        const entity = await WeeklyUpdate.create(data)
+        return await entity
+      }
 
-		const weeklyUpdate = await entity.save()
+    //    console.log("UPDATE", await update)
 
-		return WeeklyUpdate.findOne(weeklyUpdate.id)
-	}
+		// entity.category = data.category
+    // entity.department = data.department
+    // entity.activityId = data.activityId
+    
+		// entity.weekNumber = Math.floor(Math.random() * 52) // this WILL be the number of the current week
+		// entity.status = status[neh]
+		// entity.user = user 
+
+		// const weeklyUpdate = await entity.save()
+
+    // return WeeklyUpdate.findOne(weeklyUpdate.id)
+    return "hello"
+  }
+  
+  // @Patch("/weeklygoals/whatevs") 
+	// async updateUpdate(
+	// 	@Body() changes: any
+	// ) {
+	// 	const entity = new WeeklyUpdate()
+  //   WeeklyUpdate.merge(entity, changes)
+	// 	entity.category = data.category
+  //   entity.department = data.department
+  //   entity.activityId = data.activityId
+    
+	// 	entity.weekNumber = Math.floor(Math.random() * 52) // this WILL be the number of the current week
+	// 	entity.status = status[neh]
+	// 	entity.user = user 
+
+	// 	const weeklyUpdate = await entity.save()
+
+	// 	return WeeklyUpdate.findOne(weeklyUpdate.id)
+	// }
 }
