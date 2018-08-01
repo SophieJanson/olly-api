@@ -63,20 +63,20 @@ export default class User extends BaseEntity {
   @Column("text", { nullable: true })
   email: string;
 
-  @IsString()
-  @MinLength(8)
-  @Column("text")
-  @Exclude({ toPlainOnly: true })
-  password: string;
+  // @IsString()
+  // @MinLength(8)
+  // @Column("text")
+  // @Exclude({ toPlainOnly: true })
+  // password: string;
 
-  async setPassword(rawPassword: string) {
-    const hash = await bcrypt.hash(rawPassword, 10);
-    this.password = hash;
-  }
+  // async setPassword(rawPassword: string) {
+  //   const hash = await bcrypt.hash(rawPassword, 10);
+  //   this.password = hash;
+  // }
 
-  checkPassword(rawPassword: string): Promise<boolean> {
-    return bcrypt.compare(rawPassword, this.password);
-  }
+  // checkPassword(rawPassword: string): Promise<boolean> {
+  //   return bcrypt.compare(rawPassword, this.password);
+  // }
 
   @OneToMany(_ => WeeklyUpdate, WeeklyUpdate => WeeklyUpdate.userId)
   weeklyUpdate: number[];
@@ -85,5 +85,5 @@ export default class User extends BaseEntity {
   followUps: number[];
 
   @ManyToMany(_ => Match, match => match.users)
-  matches: Match[];
+  matches: number[];
 }

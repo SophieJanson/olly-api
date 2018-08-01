@@ -27,7 +27,7 @@ export default class Match extends BaseEntity {
   @ManyToMany(_ => User, user => user.matches)
   //@Column({ type: "integer", array: true })
   @JoinTable()
-  users: number[];
+  users: User[];
 
   @OneToMany(_ => WeeklyUpdate, weeklyUpdate => weeklyUpdate.match)
   weeklyUpdate?: number[];

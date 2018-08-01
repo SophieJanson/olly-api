@@ -50,21 +50,32 @@ export default class MatchController {
       params.category
     );
     if (
-      !AlgollyResult ||
+      !AlgollyResult||
       AlgollyResult === null ||
-      typeof AlgollyResult[0] !== "undefined"
+      AlgollyResult.includes(undefined)
     )
       throw new BadRequestError();
     let newMatch = new Match();
-    const data = AlgollyResult.filter(n => typeof n === "number");
-    newMatch.users = data;
+    // const data= AlgollyResult.map(n => {
+    //   if(n) {
+    //     return n 
+    //   } else {
+    //     return 0
+    //   }
+    // });
+    const firstUser = await User.findOne(1)
+    const secondUser = await User.findOne(2)
+    if(!firstUser || !secondUser) return
+    newMatch.users = [await firstUser, await secondUser];
+    console.log("NEW MATCH", newMatch)
+    return newMatch.save()
 
-    newMatch.id = AlgollyResult;
-    //let newMatch = Match.create(AlgollyResult);
-    newMatch.department = department;
-    return (
-      Match.merge(newMatch, match).save() + Users.merge(newMatch, match).save()
-    );
+    // newMatch.id = AlgollyResult;
+    // //let newMatch = Match.create(AlgollyResult);
+    // newMatch.department = department;
+    // return (
+    //   Match.merge(newMatch, match).save() + Users.merge(newMatch, match).save()
+    // );
   }
 
   // @Authorized()
