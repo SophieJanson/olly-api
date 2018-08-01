@@ -34,6 +34,7 @@ export default class CompanyController {
   async createAuth(
     @QueryParams() params : any
   ) {
+    console.log("TROUBLESHOOT", process.env.CLIENT_ID, process.env.CLIENT_SECRET, params)
     const credentials = await request
       .get(`https://slack.com/api/oauth.access?code=${params.code}&client_id=${process.env.CLIENT_ID}&client_secret=${process.env.CLIENT_SECRET}`)
       .then(res => res.body)

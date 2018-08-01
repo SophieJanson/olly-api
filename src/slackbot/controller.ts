@@ -28,34 +28,41 @@ export default class SlackbotController {
     @HttpCode(200)
     @Body() body: any
   ) {
-    if(!body.event) return "no event"
+    if(!body.event || body.event.subtype === "bot_message") return "no event"
     const { type, user, text, channel} = body.event
     const teamId = body.team_id
-    const token = this.getTeam(teamId)
+    const company = await this.getTeam(teamId)
+
+    if(!company) {
+      return "Company not found"
+    }
     const commands = text.split(" ")
     const mainCommand = commands[0].substring(0,2) !== "<@" ? commands[0] : commands[1]
-    console.log(mainCommand, token)
     let data;
+    console.log("Command, ",mainCommand)
     switch(mainCommand) {
       case 'users':
         data = await Users.getAllUsers()
+        break;
       case 'matches':
-        data = await Matches.getMatch(1)
+        data = await Matches.getMatch(0)
+        break;
       case 'followups':
         data = await FollowUps.getFollowUps()
+        break;
       case 'activities':
         data = await Activities.getActivities()
+        break;
       default:
         data = "Request not understood, try again"
     }
-    console.log(data, token)
     return request
       .post('https://slack.com/api/chat.postMessage')
-      .set('Authorization', `Bearer ${await token}`)
-      .send({"text": `${await data}`, 
+      .set('Authorization', `Bearer ${await company.botAccessToken}`)
+      .send({"text": `${await JSON.stringify(data)}`, 
         "channel": `${channel}`
       })
-      .then(res => console.log("RES", res))
+      .then(res => res.body)
       .catch(err => console.error(err))  
   }
 }
