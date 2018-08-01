@@ -33,13 +33,13 @@ export default class MatchController {
     return Match.findOne(matchId);
   }
 
-  // @Authorized()
-  // @Post("/matches")
-  // @HttpCode(201)
-  // async createMatch(@Body() match: MatchRequest) {
-  //   const newMatch = new Match();
-  //   return Match.merge(newMatch, match).save();
-  // }
+  @Authorized()
+  @Post("/matches")
+  @HttpCode(201)
+  async createMatch(@Body() match: MatchRequest) {
+    const newMatch = new Match();
+    return Match.merge(newMatch, match).save();
+  }
 
   // @Authorized()
   // @Post("/matches")

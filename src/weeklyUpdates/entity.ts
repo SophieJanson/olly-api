@@ -20,7 +20,7 @@ export default class WeeklyUpdate extends BaseEntity {
   category: string;
 
   @Length(3)
-  @Column("text")
+  @Column("text", { nullable: true })
   department: string;
 
   @Column("boolean", { default: false })

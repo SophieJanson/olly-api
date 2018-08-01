@@ -33,8 +33,9 @@ export async function getActivity(inputActivities) {
   let resultActivity = async () => {
     return await getRepository(WeeklyUpdate)
       .createQueryBuilder("weeklyupdate")
-      .select("weeklyUpdate", "userId")
+      // .select("weeklyUpdate")
       .leftJoinAndSelect("weeklyupdate.activityId", "activity")
+      .leftJoinAndSelect("weeklyupdate.userId", "user")
       .where("activity.activityName = :inputActivities")
       .setParameter("inputActivities", inputActivities)
       .getMany();
