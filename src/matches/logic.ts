@@ -47,11 +47,17 @@ export async function algolly(inputDepartment, inputActivities, inputCategory) {
   const activityMatch = await getActivity(inputActivities);
   const categoryMatch = await getCategory(inputCategory);
   console.log(inputActivities, "inputactivity");
-  if (departmentMatch.length === 0) {
-    if (activityMatch.length === 0) {
-      if (categoryMatch.length === 0) {
-        return "no match";
-      } else return Object.values(categoryMatch).map(catMatch => catMatch.id)
-    } else return Object.values(activityMatch).map(actMatch =>actMatch.id)
+  if (!departmentMatch || departmentMatch.length === 0) {
+    if (!activityMatch || activityMatch.length === 0) {
+      if (!categoryMatch || categoryMatch.length === 0) {
+        return null;
+      } else
+        return categoryMatch.map(
+          catMatch => catMatch.id && catMatch.id
+        );
+    } else
+      return Object.values(activityMatch).map(
+        actMatch => actMatch.id && actMatch.id
+      );
   } else return departmentMatch.map(depMatch => depMatch.id);
 }

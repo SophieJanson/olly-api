@@ -5,7 +5,12 @@ import {
   Authorized,
   Post,
   HttpCode,
-  Body
+  Body,
+  QueryParam,
+  QueryParams,
+  Params,
+  CurrentUser,
+  BadRequestError
 } from "routing-controllers";
 import Match from "./entity";
 import User from "../users/entity";
@@ -31,12 +36,46 @@ export default class MatchController {
     return Match.findOne(matchId);
   }
 
-  @Authorized()
+  //@Authorized()
   @Post("/matches")
   @HttpCode(201)
-  async createMatch(@Body() match: MatchRequest) {
-    const newMatch = new Match();
-    return Match.merge(newMatch, match).save();
+  async createMatch(
+    @Body() match: MatchRequest,
+    @QueryParams() params: any,
+    @CurrentUser() user: User
+  ) {
+    const AlgollyResult = await algolly(
+      params.department,
+      params.activity,
+      params.category
+    );
+    if (
+      !AlgollyResult||
+      AlgollyResult === null ||
+      AlgollyResult.includes(undefined)
+    )
+      throw new BadRequestError();
+    let newMatch = new Match();
+    // const data= AlgollyResult.map(n => {
+    //   if(n) {
+    //     return n 
+    //   } else {
+    //     return 0
+    //   }
+    // });
+    const firstUser = await User.findOne(1)
+    const secondUser = await User.findOne(2)
+    if(!firstUser || !secondUser) return
+    newMatch.users = [await firstUser, await secondUser];
+    console.log("NEW MATCH", newMatch)
+    return newMatch.save()
+
+    // newMatch.id = AlgollyResult;
+    // //let newMatch = Match.create(AlgollyResult);
+    // newMatch.department = department;
+    // return (
+    //   Match.merge(newMatch, match).save() + Users.merge(newMatch, match).save()
+    // );
   }
 
   // @Authorized()
@@ -85,6 +124,7 @@ export default class MatchController {
 
   async getalgollyNow() {
     return await algolly("develssment", "tnis", "socialize");
+    // return await algolly(params.department, params.activity, params.category);
   }
 
   

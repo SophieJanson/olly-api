@@ -9,9 +9,9 @@ export default class UserController {
 	async signup(
     @Body() data: User
   ) {
-		const { password, ...rest } = data;
-		const entity = User.create(rest);
-		await entity.setPassword(password);
+		// const { password, ...rest } = data;
+		const entity = User.create(data);
+		// await entity.setPassword(password);
 
 		const user = await entity.save();
 
