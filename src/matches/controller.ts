@@ -33,13 +33,13 @@ export default class MatchController {
     return Match.findOne(matchId);
   }
 
-  // @Authorized()
-  // @Post("/matches")
-  // @HttpCode(201)
-  // async createMatch(@Body() match: MatchRequest) {
-  //   const newMatch = new Match();
-  //   return Match.merge(newMatch, match).save();
-  // }
+  @Authorized()
+  @Post("/matches")
+  @HttpCode(201)
+  async createMatch(@Body() match: MatchRequest) {
+    const newMatch = new Match();
+    return Match.merge(newMatch, match).save();
+  }
 
   // @Authorized()
   // @Post("/matches")
@@ -84,15 +84,9 @@ export default class MatchController {
 
   @Get("/logic/algolly")
   @HttpCode(200)
-  async getalgollyNow(@QueryParams() params: any) {
+  async getalgollyNow() {
     return await algolly("develment", "tennis", "soclize");
   }
 
-  // @Post("/logic/algolly")
-  // @HttpCode(200)
-  // async getalgollyNow(
-  //   @QueryParams() params: any
-  // ) {
-  //   return await algolly(params.department, params.activity, params.category);
-  // }
+  
 }

@@ -17,7 +17,6 @@ export async function getCategory(inputCategory) {
 
 export async function getDepartment(inputDepartment) {
   let resultDepartment = async () => {
-    //  console.log(cat, "cat 1");
     return await User.find({
       select: ["department", "id", "firstName", "lastName"],
       relations: ["weeklyUpdate"],
