@@ -6,21 +6,11 @@ import {
   Post,
   HttpCode,
   Body,
-  QueryParam,
-  QueryParams,
-  Params,
-  CurrentUser,
-  BadRequestError
+  QueryParams
 } from "routing-controllers";
 import Match from "./entity";
 import User from "../users/entity";
 import { algolly, getCategory, getActivity, getDepartment } from "./logic";
-import WeeklyUpdate from "../weeklyUpdates/entity";
-//import WeeklyUpdate from "../weeklyUpdates/entity";
-
-// import { getConnection } from "../../node_modules/typeorm";
-// import Activity from "../activities/entity";
-// import { ConnectionManager } from "../../node_modules/typeorm";
 
 interface MatchRequest {
   users: User[];
@@ -37,32 +27,12 @@ export default class MatchController {
     return Match.findOne(matchId);
   }
 
-  //@Authorized()
+  @Authorized()
   @Post("/matches")
   @HttpCode(201)
-  async createMatch(
-    @Body() match: MatchRequest,
-    @QueryParams() params: any,
-    @CurrentUser() user: User
-  ) {
-    const AlgollyResult = await algolly(
-      params.department,
-      params.activity,
-      params.category
-    );
-    if (!AlgollyResult || AlgollyResult === null) throw new BadRequestError();
-
-    let newMatch = new Match();
-
-    if (!newMatch || newMatch === null)
-      throw new BadRequestError("newMatch is a number!");
-    newMatch.users = AlgollyResult; //cant seem to fix this typeError
-
-    // const weeklyUpdateMatch = await WeeklyUpdate.update({
-    //   newMatch.users
-    // }).save();
-
-    return newMatch.save();
+  async createMatch(@Body() match: MatchRequest) {
+    const newMatch = new Match();
+    return Match.merge(newMatch, match).save();
   }
 
   @Get("/logic/categories")
@@ -75,21 +45,20 @@ export default class MatchController {
   @Get("/logic/activities")
   @HttpCode(200)
   async getActivityNow() {
-    //  await console.log(getActivity("activities"));
     return await getActivity("tennis");
   }
 
   @Get("/logic/departments")
   @HttpCode(200)
   async getDepartmentNow() {
-    // await console.log(getDepartment("hi department"));
     return await getDepartment("development");
   }
 
   @Get("/logic/algolly")
   @HttpCode(200)
-  async getalgollyNow() {
-    return await algolly("develssment", "tnis", "socialize");
-    // return await algolly(params.department, params.activity, params.category);
+  async getalgollyNow(
+    @QueryParams() params: any
+  ) {
+    return await algolly(params.department, params.activity, params.category);
   }
 }

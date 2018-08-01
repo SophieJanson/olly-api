@@ -15,6 +15,9 @@ export default class FollowUp extends BaseEntity {
 	@PrimaryGeneratedColumn() 
 	id?: number;
 
+	@Column("text", {default: "pending"})
+	status: string;
+
 	@Column("integer")
 	rating: number
 	

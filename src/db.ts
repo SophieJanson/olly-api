@@ -7,6 +7,7 @@ import Activity from "./activities/entity";
 import Match from "./matches/entity";
 import WeeklyUpdate from "./weeklyUpdates/entity";
 import FollowUp from "./followups/entity";
+import Company from "./companies/entity";
 
 class CustomNamingStrategy extends DefaultNamingStrategy
   implements NamingStrategyInterface {
@@ -39,7 +40,7 @@ export default () =>
     url:
       process.env.DATABASE_URL ||
       "postgres://postgres:secret@localhost:5432/postgres",
-    entities: [WeeklyUpdate, Match, Activity, User, FollowUp],
+    entities: [WeeklyUpdate, Match, Activity, User, FollowUp, Company],
     synchronize: true,
     logging: true,
     namingStrategy: new CustomNamingStrategy()
