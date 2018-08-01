@@ -13,7 +13,7 @@ export default class WeeklyUpdate extends BaseEntity {
 	@IsString()
 	@Length(4)
 	// @Length(4, { each: true })
-	@Column("text")
+	@Column("text", {nullable: true})
 	category?: string;
 
 	@IsString()
@@ -33,7 +33,7 @@ export default class WeeklyUpdate extends BaseEntity {
 
 	@IsString()
 	@Length(2)
-	@Column("text")
+	@Column("text", {default: "pending"})
 	status: string;
   
 	@ManyToOne(_ => User, user => user.id)

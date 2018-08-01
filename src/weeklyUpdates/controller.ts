@@ -1,10 +1,11 @@
-import { JsonController, Post, Body, CurrentUser, Get, Patch, BadRequestError } from "routing-controllers";
+import { JsonController, Post, Body, CurrentUser, Get, Patch, BadRequestError, NotFoundError } from "routing-controllers";
 import WeeklyUpdate from "./entity"
 import User from "../users/entity"
 import { getRepository } from "../../node_modules/typeorm";
+import * as moment from 'moment'
 // import cron from "node-cron"
 // cron.schedule(* 15 * * 2, () => {}
-
+moment().format()
 const categories = ["socialize", "network", "learn", "teach"]
 const blah = Math.floor(Math.random() * categories.length)   
 console.log(categories[blah])              
@@ -28,34 +29,31 @@ export default class WeeklyUpdateController {
 	async newWeeklyGoals(
 		@Body() data: any,
 	) {
-    if(!data.user) throw new BadRequestError()
+		if(!data.user) throw new BadRequestError()
+		const userId = await User.findOne({slackId: data.user})
+		if(!userId || !userId.id) throw new NotFoundError
+		const week = moment().isoWeek()
+		console.log("DAAAAAAAAAAAAATA", data)
     const update = await getRepository(WeeklyUpdate)
       .createQueryBuilder('weeklyupdate')
-      .leftJoinAndSelect('weeklyupdate.user', 'user')
-      .where("user.slackId = :userId")
-      .setParameter('userId', data.user)
-      .getOne()
+      .where("user_id = :id")
+      .setParameter('id', userId.id)
+			.getOne()
 
-      if(update) {
-        return await WeeklyUpdate.merge(update, data).save()
-      } else {
-        const entity = await WeeklyUpdate.create(data)
-        return await entity
-      }
-
-    //    console.log("UPDATE", await update)
-
-		// entity.category = data.category
-    // entity.department = data.department
-    // entity.activityId = data.activityId
-    
-		// entity.weekNumber = Math.floor(Math.random() * 52) // this WILL be the number of the current week
-		// entity.status = status[neh]
-		// entity.user = user 
-
-		// const weeklyUpdate = await entity.save()
-
-    // return WeeklyUpdate.findOne(weeklyUpdate.id)
+			if(!update || typeof update === "undefined") {
+				const entity = new WeeklyUpdate()
+				entity.user = userId.id
+				data.activity ? entity.activityId = data.activity[0] : null
+				data.category ? entity.category = data.category[0] : null
+				data.department ? entity.department = data.department[0] : null
+				entity.weekNumber = week
+				return entity.save()
+			} else {
+				data.activity ? update.activityId = data.activity[0] : null
+				data.category ? update.category = data.category[0] : null
+				data.department ? update.department = data.department[0] : null
+				return update.save()
+			}
     return "hello"
   }
   

@@ -30,15 +30,22 @@ export default class SlackbotController {
     @Body() body: any
   ) {
     const data = body.payload
-    console.log(data)
-    //if(!data.actions) return "Something went wrong. Please try again."
+    console.log("DDAAAAAATTTTTTTTAAAAAAAA", data)
+    if(JSON.parse(data).callback_id === "weekly_update") {
+
+    }
     const userId = JSON.parse(data).user.id
-    const weeklyUpdate = await WeeklyUpdates.newWeeklyGoals({
-      user: userId,
-      [JSON.parse(data)['actions'][0].name]: [JSON.parse(data)['actions'][0]['selected_options'][0].value]
-    })
+    try {
+      const weeklyUpdate = await WeeklyUpdates.newWeeklyGoals({
+        user: userId,
+        [JSON.parse(data)['actions'][0].name]: [JSON.parse(data)['actions'][0]['selected_options'][0].value]
+      })
+      console.log("UPDATE ", await weeklyUpdate)
+    } catch(e) {
+      console.error(e)
+    } 
     console.log("BOOOOOODY", JSON.parse(data)['actions'][0])
-    return weeklyUpdate || ""
+    return JSON.parse(data)['actions'][0].value === "submit" ? "Thank you for your input. We will be in touch!" : ""
   }
 
   @Post("/")
