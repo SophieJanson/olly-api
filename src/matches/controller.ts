@@ -5,9 +5,7 @@ import {
   Authorized,
   Post,
   HttpCode,
-  Body,
-  QueryParam,
-  QueryParams
+  Body
 } from "routing-controllers";
 import Match from "./entity";
 import User from "../users/entity";
@@ -84,8 +82,9 @@ export default class MatchController {
 
   @Get("/logic/algolly")
   @HttpCode(200)
+
   async getalgollyNow() {
-    return await algolly("develment", "tennis", "soclize");
+    return await algolly("develssment", "tnis", "socialize");
   }
 
   
