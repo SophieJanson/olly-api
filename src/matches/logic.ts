@@ -53,11 +53,9 @@ export async function algolly(inputDepartment, inputActivities, inputCategory) {
         return null;
       } else
         return categoryMatch.map(
-          catMatch => catMatch.id && catMatch.id
+          catMatch => catMatch.userId && catMatch.userId
         );
     } else
-      return Object.values(activityMatch).map(
-        actMatch => actMatch.id && actMatch.id
-      );
-  } else return departmentMatch.map(depMatch => depMatch.id);
+      return activityMatch.map(actMatch => actMatch.userId && actMatch.userId);
+  } else return departmentMatch;
 }

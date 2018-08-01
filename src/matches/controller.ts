@@ -49,26 +49,24 @@ export default class MatchController {
       params.activity,
       params.category
     );
-    if (
-      !AlgollyResult||
-      AlgollyResult === null ||
-      AlgollyResult.includes(undefined)
-    )
-      throw new BadRequestError();
+    if (!AlgollyResult || AlgollyResult === null) throw new BadRequestError();
     let newMatch = new Match();
+    console.log("NEW MATCH TAsos", newMatch);
     // const data= AlgollyResult.map(n => {
     //   if(n) {
-    //     return n 
+    //     return n
     //   } else {
     //     return 0
     //   }
     // });
-    const firstUser = await User.findOne(1)
-    const secondUser = await User.findOne(2)
-    if(!firstUser || !secondUser) return
-    newMatch.users = [await firstUser, await secondUser];
-    console.log("NEW MATCH", newMatch)
-    return newMatch.save()
+    // const firstUser = await User.findOne(1);
+    // const secondUser = await User.findOne(2);
+    // if (!firstUser || !secondUser) return;
+    if (!newMatch || newMatch === null)
+      throw new BadRequestError("newMatch is a number!");
+    newMatch.users = AlgollyResult;
+    console.log("NEW MATCH Rianne", newMatch);
+    return newMatch.save();
 
     // newMatch.id = AlgollyResult;
     // //let newMatch = Match.create(AlgollyResult);
@@ -121,11 +119,8 @@ export default class MatchController {
 
   @Get("/logic/algolly")
   @HttpCode(200)
-
   async getalgollyNow() {
     return await algolly("develssment", "tnis", "socialize");
     // return await algolly(params.department, params.activity, params.category);
   }
-
-  
 }
