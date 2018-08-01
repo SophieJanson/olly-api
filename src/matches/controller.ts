@@ -11,11 +11,6 @@ import {
 import Match from "./entity";
 import User from "../users/entity";
 import { algolly, getCategory, getActivity, getDepartment } from "./logic";
-//import WeeklyUpdate from "../weeklyUpdates/entity";
-
-// import { getConnection } from "../../node_modules/typeorm";
-// import Activity from "../activities/entity";
-// import { ConnectionManager } from "../../node_modules/typeorm";
 
 interface MatchRequest {
   users: User[];
@@ -39,13 +34,6 @@ export default class MatchController {
     const newMatch = new Match();
     return Match.merge(newMatch, match).save();
   }
-
-  // @Get("/logic")
-  // @HttpCode(200)
-  // async getLogic() {
-  //   await console.log("logic");
-  //   return await logWeekly();
-  // }
 
   @Get("/logic/categories")
   @HttpCode(200)

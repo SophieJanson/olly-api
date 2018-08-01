@@ -7,7 +7,7 @@ import {
   ManyToMany,
   ManyToOne
 } from "typeorm";
-import { Exclude } from "class-transformer";
+//import { Exclude } from "class-transformer";
 import {
   MinLength,
   IsString,
@@ -15,11 +15,11 @@ import {
   IsArray,
   IsOptional
 } from "class-validator";
-import * as bcrypt from "bcrypt";
+//import * as bcrypt from "bcrypt";
 import WeeklyUpdate from "../weeklyUpdates/entity";
 import Match from "../matches/entity";
 import FollowUp from "../followups/entity";
-import Company from "../companies/entity";
+//import Company from "../companies/entity";
 
 @Entity()
 export default class User extends BaseEntity {
@@ -53,6 +53,10 @@ export default class User extends BaseEntity {
   @Column("text", { nullable: true })
   funFact?: string;
 
+  @IsString()
+  @Column("text", { nullable: true })
+  slackId?: string;
+
   @IsOptional()
   @IsArray()
   @Column("text", { nullable: true })
@@ -67,34 +71,27 @@ export default class User extends BaseEntity {
   // @Column("text", { nullable: true })
   // email?: string;
 
-  @IsString()
-  @Column('text', {nullable: true})
-  slackId: string;
-
-  @ManyToOne(_ => Company, company => company.users, {eager: true})
-  company: string;
-
   // @IsString()
   // @MinLength(8)
-  // @Column("text", {nullable: true})
-  // @Exclude({ toPlainOnly: true})
-  // password?: string;
+  // @Column("text")
+  // @Exclude({ toPlainOnly: true })
+  // password: string;
 
   // async setPassword(rawPassword: string) {
   //   const hash = await bcrypt.hash(rawPassword, 10);
   //   this.password = hash;
   // }
 
-  // checkPassword(rawPassword: string) {
-  //   return this.password ? bcrypt.compare(rawPassword, this.password): null;
+  // checkPassword(rawPassword: string): Promise<boolean> {
+  //   return bcrypt.compare(rawPassword, this.password);
   // }
 
-  @OneToMany(_ => WeeklyUpdate, WeeklyUpdate => WeeklyUpdate.user)
+  @OneToMany(_ => WeeklyUpdate, WeeklyUpdate => WeeklyUpdate.userId)
   weeklyUpdate: number[];
 
   @OneToMany(_ => FollowUp, followUp => followUp.user)
   followUps: number[];
 
   @ManyToMany(_ => Match, match => match.users)
-  matches: Match[];
+  matches: number[];
 }

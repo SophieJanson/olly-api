@@ -14,7 +14,6 @@ const class_validator_1 = require("class-validator");
 const entity_1 = require("../weeklyUpdates/entity");
 const entity_2 = require("../matches/entity");
 const entity_3 = require("../followups/entity");
-const entity_4 = require("../companies/entity");
 let User = class User extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -40,6 +39,11 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "funFact", void 0);
 __decorate([
+    class_validator_1.IsString(),
+    typeorm_1.Column("text", { nullable: true }),
+    __metadata("design:type", String)
+], User.prototype, "slackId", void 0);
+__decorate([
     class_validator_1.IsOptional(),
     class_validator_1.IsArray(),
     typeorm_1.Column("text", { nullable: true }),
@@ -52,16 +56,7 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "skills", void 0);
 __decorate([
-    class_validator_1.IsString(),
-    typeorm_1.Column('text', { nullable: true }),
-    __metadata("design:type", String)
-], User.prototype, "slackId", void 0);
-__decorate([
-    typeorm_1.ManyToOne(_ => entity_4.default, company => company.users, { eager: true }),
-    __metadata("design:type", String)
-], User.prototype, "company", void 0);
-__decorate([
-    typeorm_1.OneToMany(_ => entity_1.default, WeeklyUpdate => WeeklyUpdate.user),
+    typeorm_1.OneToMany(_ => entity_1.default, WeeklyUpdate => WeeklyUpdate.userId),
     __metadata("design:type", Array)
 ], User.prototype, "weeklyUpdate", void 0);
 __decorate([

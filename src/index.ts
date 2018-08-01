@@ -5,9 +5,17 @@ import setupDb from "./db";
 import * as Koa from "koa";
 import { verify } from "./jwt";
 import UserController from "./users/controller";
+<<<<<<< HEAD
 import SlackbotController from "./slackbot/controller"
 import CompanyController from "./companies/controller";
 require('dotenv').config()
+=======
+import LoginController from "./logins/controller";
+import WeeklyUpdateController from "./weeklyUpdates/controller";
+import MatchController from "./matches/controller";
+import ActivityController from "./activities/controller";
+import FollowUpController from "./followups/controller";
+>>>>>>> develop
 
 const app = new Koa();
 const port = process.env.PORT || 4000;

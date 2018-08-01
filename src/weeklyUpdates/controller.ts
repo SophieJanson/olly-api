@@ -8,7 +8,6 @@ import * as moment from 'moment'
 moment().format()
 const categories = ["socialize", "network", "learn", "teach"]
 const blah = Math.floor(Math.random() * categories.length)   
-console.log(categories[blah])              
 const connectionType = ["a team", "a randomPerson", "a group"]
 const rah = Math.floor(Math.random() * connectionType.length)
 console.log(connectionType[rah])      
@@ -19,7 +18,7 @@ console.log(status[neh])
 @JsonController()
 export default class WeeklyUpdateController {
 	
-	@Get("/weeklygoals")
+	//@Get("/weeklygoals")
 	// get weeklygoals should send a slack message to the user
 	// after choosing among options and submitting, the user will send the post request
 	// match and activity should be offered to the user as options in Slack
@@ -30,7 +29,7 @@ export default class WeeklyUpdateController {
 		@Body() data: any,
 	) {
 		if(!data.user) throw new BadRequestError()
-		const userId = await User.findOne({slackId: data.user})
+		const userId = await User.findOne({slack_id: data.user})
 		if(!userId || !userId.id) throw new NotFoundError
 		const week = moment().isoWeek()
 		console.log("DAAAAAAAAAAAAATA", data)
@@ -42,7 +41,7 @@ export default class WeeklyUpdateController {
 
 			if(!update || typeof update === "undefined") {
 				const entity = new WeeklyUpdate()
-				entity.user = userId.id
+				entity.userId = userId.id
 				data.activity ? entity.activityId = data.activity[0] : null
 				data.category ? entity.category = data.category[0] : null
 				data.department ? entity.department = data.department[0] : null
