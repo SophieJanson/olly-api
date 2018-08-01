@@ -7,7 +7,10 @@ import {
   HttpCode,
   Body,
   QueryParam,
-  QueryParams
+  QueryParams,
+  Params,
+  CurrentUser,
+  BadRequestError
 } from "routing-controllers";
 import Match from "./entity";
 import User from "../users/entity";
@@ -33,12 +36,35 @@ export default class MatchController {
     return Match.findOne(matchId);
   }
 
-  @Authorized()
+  //@Authorized()
   @Post("/matches")
   @HttpCode(201)
-  async createMatch(@Body() match: MatchRequest) {
-    const newMatch = new Match();
-    return Match.merge(newMatch, match).save();
+  async createMatch(
+    @Body() match: MatchRequest,
+    @QueryParams() params: any,
+    @CurrentUser() user: User
+  ) {
+    const AlgollyResult = await algolly(
+      params.department,
+      params.activity,
+      params.category
+    );
+    if (
+      !AlgollyResult ||
+      AlgollyResult === null ||
+      typeof AlgollyResult[0] !== "undefined"
+    )
+      throw new BadRequestError();
+    let newMatch = new Match();
+    const data = AlgollyResult.filter(n => typeof n === "number");
+    newMatch.users = data;
+
+    newMatch.id = AlgollyResult;
+    //let newMatch = Match.create(AlgollyResult);
+    newMatch.department = department;
+    return (
+      Match.merge(newMatch, match).save() + Users.merge(newMatch, match).save()
+    );
   }
 
   // @Authorized()
@@ -86,6 +112,7 @@ export default class MatchController {
   @HttpCode(200)
   async getalgollyNow(@QueryParams() params: any) {
     return await algolly("develssment", "tnis", "socialize");
+    // return await algolly(params.department, params.activity, params.category);
   }
 
   // @Post("/logic/algolly")
