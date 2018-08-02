@@ -1,19 +1,10 @@
-import { JsonController, Post, Body, CurrentUser, Get, Patch, BadRequestError, NotFoundError } from "routing-controllers";
+import { JsonController, Post, Body, BadRequestError, NotFoundError } from "routing-controllers";
 import WeeklyUpdate from "./entity"
 import User from "../users/entity"
 import { getRepository } from "../../node_modules/typeorm";
 import * as moment from 'moment'
-// import cron from "node-cron"
-// cron.schedule(* 15 * * 2, () => {}
-moment().format()
-const categories = ["socialize", "network", "learn", "teach"]
-const blah = Math.floor(Math.random() * categories.length)   
-const connectionType = ["a team", "a randomPerson", "a group"]
-const rah = Math.floor(Math.random() * connectionType.length)
-console.log(connectionType[rah])      
-const status = ["pending", "matched"]
-const neh = Math.floor(Math.random() * connectionType.length)
-console.log(status[neh])      
+
+moment().format()    
 
 @JsonController()
 export default class WeeklyUpdateController {
@@ -28,11 +19,10 @@ export default class WeeklyUpdateController {
 	async newWeeklyGoals(
 		@Body() data: any,
 	) {
-		if(!data.user) throw new BadRequestError()
-		const userId = await User.findOne({slack_id: data.user})
+		if(!data.user) throw new BadRequestError('test')
+		const userId = await User.findOne({slackId: data.user})
 		if(!userId || !userId.id) throw new NotFoundError
 		const week = moment().isoWeek()
-		console.log("DAAAAAAAAAAAAATA", data)
     const update = await getRepository(WeeklyUpdate)
       .createQueryBuilder('weeklyupdate')
       .where("user_id = :id")
@@ -41,7 +31,7 @@ export default class WeeklyUpdateController {
 
 			if(!update || typeof update === "undefined") {
 				const entity = new WeeklyUpdate()
-				entity.userId = userId.id
+				entity.userId = userId
 				data.activity ? entity.activityId = data.activity[0] : null
 				data.category ? entity.category = data.category[0] : null
 				data.department ? entity.department = data.department[0] : null

@@ -18,7 +18,7 @@ export async function getCategory(inputCategory) {
 export async function getDepartment(inputDepartment) {
   let resultDepartment = async () => {
     return await User.find({
-      select: ["department", "id", "firstName", "lastName"],
+      //select: ["department", "id", "firstName", "lastName"],
       relations: ["weeklyUpdate"],
       where: {
         department: inputDepartment
@@ -51,9 +51,8 @@ export async function algolly(inputDepartment, inputActivities, inputCategory) {
       if (!categoryMatch || categoryMatch.length === 0) {
         return null;
       } else
-        return categoryMatch.map(
-          catMatch => catMatch.userId && catMatch.userId
-        );
+        return categoryMatch
+        .map(catMatch => catMatch.userId);
     } else
       return activityMatch.map(actMatch => actMatch.userId && actMatch.userId);
   } else return departmentMatch;

@@ -42,7 +42,7 @@ export default class CompanyController {
     console.log(await credentials)
 
     const newCompany = new Company()
-    const apiKey = await newCompany.setApiKey()
+    await newCompany.setApiKey()
     newCompany.name = credentials.team_name
     newCompany.teamId = credentials.team_id
     newCompany.teamAccessToken = credentials.access_token

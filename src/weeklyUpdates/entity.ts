@@ -34,7 +34,7 @@ export default class WeeklyUpdate extends BaseEntity {
   status?: string;
 
   @ManyToOne(_ => User, user => user.id)
-  userId: number;
+  userId: User;
 
   @ManyToOne(_ => Match, match => match.id)
   match: Match;
