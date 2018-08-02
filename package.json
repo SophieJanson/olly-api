@@ -5,9 +5,11 @@
   "private": true,
   "scripts": {
     "start": "nodemon .",
+    "build": "tsc",
     "test": "node_modules/.bin/mocha --require ts-node/register src/**/*.spec.ts",
     "watch": "node_modules/.bin/tsc -w",
-    "compile": "node_modules/.bin/tsc -p ."
+    "compile": "node_modules/.bin/tsc -p .",
+    "postinstall": "yarn tsc"
   },
   "dependencies": {
     "@types/bcrypt": "^2.0.0",
