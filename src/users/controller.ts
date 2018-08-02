@@ -1,46 +1,54 @@
-import { JsonController, Post, Body, Param, Get, NotFoundError, Put, HttpCode } from "routing-controllers";
+
+import { Param, NotFoundError } from "routing-controllers";
 import User from "./entity";
 
-@JsonController()
-export default class UsersController {
-  
-  @Post('/users')
-  @HttpCode(201)
-  async createUser(
-    @Body() user: User
-  ) {
-    const { password, ...rest } = user
-    const entity = User.create(rest)
-    await entity.setPassword(password)
-    return entity.save()
-  }
-  
-  // @Get('/users/:userId/stats')
-  // async getStats(
-  //   @Body() user: User
-  // ) {
-  //   const user = await User.findOne(user)
-  //   return user
-  // }
+// @JsonController()
+export default class UserController {
+	async signup(userData: any) {
+    console.log("DATA", userData)
+		const entity = await User.create(userData);
+		const user = await entity.save();
+		return await user;
+	}a
+		
+	// @Patch("/users/:userid/")
+	// 	@HttpCode(200)
+		async updateUserInterest(
+			userId: User,
+			interests: string,
+			funFact: string,
+			department: string,
+			role: string,
+		) {	
+			const user = await User.findOne(userId)
+			
+			if (!user) throw new NotFoundError("There's no user with the given ID, man! #CYBYWY")
+			if ( !interests && !funFact && !department && !role ) {
+				throw new NotFoundError("Nothing to update here, bro!")
+			}
 
+			interests ? user.interests = interests.split(",") : user.interests
+			funFact ? user.funFact = funFact : user.funFact
+			department ? user.department = department : user.department
+			role ? user.role = role : user.role
 
-  @Get('/users/:userId')
+			let updatedUser = await user.save()
+			return updatedUser
+		}
+
+	
+  // @Get('/users/:userId')
   async getUser(
+    userSlackId: number,
     @Param('userId') userId: number
   ) {
-    const user = await User.findOne(userId)
+    const user = await User.findOne((userId || userSlackId))
     return user
   }
 
-  //maybe we are not using it
-
   // @Get('/users')
-  // async allUsers() {
-  //   const users = await User.find()
-  //   return { users }
-  // }
-
-  
- 
-
+  async getAllUsers() {
+    const users = await User.find()
+    return { users }
+  }
 }

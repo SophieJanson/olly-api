@@ -10,71 +10,53 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
-const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
-const bcrypt = require("bcrypt");
 const entity_1 = require("../weeklyUpdates/entity");
 const entity_2 = require("../matches/entity");
 const entity_3 = require("../followups/entity");
 let User = class User extends typeorm_1.BaseEntity {
-    async setPassword(rawPassword) {
-        const hash = await bcrypt.hash(rawPassword, 10);
-        this.password = hash;
-    }
-    checkPassword(rawPassword) {
-        return bcrypt.compare(rawPassword, this.password);
-    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn(),
     __metadata("design:type", Number)
 ], User.prototype, "id", void 0);
 __decorate([
-    class_validator_1.IsString(),
-    class_validator_1.MinLength(2),
-    typeorm_1.Column("text", { nullable: true }),
-    __metadata("design:type", String)
-], User.prototype, "firstName", void 0);
-__decorate([
-    class_validator_1.IsString(),
-    class_validator_1.MinLength(2),
-    typeorm_1.Column("text", { nullable: true }),
-    __metadata("design:type", String)
-], User.prototype, "lastName", void 0);
-__decorate([
+    class_validator_1.IsOptional(),
     class_validator_1.IsString(),
     typeorm_1.Column("text", { nullable: true }),
     __metadata("design:type", String)
 ], User.prototype, "department", void 0);
 __decorate([
+    class_validator_1.IsOptional(),
     class_validator_1.IsString(),
     typeorm_1.Column("text", { nullable: true }),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
 __decorate([
+    class_validator_1.IsOptional(),
     class_validator_1.IsString(),
     typeorm_1.Column("text", { nullable: true }),
     __metadata("design:type", String)
-], User.prototype, "funFacts", void 0);
+], User.prototype, "funFact", void 0);
 __decorate([
     class_validator_1.IsString(),
     typeorm_1.Column("text", { nullable: true }),
     __metadata("design:type", String)
+], User.prototype, "slackId", void 0);
+__decorate([
+    class_validator_1.IsOptional(),
+    class_validator_1.IsArray(),
+    typeorm_1.Column("text", { nullable: true }),
+    __metadata("design:type", Array)
 ], User.prototype, "interests", void 0);
 __decorate([
-    class_validator_1.IsEmail(),
+    class_validator_1.IsOptional(),
+    class_validator_1.IsArray(),
     typeorm_1.Column("text", { nullable: true }),
-    __metadata("design:type", String)
-], User.prototype, "email", void 0);
+    __metadata("design:type", Array)
+], User.prototype, "skills", void 0);
 __decorate([
-    class_validator_1.IsString(),
-    class_validator_1.MinLength(8),
-    typeorm_1.Column("text"),
-    class_transformer_1.Exclude({ toPlainOnly: true }),
-    __metadata("design:type", String)
-], User.prototype, "password", void 0);
-__decorate([
-    typeorm_1.OneToMany(_ => entity_1.default, WeeklyUpdate => WeeklyUpdate.user),
+    typeorm_1.OneToMany(_ => entity_1.default, WeeklyUpdate => WeeklyUpdate.userId),
     __metadata("design:type", Array)
 ], User.prototype, "weeklyUpdate", void 0);
 __decorate([
@@ -82,8 +64,7 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "followUps", void 0);
 __decorate([
-    typeorm_1.ManyToMany(_ => entity_2.default),
-    typeorm_1.JoinTable(),
+    typeorm_1.ManyToMany(_ => entity_2.default, match => match.users),
     __metadata("design:type", Array)
 ], User.prototype, "matches", void 0);
 User = __decorate([

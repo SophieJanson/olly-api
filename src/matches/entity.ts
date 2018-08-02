@@ -2,36 +2,35 @@ import {
   BaseEntity,
   Entity,
   PrimaryGeneratedColumn,
-  Column,
   ManyToMany,
-  OneToMany
+  OneToMany,
+  JoinTable
 } from "typeorm";
-import User from "./entity";
-import WeeklyUpdate from "../weeklyUpdates/entity"
-import FollowUp from "../followups/entity"
+import User from "../users/entity";
+import WeeklyUpdate from "../weeklyUpdates/entity";
+import FollowUp from "../followups/entity";
 
 @Entity()
 export default class Match extends BaseEntity {
-  
-	@PrimaryGeneratedColumn() 
-	id?: number;
+  @PrimaryGeneratedColumn() id?: number;
 
-	@Column("text") 
-	categories: string[];
+  // @Column("text", { nullable: true })
+  // categories: string[];
 
-	@Column("text") 
-	activities: string[];
+  // @Column("text", { nullable: true })
+  // activities: string[];
 
-	@Column("text") 
-	status: string;
-	
-	@ManyToMany(_ => User, user => user.id)
-	@Column({type: 'integer', array: true})
-	users: number[];
+  // @Column("text", { nullable: true })
+  // status: string;
 
-	@OneToMany(_ => WeeklyUpdate, weeklyUpdate => weeklyUpdate.match) 
-  	weeklyUpdate: number[]
+  @ManyToMany(_ => User, user => user.matches)
+  //@Column({ type: "integer", array: true })
+  @JoinTable()
+  users: User[];
 
-	@OneToMany(_ => FollowUp, followUp => followUp.match) 
-  		followUps: number[]
+  @OneToMany(_ => WeeklyUpdate, weeklyUpdate => weeklyUpdate.match)
+  weeklyUpdate?: number[];
+
+  @OneToMany(_ => FollowUp, followUp => followUp.match)
+  followUps: number[];
 }
