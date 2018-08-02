@@ -77,5 +77,6 @@ export default class SlackbotController {
       default:
         data = "Request not understood, try again"
     }
+    console.log(data)
   }
 }
