@@ -1,23 +1,16 @@
 import {
-  JsonController, 
+  JsonController,
   Get,
   Param,
   Authorized,
   Post,
   HttpCode,
-  Body,
-  QueryParams
+  QueryParams,
+  BadRequestError,
+  NotFoundError
 } from "routing-controllers";
 import Match from "./entity";
-import User from "../users/entity";
 import { algolly, getCategory, getActivity, getDepartment } from "./logic";
-
-interface MatchRequest {
-  users: User[];
-  activities: string[];
-  categories: string[];
-  status: string;
-}
 
 @JsonController()
 export default class MatchController {
@@ -27,12 +20,25 @@ export default class MatchController {
     return Match.findOne(matchId);
   }
 
-  @Authorized()
   @Post("/matches")
   @HttpCode(201)
-  async createMatch(@Body() match: MatchRequest) {
-    const newMatch = new Match();
-    return Match.merge(newMatch, match).save();
+  async createMatch(
+    @QueryParams() params: any,
+  ) {
+    const AlgollyResult = await algolly(
+      params.department,
+      params.activity,
+      params.category
+    );
+    if (!AlgollyResult || AlgollyResult === null) return "No matches available"
+
+    let newMatch = new Match();
+
+    if (!newMatch || newMatch === null) {
+      throw new BadRequestError("newMatch is a number!");
+    }
+    newMatch.users = AlgollyResult; //cant seem to fix this typeError
+    return newMatch.save();
   }
 
   @Get("/logic/categories")
@@ -40,7 +46,7 @@ export default class MatchController {
   async getCategoryNow() {
     console.log("socialize");
     return await getCategory("socialize");
-  }
+  } 
 
   @Get("/logic/activities")
   @HttpCode(200)
@@ -56,9 +62,7 @@ export default class MatchController {
 
   @Get("/logic/algolly")
   @HttpCode(200)
-  async getalgollyNow(
-    @QueryParams() params: any
-  ) {
-    return await algolly(params.department, params.activity, params.category);
+  async getalgollyNow() {
+    return await algolly("develssment", "tnis", "socialize");
   }
 }

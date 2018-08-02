@@ -1,13 +1,12 @@
 import "reflect-metadata";
 import { Action, BadRequestError, useKoaServer } from "routing-controllers";
-//import {useSocketServer, createSocketServer} from "socket-controllers";
 import setupDb from "./db";
 import * as Koa from "koa";
 import { verify } from "./jwt";
 import UserController from "./users/controller";
 import SlackbotController from "./slackbot/controller"
 import CompanyController from "./companies/controller";
-//require('dotenv').config()
+import MatchController from "./matches/controller";
 
 const app = new Koa();
 const port = process.env.PORT || 4000;
@@ -19,6 +18,7 @@ useKoaServer(app, {
     UserController,
     SlackbotController,
     CompanyController,
+    MatchController
   ],
   authorizationChecker: (action: Action) => {
     const header: string = action.request.headers.authorization;
