@@ -10,7 +10,7 @@ export async function getCategory(inputCategory) {
       where: {
         category: inputCategory
       }
-    });
+    }); 
   };
   return await resultCat();
 }
@@ -32,7 +32,6 @@ export async function getActivity(inputActivities) {
   let resultActivity = async () => {
     return await getRepository(WeeklyUpdate)
       .createQueryBuilder("weeklyupdate")
-      // .select("weeklyUpdate")
       .leftJoinAndSelect("weeklyupdate.activityId", "activity")
       .leftJoinAndSelect("weeklyupdate.userId", "user")
       .where("activity.activityName = :inputActivities")
