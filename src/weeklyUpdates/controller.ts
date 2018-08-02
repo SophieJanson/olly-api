@@ -1,4 +1,4 @@
-import { JsonController, Post, Body, BadRequestError, NotFoundError } from "routing-controllers";
+import { JsonController, Body, BadRequestError, NotFoundError } from "routing-controllers";
 import WeeklyUpdate from "./entity"
 import User from "../users/entity"
 import { getRepository } from "../../node_modules/typeorm";
