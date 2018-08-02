@@ -4,7 +4,7 @@ import {
   HttpCode,
   JsonController,
 } from "routing-controllers";
-import * as request from 'superagent'
+// import * as request from 'superagent'
 import ActivityController from "../activities/controller";
 import UserController from "../users/controller";
 import MatchController from "../matches/controller";
@@ -29,7 +29,9 @@ export default class SlackbotController {
     @HttpCode(200)
     @Body() body: any
   ) {
-    const data = body.payload
+    console.log(body || "test")
+	const data = body.payload
+
     console.log("DDAAAAAATTTTTTTTAAAAAAAA", data)
     if(JSON.parse(data).callback_id === "weekly_update") {
 
@@ -47,6 +49,7 @@ export default class SlackbotController {
     console.log("BOOOOOODY", JSON.parse(data)['actions'][0])
     return JSON.parse(data)['actions'][0].value === "submit" ? "Thank you for your input. We will be in touch!" : ""
   }
+
 
   @Post("/")
   async getPost(
@@ -90,10 +93,6 @@ export default class SlackbotController {
     //   .then(res => res.body)
     //   .catch(err => console.error(err))  
   }
-}
-   
-const respond = (responseText, atUser = null, fromUser, atChannel) => {
-
 }
 
 // export const startSocket = () => {

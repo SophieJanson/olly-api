@@ -5,7 +5,7 @@ import {
   Column,
   ManyToOne
 } from "typeorm";
-import { Length, IsNumber, IsString } from "class-validator";
+import { Length, IsNumber } from "class-validator";
 import User from "../users/entity";
 import Match from "../matches/entity";
 import Activity from "../activities/entity";

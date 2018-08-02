@@ -21,10 +21,12 @@ interface MatchRequest {
 
 @JsonController()
 export default class MatchController {
-  @Authorized()
-  @Get("/matches/:matchId")
-  getMatch(@Param("matchId") matchId: number) {
-    return Match.findOne(matchId);
+	@Authorized()
+	@Get("/matches/:matchId")
+	getMatch(
+		@Param("matchId") matchId: number
+	) {
+   		return Match.findOne(matchId);
   }
 
   @Authorized()
