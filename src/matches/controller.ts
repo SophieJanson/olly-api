@@ -23,11 +23,11 @@ export default class MatchController {
   @Post("/matches")
   @HttpCode(201)
   async createMatch(
-    @QueryParams() params: any,
+    params: any,
   ) {
     const AlgollyResult = await algolly(
       params.department,
-      params.activity,
+      params.activityId,
       params.category
     );
 
@@ -38,7 +38,7 @@ export default class MatchController {
     const finalNewMatch = await newMatch.save()
 
     if(!finalNewMatch.id) return finalNewMatch
-    await WeeklyUpdates.registerUpdateMatch(finalNewMatch.id, params.weekly)
+    await WeeklyUpdates.registerUpdateMatch(finalNewMatch.id, params.id)
     return finalNewMatch
   }
 

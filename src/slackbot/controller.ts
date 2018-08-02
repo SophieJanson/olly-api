@@ -14,6 +14,7 @@ import FollowUpController from "../followups/controller";
 import Company from "../companies/entity";
 import WeeklyUpdateController from '../weeklyUpdates/controller'
 import WeeklyUpdate from "../weeklyUpdates/entity";
+import { updateLocale } from "moment";
 
 const Activities = new ActivityController()
 const Users = new UserController()
@@ -39,23 +40,27 @@ export default class SlackbotController {
 
     }
     const userId = JSON.parse(data).user.id
+    let update
     try {
-      await WeeklyUpdates.newWeeklyGoals({
+      update = await WeeklyUpdates.newWeeklyGoals({
         user: userId,
         [JSON.parse(data)['actions'][0].name]: [JSON.parse(data)['actions'][0]['selected_options'][0].value]
       })
     } catch(e) {
       console.error(e)
-    } 
+    } finally {
+      this.getMatches(await update)
+    }
+    
     return JSON.parse(data)['actions'][0].value === "submit" ? "Thank you for your input. We will be in touch!" : ""
   }
 
-  @Get('/weekly/:slackId/matches')
+  // @Get('/weekly/:slackId/matches')
   async getMatches(
-    @Param('slackId') slackId: number
+    update: WeeklyUpdate
   ) {
-    //const weekly = await WeeklyUpdate.find({"user.slackId": slackId})
-    return "match"
+    const {department, activityId, category, id } = await update
+    return Matches.createMatch({department, activityId, category, id})
   }
 
   @Post("/")

@@ -35,17 +35,17 @@ export async function getDepartment(inputDepartment) {
 
 export async function getActivity(inputActivities) {
   let resultActivity = async () => {
-    return await getRepository(WeeklyUpdate)
-      .createQueryBuilder("weeklyupdate")
-      .leftJoinAndSelect("weeklyupdate.activityId", "activity")
-      .leftJoinAndSelect("weeklyupdate.userId", "user")
-      .where("activity.activityName = :inputActivities")
-      .setParameter("inputActivities", inputActivities)
-      .andWhere("weeklyupdate.weekNumber = :weekNumber", {weekNumber: week})
-      .getMany();
-  };
-  return await resultActivity();
-}
+    return await WeeklyUpdate.find({
+      select: ["activityId", "id"],
+      relations: ["userId"],
+      where: {
+        activityId: inputActivities,
+        weekNumber: week
+      }
+    })
+  }
+    return await resultActivity()
+};
 
 export async function algolly(inputDepartment, inputActivities, inputCategory) {
   const departmentMatch = await getDepartment(inputDepartment);
