@@ -15,7 +15,6 @@ export default class WeeklyUpdate extends BaseEntity {
   @PrimaryGeneratedColumn() id?: number;
 
   @Length(4)
-  // @Length(4, { each: true })
   @Column("text")
   category: string;
 
