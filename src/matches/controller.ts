@@ -5,8 +5,7 @@ import {
   Authorized,
   Post,
   HttpCode,
-  QueryParams,
-  Patch
+  QueryParams
 } from "routing-controllers";
 import Match from "./entity";
 import WeeklyUpdateController from '../weeklyUpdates/controller'
@@ -25,7 +24,6 @@ export default class MatchController {
   @HttpCode(201)
   async createMatch(
     @QueryParams() params: any,
-    //weeklyUpdateId: number
   ) {
     const AlgollyResult = await algolly(
       params.department,
@@ -38,7 +36,7 @@ export default class MatchController {
     let newMatch = new Match();
     newMatch.users = AlgollyResult; 
     const finalNewMatch = await newMatch.save()
-    console.log("FINAL ---------", await finalNewMatch)
+
     if(!finalNewMatch.id) return finalNewMatch
     await WeeklyUpdates.registerUpdateMatch(finalNewMatch.id, params.weekly)
     return finalNewMatch

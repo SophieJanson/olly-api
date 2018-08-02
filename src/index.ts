@@ -18,7 +18,8 @@ useKoaServer(app, {
     UserController,
     SlackbotController,
     CompanyController,
-    MatchController
+    MatchController,
+    UserController
   ],
   authorizationChecker: (action: Action) => {
     const header: string = action.request.headers.authorization;
