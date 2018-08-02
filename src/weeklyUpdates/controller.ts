@@ -27,17 +27,19 @@ export default class WeeklyUpdateController {
 		let a = await User.findOne({ where: { slackId: userId }})
 		console.log(" SEARCHING users: 	", a )
 
-		if ( a !== undefined ) { 
-			const welcome = "Hi there! I am Olly, it's super nice to meet you!"
-    	    return { welcome }
-		} else {
+		if ( a === undefined ) { 
+			
 			let entity = await User.create()
 			entity.slackId = userId
-			let user = await entity.save()
-			return await user
-			const iDontKnowYou = "I am sorry, I don't know you"
-			return { iDontKnowYou }
-		}
+			await entity.save()
+			const welcome = "I am sorry, I don't know you ... but wait! Now, I do! :)"
+			return { welcome }
+
+		} 
+			
+		const welcome = "Hi there! I am Olly, it's super nice to meet you!"
+    	return { welcome }
+
     }
 
     @Get("/onboard")
