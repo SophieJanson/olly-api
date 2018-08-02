@@ -13,7 +13,6 @@ import MatchController from "../matches/controller";
 import FollowUpController from "../followups/controller";
 import Company from "../companies/entity";
 import WeeklyUpdateController from '../weeklyUpdates/controller'
-import WeeklyUpdate from "../weeklyUpdates/entity";
 
 const Activities = new ActivityController()
 const Users = new UserController()
@@ -54,6 +53,7 @@ export default class SlackbotController {
   async getMatches(
     @Param('slackId') slackId: number
   ) {
+    console.log(slackId)
     //const weekly = await WeeklyUpdate.find({"user.slackId": slackId})
     return "match"
   }
