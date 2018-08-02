@@ -6,8 +6,7 @@ import {
   Post,
   HttpCode,
   QueryParams,
-  BadRequestError,
-  NotFoundError
+  BadRequestError
 } from "routing-controllers";
 import Match from "./entity";
 import { algolly, getCategory, getActivity, getDepartment } from "./logic";
