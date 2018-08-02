@@ -4,7 +4,6 @@ import {
   HttpCode,
   JsonController,
 } from "routing-controllers";
-import * as request from 'superagent'
 import ActivityController from "../activities/controller";
 import UserController from "../users/controller";
 import MatchController from "../matches/controller";
