@@ -1,8 +1,9 @@
 
+import { JsonController, Get} from 'routing-controllers'
 import { Param, NotFoundError } from "routing-controllers";
 import User from "./entity";
 
-// @JsonController()
+@JsonController()
 export default class UserController {
 	async signup(userData: any) {
     console.log("DATA", userData)
@@ -46,7 +47,7 @@ export default class UserController {
     return user
   }
 
-  // @Get('/users')
+  @Get('/users')
   async getAllUsers() {
     const users = await User.find()
     return { users }
