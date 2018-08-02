@@ -3,8 +3,6 @@ import {
   Body,
   HttpCode,
   JsonController,
-  Get,
-  Param,
   BadRequestError,
 } from "routing-controllers";
 import ActivityController from "../activities/controller";
@@ -37,28 +35,30 @@ export default class SlackbotController {
     const data = body.payload
     console.log("DATA", data)
     if(JSON.parse(data).callback_id === "weekly_update") {
+      
+      const userId = JSON.parse(data).user.id
+      let update
+      try {
+        console.log("DAAAATA IN TRY", userId)
 
-    }
-    const userId = JSON.parse(data).user.id
-    let update
-    try {
-      update = await WeeklyUpdates.newWeeklyGoals({
-        user: userId,
-        [JSON.parse(data)['actions'][0].name]: [JSON.parse(data)['actions'][0]['selected_options'][0].value]
-      })
-    } catch(e) {
-      console.error(e)
-    } finally {
-      this.getMatches(await update)
-    }
-    
+        update = await WeeklyUpdates.newWeeklyGoals({
+          user: userId,
+          [JSON.parse(data)['actions'][0].name]: [JSON.parse(data)['actions'][0]['selected_options'][0].value]
+        })
+      } catch(e) {
+        console.error("ERROR_________", e)
+      } finally {
+        this.getMatches(await update)
+      }
     return JSON.parse(data)['actions'][0].value === "submit" ? "Thank you for your input. We will be in touch!" : ""
+    }
   }
 
   // @Get('/weekly/:slackId/matches')
   async getMatches(
     update: WeeklyUpdate
   ) {
+    if(!update) throw new BadRequestError("What's wrong with you?")
     const {department, activityId, category, id } = await update
     return Matches.createMatch({department, activityId, category, id})
   }

@@ -8,10 +8,10 @@ import {
   QueryParams
 } from "routing-controllers";
 import Match from "./entity";
-import WeeklyUpdateController from "../weeklyUpdates/controller";
+import WeeklyUpdateController from '../weeklyUpdates/controller'
 import { algolly, getCategory, getActivity, getDepartment } from "./logic";
 
-const WeeklyUpdates = new WeeklyUpdateController();
+const WeeklyUpdates = new WeeklyUpdateController()
 @JsonController()
 export default class MatchController {
   @Authorized()
@@ -22,23 +22,24 @@ export default class MatchController {
 
   @Post("/matches")
   @HttpCode(201)
-  async createMatch(params: any) {
-    console.log(params, "paramsss");
+  async createMatch(
+    params: any,
+  ) {
     const AlgollyResult = await algolly(
       params.department,
       params.activityId,
       params.category
     );
 
-    if (!AlgollyResult || AlgollyResult === null) return "No matches available";
+    if (!AlgollyResult || AlgollyResult === null) return "No matches available"
 
     let newMatch = new Match();
-    newMatch.users = AlgollyResult;
-    const finalNewMatch = await newMatch.save();
+    newMatch.users = AlgollyResult; 
+    const finalNewMatch = await newMatch.save()
 
-    if (!finalNewMatch.id) return finalNewMatch;
-    await WeeklyUpdates.registerUpdateMatch(finalNewMatch.id, params.id);
-    return finalNewMatch;
+    if(!finalNewMatch.id) return finalNewMatch
+    //await WeeklyUpdates.registerUpdateMatch(finalNewMatch.id, params.id)
+    return finalNewMatch
   }
 
   @Get("/logic/categories")
@@ -46,12 +47,12 @@ export default class MatchController {
   async getCategoryNow() {
     console.log("socialize");
     return await getCategory("socialize");
-  }
+  } 
 
   @Get("/logic/activities")
   @HttpCode(200)
   async getActivityNow() {
-    return await getActivity(1);
+    return await getActivity("tennis");
   }
 
   @Get("/logic/departments")
@@ -63,6 +64,6 @@ export default class MatchController {
   @Get("/logic/algolly")
   @HttpCode(200)
   async getalgollyNow() {
-    return await algolly("develssment", 1, "socialize");
+    return await algolly("develssment", "tnis", "socialize");
   }
 }

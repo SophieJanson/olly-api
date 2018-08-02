@@ -15,12 +15,12 @@ export default class WeeklyUpdate extends BaseEntity {
   @PrimaryGeneratedColumn() id?: number;
 
   @Length(4)
-  @Column("text")
-  category: string;
+  @Column("text", {nullable: true})
+  category?: string;
 
   @Length(3)
   @Column("text", { nullable: true })
-  department: string;
+  department?: string;
 
   @Column("boolean", { default: false })
   postponedActivity: boolean;
