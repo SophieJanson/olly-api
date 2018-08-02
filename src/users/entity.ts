@@ -36,8 +36,8 @@ export default class User extends BaseEntity {
   funFact?: string;
 
   @IsString()
-  @Column("text", { nullable: true })
-  slackId?: string;
+  @Column("text")
+  slackId: string;
 
   @IsOptional()
   @IsArray()

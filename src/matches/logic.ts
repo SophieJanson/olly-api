@@ -1,16 +1,20 @@
 import User from "../users/entity";
 import WeeklyUpdate from "../weeklyUpdates/entity";
 import { getRepository } from "typeorm";
+import * as moment from 'moment';
+moment().format()
 
+const week = moment().isoWeek()
 export async function getCategory(inputCategory) {
   let resultCat = async () => {
     return await WeeklyUpdate.find({
       select: ["category", "id"],
       relations: ["userId"],
       where: {
-        category: inputCategory
+        category: inputCategory,
+        weekNumber: week
       }
-    });
+    }); 
   };
   return await resultCat();
 }
@@ -18,10 +22,11 @@ export async function getCategory(inputCategory) {
 export async function getDepartment(inputDepartment) {
   let resultDepartment = async () => {
     return await User.find({
-      //select: ["department", "id", "firstName", "lastName"],
+      // select: ["department", "id", "firstName", "lastName"],
       relations: ["weeklyUpdate"],
       where: {
-        department: inputDepartment
+        department: inputDepartment,
+        weekNumber: week
       }
     });
   };
@@ -32,11 +37,11 @@ export async function getActivity(inputActivities) {
   let resultActivity = async () => {
     return await getRepository(WeeklyUpdate)
       .createQueryBuilder("weeklyupdate")
-      // .select("weeklyUpdate")
       .leftJoinAndSelect("weeklyupdate.activityId", "activity")
       .leftJoinAndSelect("weeklyupdate.userId", "user")
       .where("activity.activityName = :inputActivities")
       .setParameter("inputActivities", inputActivities)
+      .andWhere("weeklyupdate.weekNumber = :weekNumber", {weekNumber: week})
       .getMany();
   };
   return await resultActivity();
@@ -52,8 +57,9 @@ export async function algolly(inputDepartment, inputActivities, inputCategory) {
       if (!categoryMatch || categoryMatch.length === 0) {
         return null;
       } else
-        return categoryMatch
-        .map(catMatch => catMatch.userId);
+        return categoryMatch.map(
+          catMatch => catMatch.userId && catMatch.userId
+        );
     } else
       return activityMatch.map(actMatch => actMatch.userId && actMatch.userId);
   } else return departmentMatch;

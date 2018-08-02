@@ -27,7 +27,7 @@ export default class Match extends BaseEntity {
   @JoinTable()
   users: User[];
 
-  @OneToMany(_ => WeeklyUpdate, weeklyUpdate => weeklyUpdate.match)
+  @OneToMany(_ => WeeklyUpdate, weeklyUpdate => weeklyUpdate.matchId)
   weeklyUpdate?: number[];
 
   @OneToMany(_ => FollowUp, followUp => followUp.match)

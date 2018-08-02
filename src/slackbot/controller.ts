@@ -34,15 +34,14 @@ export default class SlackbotController {
     }
     const userId = JSON.parse(data).user.id
     try {
-      const weeklyUpdate = await WeeklyUpdates.newWeeklyGoals({
+      await WeeklyUpdates.newWeeklyGoals({
         user: userId,
         [JSON.parse(data)['actions'][0].name]: [JSON.parse(data)['actions'][0]['selected_options'][0].value]
       })
-      console.log(weeklyUpdate)
     } catch(e) {
       console.error(e)
     } 
-    return JSON.parse(data)['actions'][0].value === "submit" ? `Thank you for your input. We will be in touch!` : ""
+    return JSON.parse(data)['actions'][0].value === "submit" ? "Thank you for your input. We will be in touch!" : ""
   }
 
   @Post("/")
@@ -51,7 +50,7 @@ export default class SlackbotController {
     @Body() body: any
   ) {
     if(!body.event || body.event.subtype === "bot_message") return "no event"
-    const { text } = body.event
+    const {text} = body.event
     const teamId = body.team_id
     const company = await this.getTeam(teamId)
 
@@ -78,7 +77,5 @@ export default class SlackbotController {
       default:
         data = "Request not understood, try again"
     }
-    console.log(data)
   }
 }
-
