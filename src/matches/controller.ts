@@ -6,11 +6,13 @@ import {
   Post,
   HttpCode,
   QueryParams,
-  BadRequestError
+  Patch
 } from "routing-controllers";
 import Match from "./entity";
+import WeeklyUpdateController from '../weeklyUpdates/controller'
 import { algolly, getCategory, getActivity, getDepartment } from "./logic";
 
+const WeeklyUpdates = new WeeklyUpdateController()
 @JsonController()
 export default class MatchController {
   @Authorized()
@@ -23,21 +25,23 @@ export default class MatchController {
   @HttpCode(201)
   async createMatch(
     @QueryParams() params: any,
+    //weeklyUpdateId: number
   ) {
     const AlgollyResult = await algolly(
       params.department,
       params.activity,
       params.category
     );
+
     if (!AlgollyResult || AlgollyResult === null) return "No matches available"
 
     let newMatch = new Match();
-
-    if (!newMatch || newMatch === null) {
-      throw new BadRequestError("newMatch is a number!");
-    }
-    newMatch.users = AlgollyResult; //cant seem to fix this typeError
-    return newMatch.save();
+    newMatch.users = AlgollyResult; 
+    const finalNewMatch = await newMatch.save()
+    console.log("FINAL ---------", await finalNewMatch)
+    if(!finalNewMatch.id) return finalNewMatch
+    await WeeklyUpdates.registerUpdateMatch(finalNewMatch.id, params.weekly)
+    return finalNewMatch
   }
 
   @Get("/logic/categories")
