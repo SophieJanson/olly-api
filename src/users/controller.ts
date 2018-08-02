@@ -1,9 +1,11 @@
 
+import { JsonController, Get, Post, Patch, HttpCode} from 'routing-controllers'
 import { Param, NotFoundError } from "routing-controllers";
 import User from "./entity";
 
-// @JsonController()
+@JsonController()
 export default class UserController {
+	@Post('/users')
 	async signup(userData: any) {
     console.log("DATA", userData)
 		const entity = await User.create(userData);
@@ -11,14 +13,14 @@ export default class UserController {
 		return await user;
 	}a
 		
-	// @Patch("/users/:userid/")
-	// 	@HttpCode(200)
+	@Patch("/users/:userid/")
+		@HttpCode(200)
 		async updateUserInterest(
 			userId: User,
-			interests: string,
-			funFact: string,
-			department: string,
-			role: string,
+			interests?: string,
+			funFact?: string,
+			department?: string,
+			role?: string,
 		) {	
 			const user = await User.findOne(userId)
 			
@@ -46,7 +48,7 @@ export default class UserController {
     return user
   }
 
-  // @Get('/users')
+  @Get('/users')
   async getAllUsers() {
     const users = await User.find()
     return { users }

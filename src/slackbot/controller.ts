@@ -3,6 +3,9 @@ import {
   Body,
   HttpCode,
   JsonController,
+  Get,
+  Param,
+  BadRequestError,
 } from "routing-controllers";
 import ActivityController from "../activities/controller";
 import UserController from "../users/controller";
@@ -10,6 +13,7 @@ import MatchController from "../matches/controller";
 import FollowUpController from "../followups/controller";
 import Company from "../companies/entity";
 import WeeklyUpdateController from '../weeklyUpdates/controller'
+import WeeklyUpdate from "../weeklyUpdates/entity";
 
 const Activities = new ActivityController()
 const Users = new UserController()
@@ -28,7 +32,9 @@ export default class SlackbotController {
     @HttpCode(200)
     @Body() body: any
   ) {
+    if(!body.payload) throw new BadRequestError("You BAAAAD requester!")
     const data = body.payload
+    console.log("DATA", data)
     if(JSON.parse(data).callback_id === "weekly_update") {
 
     }
@@ -42,6 +48,14 @@ export default class SlackbotController {
       console.error(e)
     } 
     return JSON.parse(data)['actions'][0].value === "submit" ? "Thank you for your input. We will be in touch!" : ""
+  }
+
+  @Get('/weekly/:slackId/matches')
+  async getMatches(
+    @Param('slackId') slackId: number
+  ) {
+    //const weekly = await WeeklyUpdate.find({"user.slackId": slackId})
+    return "match"
   }
 
   @Post("/")
