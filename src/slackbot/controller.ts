@@ -5,6 +5,7 @@ import {
   JsonController,
   BadRequestError,
 } from "routing-controllers";
+
 import ActivityController from "../activities/controller";
 import UserController from "../users/controller";
 import MatchController from "../matches/controller";
@@ -31,9 +32,10 @@ export default class SlackbotController {
     @HttpCode(200)
     @Body() body: any
   ) {
-    if(!body.payload) throw new BadRequestError("You BAAAAD requester!")
-    const data = body.payload
-    console.log("DATA", data)
+    console.log(body || "test")
+	  const data = body.payload
+
+    console.log("DDAAAAAATTTTTTTTAAAAAAAA", data)
     if(JSON.parse(data).callback_id === "weekly_update") {
       
       const userId = JSON.parse(data).user.id
@@ -62,6 +64,7 @@ export default class SlackbotController {
     const {department, activityId, category, id } = await update
     return Matches.createMatch({department, activityId, category, id})
   }
+
 
   @Post("/")
   async getPost(
