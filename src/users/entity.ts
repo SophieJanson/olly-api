@@ -4,38 +4,20 @@ import {
   PrimaryGeneratedColumn,
   Column,
   OneToMany,
-  ManyToMany,
-  ManyToOne
+  ManyToMany
 } from "typeorm";
-//import { Exclude } from "class-transformer";
 import {
-  MinLength,
   IsString,
-  IsEmail,
   IsArray,
   IsOptional
 } from "class-validator";
-//import * as bcrypt from "bcrypt";
 import WeeklyUpdate from "../weeklyUpdates/entity";
 import Match from "../matches/entity";
 import FollowUp from "../followups/entity";
-//import Company from "../companies/entity";
 
 @Entity()
 export default class User extends BaseEntity {
   @PrimaryGeneratedColumn() id?: number;
-
-  // @IsOptional()
-  // @IsString()
-  // @MinLength(2)
-  // @Column("text", { nullable: true })
-  // firstName?: string;
-
-  // @IsOptional()
-  // @IsString()
-  // @MinLength(2)
-  // @Column("text", { nullable: true })
-  // lastName?: string;
 
   @IsOptional()
   @IsString()
@@ -54,8 +36,8 @@ export default class User extends BaseEntity {
   funFact?: string;
 
   @IsString()
-  @Column("text", { nullable: true })
-  slackId?: string;
+  @Column("text")
+  slackId: string;
 
   @IsOptional()
   @IsArray()
@@ -66,25 +48,6 @@ export default class User extends BaseEntity {
   @IsArray()
   @Column("text", { nullable: true })
   skills?: string[];
-
-  // @IsEmail()
-  // @Column("text", { nullable: true })
-  // email?: string;
-
-  // @IsString()
-  // @MinLength(8)
-  // @Column("text")
-  // @Exclude({ toPlainOnly: true })
-  // password: string;
-
-  // async setPassword(rawPassword: string) {
-  //   const hash = await bcrypt.hash(rawPassword, 10);
-  //   this.password = hash;
-  // }
-
-  // checkPassword(rawPassword: string): Promise<boolean> {
-  //   return bcrypt.compare(rawPassword, this.password);
-  // }
 
   @OneToMany(_ => WeeklyUpdate, WeeklyUpdate => WeeklyUpdate.userId)
   weeklyUpdate: number[];

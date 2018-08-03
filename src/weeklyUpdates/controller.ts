@@ -8,14 +8,6 @@ import SlackbotController from "../slackbot/controller"
 // import cron from "node-cron"
 // cron.schedule(* 15 * * 2, () => {}
 moment().format()
-// const categories = ["socialize", "network", "learn", "teach"]
-// const blah = Math.floor(Math.random() * categories.length)   
-// const connectionType = ["a team", "a randomPerson", "a group"]
-// const rah = Math.floor(Math.random() * connectionType.length)
-// console.log(connectionType[rah])      
-// const status = ["pending", "matched"]
-// const neh = Math.floor(Math.random() * connectionType.length)
-// console.log(status[neh]
 
 let aboutMeButton = {
     "text": "Tell Me About Yourself Now",
@@ -105,8 +97,12 @@ export default class WeeklyUpdateController {
     }
 
 	@Post("/weeklygoals") 
+moment().format()    
+
+@JsonController()
+export default class WeeklyUpdateController {
 	async newWeeklyGoals(
-		@Body() data: any,
+		data: any,
 	) {
 		if(!data.user) throw new BadRequestError()
 		const userId = await User.findOne({slackId: data.user})
@@ -119,45 +115,29 @@ export default class WeeklyUpdateController {
 			.setParameter('id', userId.id)
 			.getOne()
 
+			let entity
 			if(!update || typeof update === "undefined") {
-				const entity = new WeeklyUpdate()
-				entity.userId = userId.id
-				data.activity ? entity.activityId = data.activity[0] : null
-				data.category ? entity.category = data.category[0] : null
-				data.department ? entity.department = data.department[0] : null
+				entity = new WeeklyUpdate()
+				entity.userId = user
 				entity.weekNumber = week
-				return entity.save()
 			} else {
-				data.activity ? update.activityId = data.activity[0] : null
-				data.category ? update.category = data.category[0] : null
-				data.department ? update.department = data.department[0] : null
-				return update.save()
+				entity = update
 			}
-    return "hello"
+
+		data.activity ? entity.activityId = data.activity[0] : null
+		data.category ? entity.category = data.category[0] : null
+		data.department ? entity.department = data.department[0] : null
+		return entity.save()
   }
   
-  // @Patch("/weeklygoals/whatevs") 
-	// async updateUpdate(
-	// 	@Body() changes: any
-	// ) {
-	// 	const entity = new WeeklyUpdate()
-  //   WeeklyUpdate.merge(entity, changes)
-	// 	entity.category = data.category
-  //   entity.department = data.department
-  //   entity.activityId = data.activityId
-    
-	// 	entity.weekNumber = Math.floor(Math.random() * 52) // this WILL be the number of the current week
-	// 	entity.status = status[neh]
-	// 	entity.user = user 
+	async registerUpdateMatch(
+		matchId: number,
+		weeklyUpdateId: number
+	) {
+		const update = await WeeklyUpdate.findOne(weeklyUpdateId)
+		if(!update) throw new NotFoundError("Weekly Update could not be found")
+		update.matchId = matchId
 
-	// 	const weeklyUpdate = await entity.save()
-
-	// 	return WeeklyUpdate.findOne(weeklyUpdate.id)
-	// }
-
-	//@Get("/weeklygoals")
-	// get weeklygoals should send a slack message to the user
-	// after choosing among options and submitting, the user will send the post request
-	// match and activity should be offered to the user as options in Slack
-	// they should be brought to the front-end from their respective tables in the back-end
+		return update.save()
+	}
 }

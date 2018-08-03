@@ -3,14 +3,17 @@ import {
   Body,
   HttpCode,
   JsonController,
+  BadRequestError,
 } from "routing-controllers";
-// import * as request from 'superagent'
+
 import ActivityController from "../activities/controller";
 import UserController from "../users/controller";
 import MatchController from "../matches/controller";
 import FollowUpController from "../followups/controller";
 import Company from "../companies/entity";
 import WeeklyUpdateController from '../weeklyUpdates/controller'
+import WeeklyUpdate from "../weeklyUpdates/entity";
+import { updateLocale } from "moment";
 
 const Activities = new ActivityController()
 const Users = new UserController()
@@ -30,24 +33,36 @@ export default class SlackbotController {
     @Body() body: any
   ) {
     console.log(body || "test")
-	const data = body.payload
+	  const data = body.payload
 
     console.log("DDAAAAAATTTTTTTTAAAAAAAA", data)
     if(JSON.parse(data).callback_id === "weekly_update") {
+      
+      const userId = JSON.parse(data).user.id
+      let update
+      try {
+        console.log("DAAAATA IN TRY", userId)
 
-    }
-    const userId = JSON.parse(data).user.id
-    try {
-      const weeklyUpdate = await WeeklyUpdates.newWeeklyGoals({
-        user: userId,
-        [JSON.parse(data)['actions'][0].name]: [JSON.parse(data)['actions'][0]['selected_options'][0].value]
-      })
-      console.log("UPDATE ", await weeklyUpdate)
-    } catch(e) {
-      console.error(e)
-    } 
-    console.log("BOOOOOODY", JSON.parse(data)['actions'][0])
+        update = await WeeklyUpdates.newWeeklyGoals({
+          user: userId,
+          [JSON.parse(data)['actions'][0].name]: [JSON.parse(data)['actions'][0]['selected_options'][0].value]
+        })
+      } catch(e) {
+        console.error("ERROR_________", e)
+      } finally {
+        this.getMatches(await update)
+      }
     return JSON.parse(data)['actions'][0].value === "submit" ? "Thank you for your input. We will be in touch!" : ""
+    }
+  }
+
+  // @Get('/weekly/:slackId/matches')
+  async getMatches(
+    update: WeeklyUpdate
+  ) {
+    if(!update) throw new BadRequestError("What's wrong with you?")
+    const {department, activityId, category, id } = await update
+    return Matches.createMatch({department, activityId, category, id})
   }
 
 
@@ -57,7 +72,7 @@ export default class SlackbotController {
     @Body() body: any
   ) {
     if(!body.event || body.event.subtype === "bot_message") return "no event"
-    const { type, user, text, channel} = body.event
+    const {text} = body.event
     const teamId = body.team_id
     const company = await this.getTeam(teamId)
 
@@ -84,68 +99,6 @@ export default class SlackbotController {
       default:
         data = "Request not understood, try again"
     }
-    // return request
-    //   .post('https://slack.com/api/chat.postMessage')
-    //   .set('Authorization', `Bearer ${await company.botAccessToken}`)
-    //   .send({"text": `${await JSON.stringify(data)}`, 
-    //     "channel": `${channel}`
-    //   })
-    //   .then(res => res.body)
-    //   .catch(err => console.error(err))  
+    console.log(data)
   }
 }
-
-// export const startSocket = () => {
-//   console.log("Hello!")
-//   const bot = new SlackBot({
-//     token: "xoxb-13649336358-407340755362-WVcEJblXeNy63YzPjG5r42xA",
-//     name: "Olly"
-//   })
-//   console.log(bot)
-//   bot.on("start", () => {        
-//     bot.postMessageToChannel(
-//       "test-integrations",
-//       "Olly is here for you!",
-//     )
-//   })
-// }
-
-
-
-//     console.log("testttt")
-//     if(!body.event) throw new BadRequestError
-//     if(body.event.subtype === 'bot_message') return "bot"
-
-//     const { user, text } = body.event
-//     const teamId = body.team_id
-
-//     const companyToken = await Company.findOne({"teamId": teamId})
-//     if(! companyToken) return "bot"
-
-//     switch(text.split(" ")[1]) {
-//       case 'activities':
-//         const activities = Activities.getActivities()
-
-//         return request
-//           .post('https://slack.com/api/chat.postMessage')
-//           .set('Authorization', `Bearer ${await companyToken.botAccessToken}`)
-//           .send({"text": `${await activities}`, 
-//             "channel": `${body.event.channel}`
-//           })
-//           .then(res => console.log("RES", res))  
-//       default:
-//         return request
-//           .post('https://slack.com/api/chat.postMessage')
-//           .set('Authorization', `Bearer ${await companyToken.botAccessToken}`)
-//           .send({"text": `No data found, try again`, 
-//             "channel": `${body.event.channel}`
-//           })
-//           .then(res => console.log("RES", res)) 
-//     }
-//     const userEntity = await User.find({slackId: user})
-//     console.log(userEntity)
-//     console.log("BODY EVENT", body.event)
-
-//     return body.challenge
-//   }
-// }

@@ -44,6 +44,7 @@ jspm_packages
 .node_repl_history
 
 .env
+src/.env
 
 # Output of 'npm pack'
 *.tgz

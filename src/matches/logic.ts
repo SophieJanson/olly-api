@@ -1,16 +1,20 @@
 import User from "../users/entity";
 import WeeklyUpdate from "../weeklyUpdates/entity";
 import { getRepository } from "typeorm";
+import * as moment from 'moment';
+moment().format()
 
+const week = moment().isoWeek()
 export async function getCategory(inputCategory) {
   let resultCat = async () => {
     return await WeeklyUpdate.find({
       select: ["category", "id"],
       relations: ["userId"],
       where: {
-        category: inputCategory
+        category: inputCategory,
+        weekNumber: week
       }
-    });
+    }); 
   };
   return await resultCat();
 }
@@ -18,10 +22,11 @@ export async function getCategory(inputCategory) {
 export async function getDepartment(inputDepartment) {
   let resultDepartment = async () => {
     return await User.find({
-      select: ["department", "id", "firstName", "lastName"],
+      // select: ["department", "id", "firstName", "lastName"],
       relations: ["weeklyUpdate"],
       where: {
-        department: inputDepartment
+        department: inputDepartment,
+        weekNumber: week
       }
     });
   };
@@ -30,17 +35,17 @@ export async function getDepartment(inputDepartment) {
 
 export async function getActivity(inputActivities) {
   let resultActivity = async () => {
-    return await getRepository(WeeklyUpdate)
-      .createQueryBuilder("weeklyupdate")
-      // .select("weeklyUpdate")
-      .leftJoinAndSelect("weeklyupdate.activityId", "activity")
-      .leftJoinAndSelect("weeklyupdate.userId", "user")
-      .where("activity.activityName = :inputActivities")
-      .setParameter("inputActivities", inputActivities)
-      .getMany();
-  };
-  return await resultActivity();
-}
+    return await WeeklyUpdate.find({
+      select: ["activityId", "id"],
+      relations: ["userId"],
+      where: {
+        activityId: inputActivities,
+        weekNumber: week
+      }
+    })
+  }
+    return await resultActivity()
+};
 
 export async function algolly(inputDepartment, inputActivities, inputCategory) {
   const departmentMatch = await getDepartment(inputDepartment);
