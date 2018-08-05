@@ -99,11 +99,10 @@ async function ollyAddUser(message): Promise<User|string> {
 		)
 	}
 
-	console.log("MESSAGE", message)
 	const departments = ["development", "marketing", "customer success", "hr"]
 	const setDepartment = departments[Math.round(Math.random() * departments.length)]
+	
 	const user = new User()
-
 	user.slackId = message.user
 	user.department = setDepartment
 	const savedUser = await user.save()
