@@ -4,8 +4,7 @@ import {
   Param,
   Authorized,
   Post,
-  HttpCode,
-  QueryParams
+  HttpCode
 } from "routing-controllers";
 import Match from "./entity";
 import WeeklyUpdateController from "../weeklyUpdates/controller";

@@ -1,6 +1,5 @@
 import User from "../users/entity";
 import WeeklyUpdate from "../weeklyUpdates/entity";
-import { getRepository } from "typeorm";
 import * as moment from 'moment';
 moment().format()
 
@@ -22,7 +21,6 @@ export async function getCategory(inputCategory) {
 export async function getDepartment(inputDepartment) {
   let resultDepartment = async () => {
     return await User.find({
-      // select: ["department", "id", "firstName", "lastName"],
       relations: ["weeklyUpdate"],
       where: {
         department: inputDepartment,
