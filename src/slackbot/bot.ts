@@ -92,7 +92,8 @@ async function ollyMatch(message) {
 }
 
 async function ollyAddUser(message): Promise<User|string> {
-	if(await User.find({slackId: message.user})) {
+	const existingUser = await User.find({slackId: message.user})
+	if(existingUser.length > 0) {
 		return bot.postMessageToChannel(
 			'your-olly',
 			"You already exist"
@@ -104,7 +105,7 @@ async function ollyAddUser(message): Promise<User|string> {
 	
 	const user = new User()
 	user.slackId = message.user
-	user.department = setDepartment
+	user.department = setDepartment	
 	const savedUser = await user.save()
 	bot.postMessageToChannel(
 		'your-olly',
