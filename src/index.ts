@@ -11,7 +11,7 @@ import CompanyController from "./companies/controller";
 import { bot } from './slackbot/bot'
 
 const app = new Koa();
-const port = 4000;
+const port = process.env.PORT || 4000;
 let time = `${new Date().getHours()}:${new Date().getMinutes()}`;
 
 useKoaServer(app, {
