@@ -1,4 +1,4 @@
-import { JsonController, Body, BadRequestError, NotFoundError } from "routing-controllers";
+import { JsonController, BadRequestError, NotFoundError } from "routing-controllers";
 import WeeklyUpdate from "./entity"
 import User from "../users/entity"
 import { getRepository } from "../../node_modules/typeorm";
@@ -8,23 +8,26 @@ moment().format()
 
 @JsonController()
 export default class WeeklyUpdateController {
+
 	async newWeeklyGoals(
-		@Body() data: any,
+		data: any,
 	) {
 		if(!data.user) throw new BadRequestError()
 
-		const userId = await User.findOne({slackId: data.user})
-		if(!userId || !userId.id) throw new NotFoundError
+		const user = await User.findOne({slackId: data.user})
+		if(!user || !user.id) throw new NotFoundError()
+		console.log("USER ID --------> ", user)
 		const week = moment().isoWeek()
     const update = await getRepository(WeeklyUpdate)
       .createQueryBuilder('weeklyupdate')
-      .where("user_id = :id", {id: userId.id})
+			.where("user_id_id = :id", {id: user.id})
+			.andWhere("week_number = :week", {week: week})
 			.getOne()
 
 			let entity
 			if(!update || typeof update === "undefined") {
 				entity = new WeeklyUpdate()
-				entity.userId = userId
+				entity.userId = user
 				entity.weekNumber = week
 			} else {
 				entity = update
@@ -34,6 +37,22 @@ export default class WeeklyUpdateController {
 		data.category ? entity.category = data.category[0] : null
 		data.department ? entity.department = data.department[0] : null
 		return entity.save()
+	}
+	
+	async getWeeklyGoals(
+		userSlackId: string,
+	) {
+		const user = await User.findOne({slackId: userSlackId})
+
+		if(!user || !user.id) throw new NotFoundError()
+		console.log("USER ID --------> ", user)
+		const week = moment().isoWeek()
+    return await getRepository(WeeklyUpdate)
+      .createQueryBuilder('weeklyupdate')
+			.where("user_id_id = :id", {id: user.id})
+			.andWhere("week_number = :week", {week: week})
+			.getOne()
+	
   }
   
 	async registerUpdateMatch(

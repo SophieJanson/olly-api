@@ -11,7 +11,7 @@ export default class UserController {
 		const entity = await User.create(userData);
 		const user = await entity.save();
 		return await user;
-	}a
+	}
 		
 	@Patch("/users/:userid/")
 		@HttpCode(200)

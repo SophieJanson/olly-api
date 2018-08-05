@@ -4,21 +4,27 @@ import setupDb from "./db";
 import * as Koa from "koa";
 import { verify } from "./jwt";
 import UserController from "./users/controller";
-import SlackbotController from "./slackbot/controller"
+import LoginController from "./logins/controller";
+import WeeklyUpdateController from "./weeklyUpdates/controller";
+import SlackbotController from "./slackbot/controller";
 import CompanyController from "./companies/controller";
-import MatchController from "./matches/controller";
+import { bot } from './slackbot/bot'
 
 const app = new Koa();
-const port = process.env.PORT || 4000;
+const port = 4000;
 let time = `${new Date().getHours()}:${new Date().getMinutes()}`;
 
 useKoaServer(app, {
   cors: true,
   controllers: [
     UserController,
-    SlackbotController,
+    LoginController,
+    WeeklyUpdateController,
     CompanyController,
-    MatchController
+	// MatchController,
+	// ActivityController,
+	// FollowUpController,
+	SlackbotController
   ],
   authorizationChecker: (action: Action) => {
     const header: string = action.request.headers.authorization;
@@ -38,6 +44,7 @@ setupDb()
   .then(_ => {
     app.listen(port);
     console.log(`Listening on port ${port}  @ ${time}`);
+    bot
   })
   .catch(err => console.error(err));
 

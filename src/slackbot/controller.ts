@@ -3,10 +3,10 @@ import {
   Body,
   HttpCode,
   JsonController,
-  Get,
-  Param,
   BadRequestError,
+  NotFoundError,
 } from "routing-controllers";
+
 import ActivityController from "../activities/controller";
 import UserController from "../users/controller";
 import MatchController from "../matches/controller";
@@ -31,31 +31,42 @@ export default class SlackbotController {
     @HttpCode(200)
     @Body() body: any
   ) {
-    if(!body.payload) throw new BadRequestError("You BAAAAD requester!")
-    const data = body.payload
-    console.log("DATA", data)
-    if(JSON.parse(data).callback_id === "weekly_update") {
+	  const data = body.payload
 
+    if(JSON.parse(data).callback_id === "weekly_update") {
+      
+      const userId = JSON.parse(data).user.id
+      const parsedMessage = JSON.parse(data)['actions'][0]
+      try {
+        if(parsedMessage['selected_options']) {
+          await WeeklyUpdates.newWeeklyGoals({
+            user: userId,
+            [parsedMessage.name]: [parsedMessage['selected_options'][0].value]
+          })
+        }
+      } catch(e) {
+        console.error("ERROR_________", e)
+      } 
+
+      if(parsedMessage.value === "submit") {
+        let matches = await this.getMatches(userId)
+        if(!matches) {
+          return "No matches available. Try again next week"
+        } 
+        return "Your match(es) is / are: " + await matches.users.map(user => `<@${user.slackId}>`)
+          .join(", ")
+      }
+      return ""
     }
-    const userId = JSON.parse(data).user.id
-    try {
-      await WeeklyUpdates.newWeeklyGoals({
-        user: userId,
-        [JSON.parse(data)['actions'][0].name]: [JSON.parse(data)['actions'][0]['selected_options'][0].value]
-      })
-    } catch(e) {
-      console.error(e)
-    } 
-    return JSON.parse(data)['actions'][0].value === "submit" ? "Thank you for your input. We will be in touch!" : ""
   }
 
-  @Get('/weekly/:slackId/matches')
   async getMatches(
-    @Param('slackId') slackId: number
+    user: string
   ) {
-    console.log(slackId)
-    //const weekly = await WeeklyUpdate.find({"user.slackId": slackId})
-    return "match"
+    const update = await WeeklyUpdates.getWeeklyGoals(user)
+    if(!update || !update.id) throw new NotFoundError("Weekly update could not be found")
+    const {department, activityId, category} = await update
+    return await Matches.createMatch({department, activityId, category, id: update.id})
   }
 
   @Post("/")
@@ -63,34 +74,6 @@ export default class SlackbotController {
     @HttpCode(200)
     @Body() body: any
   ) {
-    if(!body.event || body.event.subtype === "bot_message") return "no event"
-    const {text} = body.event
-    const teamId = body.team_id
-    const company = await this.getTeam(teamId)
-
-    if(!company) {
-      return "Company not found"
-    }
-    const commands = text.split(" ")
-    const mainCommand = commands[0].substring(0,2) !== "<@" ? commands[0] : commands[1]
-    let data;
-    console.log("Command, ",mainCommand)
-    switch(mainCommand) {
-      case 'users':
-        data = await Users.getAllUsers()
-        break;
-      case 'matches':
-        data = await Matches.getMatch(0)
-        break;
-      case 'followups':
-        data = await FollowUps.getFollowUps()
-        break;
-      case 'activities':
-        data = await Activities.getActivities()
-        break;
-      default:
-        data = "Request not understood, try again"
-    }
-    console.log(data)
+    return body
   }
 }
