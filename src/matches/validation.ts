@@ -1,6 +1,6 @@
 export interface MatchInput {
-  department: string,
-  activityId: number,
-  category: string,
+  department?: string|undefined,
+  activityId?: number|undefined,
+  category?: string|undefined,
   id: number
 }

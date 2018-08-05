@@ -4,8 +4,7 @@ import {
   Param,
   Authorized,
   Post,
-  HttpCode,
-  QueryParams
+  HttpCode
 } from "routing-controllers";
 import Match from "./entity";
 import WeeklyUpdateController from "../weeklyUpdates/controller";
@@ -24,7 +23,6 @@ export default class MatchController {
   @Post("/matches")
   @HttpCode(201)
   async createMatch(params: MatchInput) {
-    console.log(params, "paramsss");
     const AlgollyResult = await algolly(
       params.department,
       params.activityId,

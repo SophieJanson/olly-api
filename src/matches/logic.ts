@@ -1,6 +1,5 @@
 import User from "../users/entity";
 import WeeklyUpdate from "../weeklyUpdates/entity";
-import { getRepository } from "typeorm";
 import * as moment from 'moment';
 moment().format()
 
