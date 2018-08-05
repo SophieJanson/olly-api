@@ -1,44 +1,40 @@
 
 import User from "../users/entity"
 import Activity from "../activities/entity"
-import WeeklyUpdate from "../weeklyUpdates/entity"
 
 export const threeButtonsFunc = async () => {
     
-    const categories = await WeeklyUpdate.find( { select: ["category"] } )
-    const activities = await Activity.find(  )
+    const categories = ["socialize", "network"] //await WeeklyUpdate.find( { select: ["category"] } )
+    const activities = await Activity.find()
     const departments = await User.find( { select: ["department"] } )
+    const fallback = "If you could read this message, you'd be choosing something fun to do right now."
+    const callbackId = "weekly_update"
 
-    let threeButtons: any = await {
-        "response_type": "ephemeral",
-        "replace_original": false,
-        "text": "While you’re here, can you let me know what you’re up for this week?",
-        "attachments": [
+    let threeButtons: any = await [
             {
                 "text": "I want to ...",
-                "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
+                "fallback": fallback,
                 "color": "#3AA3E3",
                 "attachment_type": "default",
-                "callback_id": "weekly_update",
+                "callback_id": callbackId,
                 "actions": [
                     {
                         "name": "category",
                         "text": "Pick a category",
                         "type": "select",
-                        "options": await categories.map(cat => { return {
-                                    text: cat.category,
-                                    value: cat.category
-                                } 
-                            } )                 
+                        "options": categories.map(cat => ({
+                            text: cat,
+                            value: cat
+                        }))                 
                     }
                 ]
             },
                     {
                 "text": "... by doing ...",
-                "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
+                "fallback": fallback,
                 "color": "#3AA3E3",
                 "attachment_type": "default",
-                "callback_id": "weekly_update",
+                "callback_id": callbackId,
                 "actions": [
                     {
                         "name": "activity",
@@ -54,10 +50,10 @@ export const threeButtonsFunc = async () => {
             },
             {
                 "text": " ... with ...",
-                "fallback": "If you could read this message, you'd be choosing something fun to do right now.",
+                "fallback": fallback,
                 "color": "#3AA3E3",
                 "attachment_type": "default",
-                "callback_id": "weekly_update",
+                "callback_id": callbackId,
                 "actions": [
                     {
                         "name": "department",
@@ -72,12 +68,12 @@ export const threeButtonsFunc = async () => {
                 ]
             },
             {
-            "fallback": "Submit Your Answer",
-            "title": "Submit Your Answer",
-            "callback_id": "submit_button",
-            "color": "#66BD96",
-            "attachment_type": "default",
-            "actions": [
+                "fallback": "Submit Your Answer",
+                "title": "Submit Your Answer",
+                "callback_id": callbackId,
+                "color": "#66BD96",
+                "attachment_type": "default",
+                "actions": [
                     {
                         "name": "submit",
                         "style": "primary",
@@ -85,12 +81,10 @@ export const threeButtonsFunc = async () => {
                         "type": "button",
                         "value": "submit"
                     }
-                ]
-            }
-            ]
-    }
+                ]
+            }
+    ]
     return await threeButtons
 }
-        
+       
 
-// threeButtonsFunc()
