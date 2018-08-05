@@ -21,7 +21,6 @@ export async function getCategory(inputCategory) {
 export async function getDepartment(inputDepartment) {
   let resultDepartment = async () => {
     return await User.find({
-      // select: ["department", "id", "firstName", "lastName"],
       relations: ["weeklyUpdate"],
       where: {
         department: inputDepartment,

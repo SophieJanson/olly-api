@@ -1,12 +1,13 @@
 
-import { JsonController, Get, Post, Patch, HttpCode} from 'routing-controllers'
+import { JsonController, Get, Post, Patch, HttpCode, Body} from 'routing-controllers'
 import { Param, NotFoundError } from "routing-controllers";
 import User from "./entity";
 
 @JsonController()
 export default class UserController {
 	@Post('/users')
-	async signup(userData: any) {
+	async signup(
+		@Body() userData: any) {
     console.log("DATA", userData)
 		const entity = await User.create(userData);
 		const user = await entity.save();
@@ -38,7 +39,6 @@ export default class UserController {
 			return updatedUser
 		}
 
-	
   // @Get('/users/:userId')
   async getUser(
     userSlackId: number,
