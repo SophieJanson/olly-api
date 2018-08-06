@@ -1,6 +1,9 @@
 
 import User from "../users/entity"
 import Activity from "../activities/entity"
+// import { triggerAsyncId } from "async_hooks";
+
+const departments = ["Development", "Marketing", "Customer Success", "Human Resources", "Analytics", "Legal"]
 
 export const threeButtonsFunc = async () => {
     
@@ -87,4 +90,60 @@ export const threeButtonsFunc = async () => {
     return await threeButtons
 }
        
+export const introButton = [
+			{
+				"text": "Tell Me More",
+				"fallback": "You can't click on this button at the moment",
+				"callback_id": "intro_me",
+				"color": "#3AA3E3",
+				"attachment_type": "default",
+				"actions": [
+					{
+						"name": "Tell Me More",
+						"text": "Tell Me More",
+						"type": "button",
+						"value": "intro",
+						"style": "primary"
+					}
+				]
+			}
+]
 
+export const threeIntroQuestions = async (trgId, callbId) => {
+	let threeQ = 
+		{
+			"trigger_id": `${trgId}`,
+			"dialog": {
+				"callback_id": `${callbId}`,
+				"title": "Your Department",
+				"submit_label": "Submit",
+				"notify_on_cancel": true,
+				"elements": [
+					{
+						"label": "Your Department",
+						"type": "select",
+						"name": "choose_dept",
+						"options": await departments.map(dept => { return {
+							"label": `${dept}`,
+							"value": `${dept.toLowerCase().split(" ").join("_")}`
+							}
+						})
+					},
+					{
+						"label": "Fun Fact About You",
+						"name": "fun_fact",
+						"type": "text",
+						"placeholder": "Once, I ate the whole birthday cake of Joanna from Marketing ..."
+					},
+					{
+						"label": "Your Interests",
+						"name": "your_interests",
+						"type": "text",
+						"placeholder": "fill in 3 areas of interest, separated with a comma"
+					}
+				]
+
+			}
+		}
+	return await threeQ
+}

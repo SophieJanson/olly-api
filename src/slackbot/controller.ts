@@ -9,6 +9,8 @@ import {
 import MatchController from "../matches/controller";
 import Company from "../companies/entity";
 import WeeklyUpdateController from '../weeklyUpdates/controller'
+import { threeIntroQuestions } from './bot-lib';
+import * as request from "superagent"
 
 
 const Matches = new MatchController()
@@ -25,34 +27,64 @@ export default class SlackbotController {
     @HttpCode(200)
     @Body() body: any
   ) {
-	  const data = body.payload
+	const data = body.payload
+	console.log("JSON data from Slack: " + data)
 
     if(JSON.parse(data).callback_id === "weekly_update") {
-      
-      const userId = JSON.parse(data).user.id
-      const parsedMessage = JSON.parse(data)['actions'][0]
-      try {
-        if(parsedMessage['selected_options']) {
-          await WeeklyUpdates.newWeeklyGoals({
-            user: userId,
-            [parsedMessage.name]: [parsedMessage['selected_options'][0].value]
-          })
-        }
-      } catch(e) {
-        console.error("ERROR_________", e)
-      } 
+      	const userId = JSON.parse(data).user.id
+      	const parsedMessage = JSON.parse(data)['actions'][0]
+		try {
+			if(parsedMessage['selected_options']) {
+			await WeeklyUpdates.newWeeklyGoals({
+				user: userId,
+				[parsedMessage.name]: [parsedMessage['selected_options'][0].value]
+			})
+			}
+		} catch(e) {
+			console.error("ERROR_________", e)
+		} 
 
-      if(parsedMessage.value === "submit") {
-        let matches = await this.getMatches(userId)
-        if(!matches) {
-          return "No matches available. Try again next week"
-        } 
-        return "Your match(es) is / are: " + await matches.users.map(user => `<@${user.slackId}>`)
-          .join(", ")
-      }
-      return ""
-    }
-  }
+		if(parsedMessage.value === "submit") {
+			let matches = await this.getMatches(userId)
+			if(!matches) {
+			return "No matches available. Try again next week"
+			} 
+			return "Your match(es) is / are: " + await matches.users.map(user => `<@${user.slackId}>`)
+			.join(", ")
+		}
+
+    return ""
+    
+	}
+
+	if(JSON.parse(data).callback_id === "intro_me") {
+		let triggerId = JSON.parse(data).trigger_id
+		let callbackId = JSON.parse(data).callback_id
+		let threeQ = await threeIntroQuestions(triggerId, callbackId)
+
+		await request
+			.post("https://slack.com/api/dialog.open")
+			.set({
+				'Content-Type': 'application/json; charset=utf8',
+				'Authorization': 'Bearer xoxb-215618382279-404376298535-QAhcY9Uwox7Mn7SrG0HaRbj4'
+			})
+			.send( threeQ )
+			.then( res => console.log("threeQ answer: ", res.body) )
+			.catch(err => console.log("			ERROR FROM intro_me CALLBACK:   " + err));
+		
+		return ""
+	}
+
+	if(JSON.parse(data).type === "dialog_submission") {
+		const dept = JSON.parse(data).submission.choose_dept
+		const funFact = JSON.parse(data).submission.fun_fact
+		const interests = JSON.parse(data).submission.your_interests
+		const userId = JSON.parse(data).user.id
+		console.log(dept, funFact, interests, userId)
+		console.log(typeof dept, typeof funFact, typeof interests, typeof userId)
+	}
+	
+}
 
   async getMatches(
     user: string

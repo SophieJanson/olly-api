@@ -1,6 +1,6 @@
-var request = require("superagent")
+// var request = require("superagent")
 var SlackBot = require('slackbots');
-import {threeButtonsFunc} from './bot-lib';
+import {threeButtonsFunc, introButton} from './bot-lib';
 import User from '../users/entity'
 let time = `${new Date().getHours()}:${new Date().getMinutes()}`;
 
@@ -26,7 +26,6 @@ bot.on("start", () => {
 bot.on("error", (err) => console.log(err))
 
 bot.on("message", (data) => {
-  console.log("Olly is listening")
 	if (data.type !== "message") {
 		return;
 	}
@@ -48,9 +47,6 @@ function handleMessage(data) {
 }
 
 function ollyHey(userId) {
-	console.log("	 	")
-	console.log("		Problematic DATA: 	" + userId)
-	console.log("	 	")
 	// request
 	// 	.get(`http://localhost:4000/hey/${userId}`)
 	// 	.then(res => {
@@ -64,18 +60,28 @@ function ollyHey(userId) {
 	// 	.catch(err => console.log("			ERROR FROM OUTSIDE REQUEST:   " + err))
 }
 
-function ollyIntro() {
-	request
-		.get(`http://localhost:4000/intro`)
-		.then(res => {
-			request
-				.post('https://hooks.slack.com/services/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')
-				.set('Content-Type', 'application/json')
-				.send( { text: res.body.intro } )
-				.catch(err => console.log("			ERROR FROM INSIDE REQUEST:   " + err));
-			}
-		)
-		.catch(err => console.log("			ERROR FROM OUTSIDE REQUEST:   " + err))
+async function ollyIntro() {
+	
+	bot.postMessage(
+		"your-olly",
+		"Let me know about yourself",
+		{
+			attachments: await JSON.stringify(await introButton)
+		}
+	)
+	.then(res => console.log(" "))
+  	.catch(err => console.error(err))
+	// request
+	// 	.get(`http://localhost:4000/intro`)
+	// 	.then(res => {
+	// 		request
+	// 			.post('https://hooks.slack.com/services/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')
+	// 			.set('Content-Type', 'application/json')
+	// 			.send( { text: res.body.intro } )
+	// 			.catch(err => console.log("			ERROR FROM INSIDE REQUEST:   " + err));
+	// 		}
+	// 	)
+	// 	.catch(err => console.log("			ERROR FROM OUTSIDE REQUEST:   " + err))
 }
 
 async function ollyMatch(message) {
