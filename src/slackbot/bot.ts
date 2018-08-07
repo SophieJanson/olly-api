@@ -69,7 +69,7 @@ async function ollyIntro() {
 			attachments: await JSON.stringify(await introButton)
 		}
 	)
-	.then(res => console.log(" "))
+	.then(res => console.log(" ___ OLLY INTRO res ___ : ", res.message))
   	.catch(err => console.error(err))
 	// request
 	// 	.get(`http://localhost:4000/intro`)

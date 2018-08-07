@@ -124,8 +124,8 @@ export const threeIntroQuestions = async (trgId, callbId) => {
 						"type": "select",
 						"name": "choose_dept",
 						"options": await departments.map(dept => { return {
-							"label": `${dept}`,
-							"value": `${dept.toLowerCase().split(" ").join("_")}`
+							label: dept,
+							value: dept.toLowerCase().split(" ").join("_")
 							}
 						})
 					},
