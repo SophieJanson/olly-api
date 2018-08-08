@@ -77,7 +77,7 @@ export default class SlackbotController {
 				.then(res => console.log("threeQ answer: ", res.status, " ", res.body) )
 				.catch(err => console.log("			ERROR FROM intro_me CALLBACK:   " + err));
 			
-			// return ""
+			// return "" // it works even without this return statement
 		}
 
 		if (JSON.parse(data).type === "dialog_submission") {
@@ -86,16 +86,38 @@ export default class SlackbotController {
 			const funFact = JSON.parse(data).submission.fun_fact
 			const interests = JSON.parse(data).submission.your_interests
 			const userId = JSON.parse(data).user.id
-			
+
+			let answerTheUser = async (message) => {
+				await request
+				.post("https://slack.com/api/chat.postMessage")
+				.set({
+					'Content-Type': 'application/json; charset=utf8',
+					'Authorization': `Bearer ${token}`
+				})
+				.send({
+					"token": `${token}`,
+					"channel": `${JSON.parse(data).channel.id}`,
+					"text": `${message}`
+				})
+				.then(res => console.log("_____ RES from chat.postMessage__ : ", res.status, " ", res.body))
+				.catch(err => console.log("_____ RES from chat.postMessage__ : ", err))
+			}
+
+			const okayMessage = "Thanks! Now, I'll be able to match you with the right people!"
+			const nonOkayMessage = "I couldn't get your information properly. Can you try again?"
+
 			let entity = await User.findOne({ where: { slackId: userId }})
-			if (!entity) { return "I couldn't get your information properly. Let's try again!" }
+
+			if (!entity) { answerTheUser(nonOkayMessage) }
 			
+			if (entity) {
 			entity.department = await dept
 			entity.funFact = await funFact
 			entity.interests = await interests
-			await entity.save()
-			return "Thanks! Now, I'll be able to match you with the right people!"
-			// return "" // this should work with returning a message to the user, also do that when !entity
+			await entity.save()			
+			answerTheUser(okayMessage)
+			}
+			return "" 
 		}
 
 	return ""
