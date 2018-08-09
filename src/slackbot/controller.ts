@@ -13,7 +13,7 @@ import WeeklyUpdateController from '../weeklyUpdates/controller'
 import { threeIntroQuestions, noMatchesText, yourMatch, yourMatches, ollyIntroQuestionsThanks } from './bot-lib';
 import * as request from "superagent"
 
-const token = process.env.BOT_ID || "xoxb-215618382279-404376298535-QAhcY9Uwox7Mn7SrG0HaRbj4"
+const token = process.env.BOT_ID
 const Matches = new MatchController()
 const WeeklyUpdates = new WeeklyUpdateController()
 
@@ -31,10 +31,9 @@ export default class SlackbotController {
   ) {
 	const data = body.payload
 
-    if(JSON.parse(data).callback_id === "weekly_update") {
-      	const userId = JSON.parse(data).user.id
-      	const parsedMessage = JSON.parse(data)['actions'][0]
-		
+  if(JSON.parse(data).callback_id === "weekly_update") {
+		const userId = JSON.parse(data).user.id
+		const parsedMessage = JSON.parse(data)['actions'][0]
 		try {
 			if(parsedMessage['selected_options']) {
 			await WeeklyUpdates.newWeeklyGoals({
@@ -58,7 +57,6 @@ export default class SlackbotController {
 					.join(", ")
 			}
 		}
-
     return ""
 	}
 
@@ -106,7 +104,7 @@ export default class SlackbotController {
 			const okayMessage = `${ollyIntroQuestionsThanks}`
 
 			let entity = new User()
-			
+
 			entity.slackId = userId
 			entity.department = await dept
 			entity.funFact = await funFact

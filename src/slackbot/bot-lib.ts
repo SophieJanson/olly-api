@@ -1,4 +1,5 @@
 
+
 import Activity from "../activities/entity"
 
 // that's the message Olly sends away when the server running Olly starts
@@ -27,9 +28,10 @@ export const yourMatches = "Your matches are: "
 
 
 export const departments = ["Development", "Marketing", "Customer Success", "Human Resources", "Analytics", "Legal"]
+export const categories = ["socialize", "network"] 
+export const channel = "your-olly"
 
 export const threeButtonsFunc = async () => {
-    const categories = ["socialize", "network"] 
     const activities = await Activity.find()
     const fallback = "If you could read this message, you'd be choosing something fun to do right now."
     const callbackId = "weekly_update"
@@ -92,7 +94,7 @@ export const threeButtonsFunc = async () => {
                 ]
             },
             {
-                "fallback": "Submit Your Answer",
+                "fallback": fallback,
                 "title": "Submit Your Answer",
                 "callback_id": callbackId,
                 "color": "#66BD96",
@@ -151,7 +153,7 @@ export const threeIntroQuestions = async (trgId, callbId) => {
 						})
 					},
 					{
-						"label": "Fun Fact About You",
+						"label": "Funfact About You",
 						"name": "fun_fact",
 						"type": "text",
 						"placeholder": "Once, I ate the whole birthday cake of Joanna from Marketing ..."
