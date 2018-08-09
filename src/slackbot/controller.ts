@@ -12,7 +12,6 @@ import User from "../users/entity"
 import WeeklyUpdateController from '../weeklyUpdates/controller'
 import { threeIntroQuestions } from './bot-lib';
 import * as request from "superagent"
-// import { EntitySchema } from "../../node_modules/typeorm";
 
 const token = process.env.BOT_ID || "xoxb-215618382279-404376298535-QAhcY9Uwox7Mn7SrG0HaRbj4"
 const Matches = new MatchController()
@@ -33,10 +32,9 @@ export default class SlackbotController {
 	const data = body.payload
 	console.log("___JSON data from Slack___: " + data)
 
-    if(JSON.parse(data).callback_id === "weekly_update") {
-      	const userId = JSON.parse(data).user.id
-      	const parsedMessage = JSON.parse(data)['actions'][0]
-		
+  if(JSON.parse(data).callback_id === "weekly_update") {
+		const userId = JSON.parse(data).user.id
+		const parsedMessage = JSON.parse(data)['actions'][0]
 		try {
 			if(parsedMessage['selected_options']) {
 			await WeeklyUpdates.newWeeklyGoals({
@@ -56,7 +54,6 @@ export default class SlackbotController {
 			return "Your match(es) is / are: " + await matches.users.map(user => `<@${user.slackId}>`)
 			.join(", ")
 		}
-
     return ""
 	}
 
@@ -104,20 +101,14 @@ export default class SlackbotController {
 			}
 
 			const okayMessage = "Thanks! Now, I'll be able to match you with the right people!"
-			//const nonOkayMessage = "I couldn't get your information properly. Can you try again?"
 
-			let entity = new User() //await User.findOne({ where: { slackId: userId }})
-
-			// if (!entity) { answerTheUser(nonOkayMessage) }
-			
-			// if (entity) {
+			let entity = new User() 
 			entity.slackId = userId
 			entity.department = await dept
 			entity.funFact = await funFact
 			entity.interests = await interests
 			await entity.save()			
 			answerTheUser(okayMessage)
-			// }
 		}
 	}
 
