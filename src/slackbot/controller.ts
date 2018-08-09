@@ -48,14 +48,16 @@ export default class SlackbotController {
 
 		if(parsedMessage.value === "submit") {
 			let matches: any = await this.getMatches(userId)
+			
 			if(await matches === null || undefined) {
 				return `${noMatchesText}`
 			} 
+
 			let matchedUsers = await matches.users.filter(match => match.slackId !== userId)
 			
-			if (await matches.users.length === 1) {
+			if (await matchedUsers.length === 1) {
 				return `${yourMatch}`  + await `<@${matchedUsers[0].slackId}>`
-			} else if (await matches.users.length > 1) {
+			} else if (await matchedUsers.length > 1) {
 				return `${yourMatches}` + await matchedUsers.map(user => `<@${user.slackId}>`)
 					.join(", ")
 			}
