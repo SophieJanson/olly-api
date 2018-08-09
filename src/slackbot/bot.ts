@@ -1,4 +1,3 @@
-
 var SlackBot = require('slackbots');
 import {threeButtonsFunc, introButton, ollyOnStart, ollyOnIntro, ollyOnMatch, youDontExist, ollyNewActivity} from './bot-lib';
 import User from "../users/entity"
@@ -10,36 +9,37 @@ const activities = ["Talking JS", "Climbing", "Organizing a Potluck dinner", "Ca
 const newActivity = new Activity()
 
 export const bot = new SlackBot({
-	token: process.env.BOT_ID,
-	name: "Olly"
+    token: process.env.BOT_ID,
+    name: "Olly"
 })
 
 bot.on("start", () => {
-	const params = {
-		icon_emoji: ":penguin:"
-	}
-	
-	console.log(`Olly's server is running @ ${time}`)
+    const params = {
+        icon_emoji: ":penguin:"
+    }
+    
+    console.log(`Olly's server is running @ ${time}`)
 
-	bot.postMessageToChannel(
-		"olly-status",
-		`${ollyOnStart}`,
-		`${params.icon_emoji}`
-	)
+    bot.postMessageToChannel(
+        "olly-status",
+        `${ollyOnStart}`,
+        `${params.icon_emoji}`
+    )
 })
 
 bot.on("error", (err) => console.log(err))
 
 bot.on("message", (data) => {
-	if (data.type !== "message") {
-		return;
-	}
-	handleMessage(data)
+    if (data.type !== "message") {
+        return;
+    }
+    handleMessage(data)
 })
 
 function handleMessage(data) {
-	if(!data.text) return;
+    if(!data.text) return;
 
+<<<<<<< HEAD
 	if (data.text.includes("goals")) {
 		return ollyMatch(data)
 	} else if (data.text.includes("intro")) {
@@ -47,24 +47,33 @@ function handleMessage(data) {
 	} else if (data.text.includes("activity")) {
 		return ollyActivity()
 	}
+=======
+    if (data.text.includes("goals")) {
+        return ollyMatch(data)
+    } else if (data.text.includes("intro")) {
+        return ollyIntro(data)
+    } else if (data.text.includes("activity")) {
+        return ollyActivity()
+    }
+>>>>>>> 012f96527c2710ae9e1b2fa0ce9ed9f80066cd6a
 }
 
 async function ollyIntro(data) {
-	const existingUser = await User.find({slackId: data.user})
+    const existingUser = await User.find({slackId: data.user})
 
-	if(existingUser.length > 0) {
-		return `${youDontExist}`
-	}
+    if(existingUser.length > 0) {
+        return `${youDontExist}`
+    }
 
-	bot.postMessage(
-		data.channel,
-		`${ollyOnIntro}`,
-		{
-			attachments: await JSON.stringify(await introButton)
-		}
-	)
-	.then(res => console.log(" ___ OLLY INTRO res ___ : ", res.message))
-  	.catch(err => console.error(err))
+    bot.postMessage(
+        data.channel,
+        `${ollyOnIntro}`,
+        {
+            attachments: await JSON.stringify(await introButton)
+        }
+    )
+    .then(res => console.log(" ___ OLLY INTRO res ___ : ", res.message))
+      .catch(err => console.error(err))
 }
 
 async function ollyMatch(data) {
@@ -80,7 +89,7 @@ async function ollyMatch(data) {
 }
 
 async function ollyActivity() {
-	return activities.forEach(activ => {
-		return newActivity.addActivity(activ)
-	}) 
+    return activities.forEach(activ => {
+        return newActivity.addActivity(activ)
+    }) 
 }
