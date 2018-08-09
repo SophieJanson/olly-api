@@ -1,7 +1,6 @@
-// var request = require("superagent")
+
 var SlackBot = require('slackbots');
-import {threeButtonsFunc, introButton, departments} from './bot-lib';
-import User from '../users/entity'
+import {threeButtonsFunc, introButton, ollyOnStart, ollyOnIntro, ollyOnMatch} from './bot-lib';
 let time = `${new Date().getHours()}:${new Date().getMinutes()}`;
 
 export const bot = new SlackBot({
@@ -18,7 +17,7 @@ bot.on("start", () => {
 
 	bot.postMessageToChannel(
 		"your-olly",
-		"Olly is here for you!",
+		`${ollyOnStart}`,
 		`${params.icon_emoji}`
 	)
 })
@@ -35,60 +34,30 @@ bot.on("message", (data) => {
 function handleMessage(data) {
 	if(!data.text) return "no text"
 
-	if (data.text.includes(" hey")) {
-		return ollyHey(data.user)
-	} else if (data.text.includes(" goals")) {
+	if (data.text.includes(" goals")) {
 		return ollyMatch(data.text)
 	} else if (data.text.includes(" intro")) {
 		return ollyIntro()
-	} else if (data.text.includes(" add me")) {
-		return ollyAddUser(data)
-	}
-}
-
-function ollyHey(userId) {
-	// request
-	// 	.get(`http://localhost:4000/hey/${userId}`)
-	// 	.then(res => {
-	// 		request
-	// 			.post('https://hooks.slack.com/services/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')
-	// 			.set('Content-Type', 'application/json')
-	// 			.send( res.body.aboutMeButton )
-	// 			.catch(err => console.log("			ERROR FROM INSIDE REQUEST:   " + err));
-	// 		}
-	// 	)
-	// 	.catch(err => console.log("			ERROR FROM OUTSIDE REQUEST:   " + err))
+	} 
 }
 
 async function ollyIntro() {
 	
 	bot.postMessage(
 		"your-olly",
-		"Let me know about yourself",
+		`${ollyOnIntro}`,
 		{
 			attachments: await JSON.stringify(await introButton)
 		}
 	)
 	.then(res => console.log(" ___ OLLY INTRO res ___ : ", res.message))
   	.catch(err => console.error(err))
-	// request
-	// 	.get(`http://localhost:4000/intro`)
-	// 	.then(res => {
-	// 		request
-	// 			.post('https://hooks.slack.com/services/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')
-	// 			.set('Content-Type', 'application/json')
-	// 			.send( { text: res.body.intro } )
-	// 			.catch(err => console.log("			ERROR FROM INSIDE REQUEST:   " + err));
-	// 		}
-	// 	)
-	// 	.catch(err => console.log("			ERROR FROM OUTSIDE REQUEST:   " + err))
 }
 
 async function ollyMatch(message) {
-  console.log(message)
   bot.postMessage(
     "your-olly", 
-    "While you’re here, can you let me know what you’re up for this week?", 
+    `${ollyOnMatch}`, 
     {
       attachments: await JSON.stringify(await threeButtonsFunc())
     }
@@ -97,24 +66,3 @@ async function ollyMatch(message) {
   .catch(err => console.error(err))
 }
 
-async function ollyAddUser(message): Promise<User|string> {
-	const existingUser = await User.find({slackId: message.user})
-	if(existingUser.length > 0) {
-		return bot.postMessageToChannel(
-			'your-olly',
-			"You already exist"
-		)
-	}
-
-	const setDepartment = departments[Math.round(Math.random() * departments.length)]
-	
-	const user = new User()
-	user.slackId = message.user
-	user.department = setDepartment	
-	const savedUser = await user.save()
-	bot.postMessageToChannel(
-		'your-olly',
-		"You have been added"
-	)
-	return savedUser
-}

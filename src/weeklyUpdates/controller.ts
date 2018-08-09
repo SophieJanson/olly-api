@@ -16,7 +16,6 @@ export default class WeeklyUpdateController {
 
 		const user = await User.findOne({slackId: data.user})
 		if(!user || !user.id) throw new NotFoundError()
-		console.log("USER ID --------> ", user)
 		const week = moment().isoWeek()
 		const update = await getRepository(WeeklyUpdate)
 		.createQueryBuilder('weeklyupdate')
@@ -45,13 +44,13 @@ export default class WeeklyUpdateController {
 		const user = await User.findOne({slackId: userSlackId})
 
 		if(!user || !user.id) throw new NotFoundError()
-		console.log("USER ID --------> ", user)
+
 		const week = moment().isoWeek()
-    return await getRepository(WeeklyUpdate)
-      .createQueryBuilder('weeklyupdate')
-			.where("user_id_id = :id", {id: user.id})
-			.andWhere("week_number = :week", {week: week})
-			.getOne()
+		return await getRepository(WeeklyUpdate)
+		.createQueryBuilder('weeklyupdate')
+				.where("user_id_id = :id", {id: user.id})
+				.andWhere("week_number = :week", {week: week})
+				.getOne()
 	
   }
   

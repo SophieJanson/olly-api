@@ -21,9 +21,6 @@ useKoaServer(app, {
     LoginController,
     WeeklyUpdateController,
     CompanyController,
-	// MatchController,
-	// ActivityController,
-	// FollowUpController,
 	SlackbotController
   ],
   authorizationChecker: (action: Action) => {

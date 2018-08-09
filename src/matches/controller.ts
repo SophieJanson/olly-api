@@ -43,7 +43,6 @@ export default class MatchController {
   @Get("/logic/categories")
   @HttpCode(200)
   async getCategoryNow() {
-    console.log("socialize");
     return await getCategory("socialize");
   }
 

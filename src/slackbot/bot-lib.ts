@@ -1,6 +1,30 @@
 
-import User from "../users/entity"
 import Activity from "../activities/entity"
+
+// that's the message Olly sends away when the server running Olly starts
+export const ollyOnStart = "Olly is here for you!"
+
+// that's the message Olly sends away when the user types "@Olly intro"
+export const ollyOnIntro = "Let me know about yourself"
+
+// that's the message Olly sends when the user submits answers to the 3 intro questions
+export const ollyIntroQuestionsThanks = "Thanks! Now, I'll be able to match you with the right people!"
+
+// that's the message Olly sends away when the user types "@Olly match", it appears above the 3 drop-down questions
+export const ollyOnMatch = "While you’re here, can you let me know what you’re up for this week?"
+
+// that's the message Olly sends when there are no available matches
+export const noMatchesText = "No matches available. Try again next week"
+
+// that's the message Olly sends when there is ONE SINGLE match found
+export const yourMatch = "You matched with: "
+
+// that's the message Olly sends when there are MULTIPLE matches found
+export const yourMatches = "Your matches are: "
+
+
+
+
 
 export const departments = ["Development", "Marketing", "Customer Success", "Human Resources", "Analytics", "Legal"]
 

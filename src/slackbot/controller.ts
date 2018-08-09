@@ -10,9 +10,8 @@ import MatchController from "../matches/controller";
 import Company from "../companies/entity";
 import User from "../users/entity"
 import WeeklyUpdateController from '../weeklyUpdates/controller'
-import { threeIntroQuestions } from './bot-lib';
+import { threeIntroQuestions, noMatchesText, yourMatch, yourMatches, ollyIntroQuestionsThanks } from './bot-lib';
 import * as request from "superagent"
-// import { EntitySchema } from "../../node_modules/typeorm";
 
 const token = process.env.BOT_ID || "xoxb-215618382279-404376298535-QAhcY9Uwox7Mn7SrG0HaRbj4"
 const Matches = new MatchController()
@@ -31,7 +30,6 @@ export default class SlackbotController {
     @Body() body: any
   ) {
 	const data = body.payload
-	console.log("___JSON data from Slack___: " + data)
 
     if(JSON.parse(data).callback_id === "weekly_update") {
       	const userId = JSON.parse(data).user.id
@@ -49,12 +47,16 @@ export default class SlackbotController {
 		} 
 
 		if(parsedMessage.value === "submit") {
-			let matches = await this.getMatches(userId)
+			let matches: any = await this.getMatches(userId)
+
 			if(matches === null) {
-				return "No matches available. Try again next week"
-			} 
-			return "Your match(es) is / are: " + await matches.users.map(user => `<@${user.slackId}>`)
-			.join(", ")
+				return `${noMatchesText}`
+			} else if (matches = 1) {
+				return `${yourMatch}`  + await matches.users
+			} else if (matches > 1) {
+				return `${yourMatches}` + await matches.users.map(user => `<@${user.slackId}>`)
+					.join(", ")
+			}
 		}
 
     return ""
@@ -76,8 +78,6 @@ export default class SlackbotController {
 				.send( await threeQ )
 				.then(res => console.log("threeQ answer: ", res.status, " ", res.body) )
 				.catch(err => console.log("			ERROR FROM intro_me CALLBACK:   " + err));
-			
-			// return "" // it works even without this return statement
 		}
 
 		if (JSON.parse(data).type === "dialog_submission") {
@@ -103,21 +103,16 @@ export default class SlackbotController {
 				.catch(err => console.log("_____ RES from chat.postMessage__ : ", err))
 			}
 
-			const okayMessage = "Thanks! Now, I'll be able to match you with the right people!"
-			//const nonOkayMessage = "I couldn't get your information properly. Can you try again?"
+			const okayMessage = `${ollyIntroQuestionsThanks}`
 
-			let entity = new User() //await User.findOne({ where: { slackId: userId }})
-
-			// if (!entity) { answerTheUser(nonOkayMessage) }
+			let entity = new User()
 			
-			// if (entity) {
 			entity.slackId = userId
 			entity.department = await dept
 			entity.funFact = await funFact
 			entity.interests = await interests
 			await entity.save()			
 			answerTheUser(okayMessage)
-			// }
 		}
 	}
 
