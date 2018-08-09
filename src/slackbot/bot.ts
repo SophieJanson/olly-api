@@ -5,7 +5,7 @@ import User from '../users/entity'
 let time = `${new Date().getHours()}:${new Date().getMinutes()}`;
 
 export const bot = new SlackBot({
-	token: process.env.BOT_ID || "xoxb-215618382279-404376298535-QAhcY9Uwox7Mn7SrG0HaRbj4",
+	token: process.env.BOT_ID,
 	name: "Olly"
 })
 

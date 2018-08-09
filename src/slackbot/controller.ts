@@ -13,7 +13,7 @@ import WeeklyUpdateController from '../weeklyUpdates/controller'
 import { threeIntroQuestions } from './bot-lib';
 import * as request from "superagent"
 
-const token = process.env.BOT_ID || "xoxb-215618382279-404376298535-QAhcY9Uwox7Mn7SrG0HaRbj4"
+const token = process.env.BOT_ID
 const Matches = new MatchController()
 const WeeklyUpdates = new WeeklyUpdateController()
 
