@@ -33,8 +33,6 @@ export default class SlackbotController {
 	console.log(data)
 
   if(JSON.parse(data).callback_id === "weekly_update") {
-		console.log(data)
-		console.log(data.callback_id)
 		const userId = JSON.parse(data).user.id
 		const parsedMessage = JSON.parse(data)['actions'][0]
 		try {
@@ -50,7 +48,8 @@ export default class SlackbotController {
 
 		if(parsedMessage.value === "submit") {
 			let matches: any = await this.getMatches(userId)
-
+			matches = await matches.filter(match => match.slackId !== userId)
+			
 			if(await matches === null || undefined) {
 				return `${noMatchesText}`
 			} else if (await matches.users.length === 1) {
