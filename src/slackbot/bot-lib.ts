@@ -1,15 +1,12 @@
 
 import User from "../users/entity"
 import Activity from "../activities/entity"
-// import { triggerAsyncId } from "async_hooks";
 
-const departments = ["Development", "Marketing", "Customer Success", "Human Resources", "Analytics", "Legal"]
+export const departments = ["Development", "Marketing", "Customer Success", "Human Resources", "Analytics", "Legal"]
 
 export const threeButtonsFunc = async () => {
-    
-    const categories = ["socialize", "network"] //await WeeklyUpdate.find( { select: ["category"] } )
+    const categories = ["socialize", "network"] 
     const activities = await Activity.find()
-    const departments = await User.find( { select: ["department"] } )
     const fallback = "If you could read this message, you'd be choosing something fun to do right now."
     const callbackId = "weekly_update"
 
@@ -63,8 +60,8 @@ export const threeButtonsFunc = async () => {
                         "text": "Pick buddy/buddies",
                         "type": "select",
                         "options": await departments.map(dept => { return {
-                                    text: dept.department,
-                                    value: dept.department
+                                    text: dept,
+                                    value: dept.toLowerCase().split(" ").join("_")
                                 } 
                             } )
                     }
@@ -139,7 +136,7 @@ export const threeIntroQuestions = async (trgId, callbId) => {
 						"label": "Your Interests",
 						"name": "your_interests",
 						"type": "text",
-						"placeholder": "fill in 3 areas of interest, separated with a comma"
+						"placeholder": "Interested in knitting, javascript or sustainability? Let me know what you are most passionate about!"
 					}
 				]
 

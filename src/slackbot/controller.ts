@@ -50,8 +50,8 @@ export default class SlackbotController {
 
 		if(parsedMessage.value === "submit") {
 			let matches = await this.getMatches(userId)
-			if(!matches) {
-			return "No matches available. Try again next week"
+			if(matches === null) {
+				return "No matches available. Try again next week"
 			} 
 			return "Your match(es) is / are: " + await matches.users.map(user => `<@${user.slackId}>`)
 			.join(", ")
@@ -104,25 +104,23 @@ export default class SlackbotController {
 			}
 
 			const okayMessage = "Thanks! Now, I'll be able to match you with the right people!"
-			const nonOkayMessage = "I couldn't get your information properly. Can you try again?"
+			//const nonOkayMessage = "I couldn't get your information properly. Can you try again?"
 
-			let entity = await User.findOne({ where: { slackId: userId }})
+			let entity = new User() //await User.findOne({ where: { slackId: userId }})
 
-			if (!entity) { answerTheUser(nonOkayMessage) }
+			// if (!entity) { answerTheUser(nonOkayMessage) }
 			
-			if (entity) {
+			// if (entity) {
+			entity.slackId = userId
 			entity.department = await dept
 			entity.funFact = await funFact
 			entity.interests = await interests
 			await entity.save()			
 			answerTheUser(okayMessage)
-			}
-			return "" 
+			// }
 		}
-
-	return ""
 	}
-	
+
 	return ""
 	}
 

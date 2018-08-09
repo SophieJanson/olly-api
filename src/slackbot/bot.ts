@@ -1,6 +1,6 @@
 // var request = require("superagent")
 var SlackBot = require('slackbots');
-import {threeButtonsFunc, introButton} from './bot-lib';
+import {threeButtonsFunc, introButton, departments} from './bot-lib';
 import User from '../users/entity'
 let time = `${new Date().getHours()}:${new Date().getMinutes()}`;
 
@@ -106,7 +106,6 @@ async function ollyAddUser(message): Promise<User|string> {
 		)
 	}
 
-	const departments = ["development", "marketing", "customer success", "hr"]
 	const setDepartment = departments[Math.round(Math.random() * departments.length)]
 	
 	const user = new User()
