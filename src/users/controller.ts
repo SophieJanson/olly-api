@@ -8,7 +8,6 @@ export default class UserController {
 	@Post('/users')
 	async signup(
 		@Body() userData: any) {
-    console.log("DATA", userData)
 		const entity = await User.create(userData);
 		const user = await entity.save();
 		return await user;
@@ -39,7 +38,6 @@ export default class UserController {
 			return updatedUser
 		}
 
-  // @Get('/users/:userId')
   async getUser(
     userSlackId: number,
     @Param('userId') userId: number
