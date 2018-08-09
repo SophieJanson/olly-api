@@ -28,9 +28,10 @@ export const youDontExist = "You already exist"
 export const departments = ["Development", "Marketing", "Customer Success", "Human Resources", "Analytics", "Legal"]
 export const categories = ["socialize", "network"] 
 export const channel = "your-olly"
+export const activities = ["Talking JS", "Climbing", "Organizing a Potluck dinner", "Camel riding", "Nude yoga"]
 
 export const threeButtonsFunc = async () => {
-    const activities = await Activity.find()
+//     const activities = await Activity.find()
     const fallback = "If you could read this message, you'd be choosing something fun to do right now."
     const callbackId = "weekly_update"
 
@@ -64,9 +65,9 @@ export const threeButtonsFunc = async () => {
                         "name": "activity",
                         "text": "Pick an activity",
                         "type": "select",
-                        "options": await activities.map(activ => { return {
-                                    text: activ.activityName,
-                                    value: activ.id
+                        "options": await activities.map((activ, index) => { return {
+                                    text: activ,
+                                    value: index
                                 } 
                             } )
                     }
