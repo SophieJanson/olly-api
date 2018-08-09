@@ -1,5 +1,4 @@
 
-
 import Activity from "../activities/entity"
 
 // that's the message Olly sends away when the server running Olly starts
@@ -18,14 +17,13 @@ export const ollyOnMatch = "While you’re here, can you let me know what you’
 export const noMatchesText = "No matches available. Try again next week"
 
 // that's the message Olly sends when there is ONE SINGLE match found
-export const yourMatch = "You matched with: "
+export const yourMatch = "You matched with "
 
 // that's the message Olly sends when there are MULTIPLE matches found
-export const yourMatches = "Your matches are: "
+export const yourMatches = "Your matches are "
 
-
-
-
+// that's the message Olly sends when you already exist in the database
+export const youDontExist = "You already exist"
 
 export const departments = ["Development", "Marketing", "Customer Success", "Human Resources", "Analytics", "Legal"]
 export const categories = ["socialize", "network"] 

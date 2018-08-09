@@ -30,8 +30,11 @@ export default class SlackbotController {
     @Body() body: any
   ) {
 	const data = body.payload
+	console.log(data)
 
   if(JSON.parse(data).callback_id === "weekly_update") {
+		console.log(data)
+		console.log(data.callback_id)
 		const userId = JSON.parse(data).user.id
 		const parsedMessage = JSON.parse(data)['actions'][0]
 		try {
@@ -48,11 +51,11 @@ export default class SlackbotController {
 		if(parsedMessage.value === "submit") {
 			let matches: any = await this.getMatches(userId)
 
-			if(matches === null) {
+			if(await matches === null || undefined) {
 				return `${noMatchesText}`
-			} else if (matches = 1) {
-				return `${yourMatch}`  + await matches.users
-			} else if (matches > 1) {
+			} else if (await matches.users.length === 1) {
+				return `${yourMatch}`  + await `<@${matches.users[0].slackId}>`
+			} else if (await matches.users.length > 1) {
 				return `${yourMatches}` + await matches.users.map(user => `<@${user.slackId}>`)
 					.join(", ")
 			}
