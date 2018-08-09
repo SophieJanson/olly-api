@@ -9,9 +9,11 @@ export default class ActivityController {
   }
 
   async addActivity(
-    activity: Activity
+    activity: string
   ) {
-    return activity.save()
+	const activ = new Activity()
+	activ.activityName = activity
+    return activ.save()
   }
 
   async editActivity(

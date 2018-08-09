@@ -1,8 +1,13 @@
 
 var SlackBot = require('slackbots');
-import {threeButtonsFunc, introButton, ollyOnStart, ollyOnIntro, ollyOnMatch, youDontExist} from './bot-lib';
+import {threeButtonsFunc, introButton, ollyOnStart, ollyOnIntro, ollyOnMatch, youDontExist, ollyNewActivity} from './bot-lib';
 import User from "../users/entity"
+import Activity from "../activities/controller"
 let time = `${new Date().getHours()}:${new Date().getMinutes()}`;
+
+const activities = ["Talking JS", "Climbing", "Organizing a Potluck dinner", "Camel riding", "Nude yoga"]
+
+const newActivity = new Activity()
 
 export const bot = new SlackBot({
 	token: process.env.BOT_ID,
@@ -39,6 +44,8 @@ function handleMessage(data) {
 		return ollyMatch(data)
 	} else if (data.text.includes("intro")) {
 		return ollyIntro(data)
+	} else if (data.text.includes("activity")) {
+		return ollyActivity()
 	}
 }
 
@@ -56,7 +63,7 @@ async function ollyIntro(data) {
 			attachments: await JSON.stringify(await introButton)
 		}
 	)
-		.then(res => console.log(" ___ OLLY INTRO res ___ : ", res.message))
+	.then(res => console.log(" ___ OLLY INTRO res ___ : ", res.message))
   	.catch(err => console.error(err))
 }
 
@@ -70,4 +77,10 @@ async function ollyMatch(data) {
   )
   .then(res => console.log("RESULT", res))
   .catch(err => console.error(err))
+}
+
+async function ollyActivity() {
+	return activities.forEach(activ => {
+		return newActivity.addActivity(activ)
+	}) 
 }
