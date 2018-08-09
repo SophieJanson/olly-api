@@ -49,7 +49,6 @@ export async function algolly(inputDepartment, inputActivities, inputCategory) {
   const departmentMatch = await getDepartment(inputDepartment);
   const activityMatch = await getActivity(inputActivities);
   const categoryMatch = await getCategory(inputCategory);
-  console.log(inputActivities, "inputactivity");
   if (!departmentMatch || departmentMatch.length === 0) {
     if (!activityMatch || activityMatch.length === 0) {
       if (!categoryMatch || categoryMatch.length === 0) {

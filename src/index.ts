@@ -9,9 +9,10 @@ import WeeklyUpdateController from "./weeklyUpdates/controller";
 import SlackbotController from "./slackbot/controller";
 import CompanyController from "./companies/controller";
 import { bot } from './slackbot/bot'
+require('dotenv').config()
 
 const app = new Koa();
-const port = 4000;
+const port = process.env.PORT || 4000;
 let time = `${new Date().getHours()}:${new Date().getMinutes()}`;
 
 useKoaServer(app, {
@@ -21,9 +22,6 @@ useKoaServer(app, {
     LoginController,
     WeeklyUpdateController,
     CompanyController,
-	// MatchController,
-	// ActivityController,
-	// FollowUpController,
 	SlackbotController
   ],
   authorizationChecker: (action: Action) => {

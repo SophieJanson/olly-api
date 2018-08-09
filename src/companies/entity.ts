@@ -44,7 +44,6 @@ export default class Company extends BaseEntity {
   }
 
   checkApiKey(rawApiKey: string): Promise<boolean> {
-    console.log("ARGS", rawApiKey)
     return bcrypt.compare(rawApiKey, this.apiKey);
   }
 }
