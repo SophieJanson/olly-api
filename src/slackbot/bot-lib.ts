@@ -1,6 +1,3 @@
-
-import Activity from "../activities/entity"
-
 // that's the message Olly sends away when the server running Olly starts
 export const ollyOnStart = "Olly is here for you!"
 
