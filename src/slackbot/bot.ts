@@ -1,5 +1,5 @@
 var SlackBot = require('slackbots');
-import {threeButtonsFunc, introButton, ollyOnStart, ollyOnIntro, ollyOnMatch, youDontExist, ollyNewActivity} from './bot-lib';
+import {threeButtonsFunc, introButton, ollyOnStart, ollyOnIntro, ollyOnMatch, youDontExist} from './bot-lib';
 import User from "../users/entity"
 import Activity from "../activities/controller"
 let time = `${new Date().getHours()}:${new Date().getMinutes()}`;
@@ -39,7 +39,6 @@ bot.on("message", (data) => {
 function handleMessage(data) {
     if(!data.text) return;
 
-<<<<<<< HEAD
 	if (data.text.includes("goals")) {
 		return ollyMatch(data)
 	} else if (data.text.includes("intro")) {
@@ -47,15 +46,6 @@ function handleMessage(data) {
 	} else if (data.text.includes("activity")) {
 		return ollyActivity()
 	}
-=======
-    if (data.text.includes("goals")) {
-        return ollyMatch(data)
-    } else if (data.text.includes("intro")) {
-        return ollyIntro(data)
-    } else if (data.text.includes("activity")) {
-        return ollyActivity()
-    }
->>>>>>> 012f96527c2710ae9e1b2fa0ce9ed9f80066cd6a
 }
 
 async function ollyIntro(data) {
