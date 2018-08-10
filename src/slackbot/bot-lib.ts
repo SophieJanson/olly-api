@@ -10,6 +10,8 @@ export const ollyOnIntro = "Let me know about yourself"
 // that's the message Olly sends when the user submits answers to the 3 intro questions
 export const ollyIntroQuestionsThanks = "Thanks! Now, I'll be able to match you with the right people!"
 
+export const ollyIntroQuestionsFailed = "Sorry, I'm afraid something went wrong. Can you try again?"
+
 // that's the message Olly sends away when the user types "@Olly match", it appears above the 3 drop-down questions
 export const ollyOnMatch = "While you’re here, can you let me know what you’re up for this week?"
 
