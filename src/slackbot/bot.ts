@@ -50,12 +50,6 @@ function handleMessage(data) {
 }
 
 async function ollyIntro(data) {
-    const existingUser = await User.find({slackId: data.user})
-
-    if(existingUser.length > 0) {
-        return `${youDontExist}`
-    }
-
     bot.postMessage(
         data.channel,
 		`${ollyOnIntro}`,			
@@ -68,7 +62,6 @@ async function ollyIntro(data) {
 }
 
 async function ollyMatch(data) {
-	console.log("hey")
   bot.postMessage(
     data.channel, 
     `${ollyOnMatch}`,

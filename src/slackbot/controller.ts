@@ -10,7 +10,7 @@ import MatchController from "../matches/controller";
 import Company from "../companies/entity";
 import User from "../users/entity"
 import WeeklyUpdateController from '../weeklyUpdates/controller'
-import { threeIntroQuestions, noMatchesText, yourMatch, yourMatches, ollyIntroQuestionsThanks, ollyIntroQuestionsFailed } from './bot-lib';
+import { threeIntroQuestions, noMatchesText, yourMatch, yourMatches, ollyIntroQuestionsThanks, ollyIntroQuestionsFailed, youDontExist } from './bot-lib';
 import * as request from "superagent"
 import Match from "../matches/entity";
 
@@ -62,6 +62,11 @@ export default class SlackbotController {
 
 			case 'intro_me':
 				if(parsedData.type === "interactive_message") {
+					const existingUser = await User.find({slackId: data.user})
+					if(existingUser.length > 0) {
+							this.answerTheUser("It seems like you're already in our database. You can't intro yourself again", parsedData.response_url)
+					}
+
 					let threeQ = await threeIntroQuestions(parsedData.trigger_id, parsedData.callback_id)
 		
 					await request
@@ -89,6 +94,7 @@ export default class SlackbotController {
 						})
 				}
 				return ""
+
 			default: 
 				return ollyIntroQuestionsFailed
 		}
