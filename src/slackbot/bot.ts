@@ -1,6 +1,5 @@
 var SlackBot = require('slackbots');
-import {threeButtonsFunc, introButton, ollyOnStart, ollyOnIntro, ollyOnMatch, youDontExist} from './bot-lib';
-import User from "../users/entity"
+import {threeButtonsFunc, introButton, ollyOnStart, ollyOnIntro, ollyOnMatch} from './bot-lib';
 import Activity from "../activities/controller"
 let time = `${new Date().getHours()}:${new Date().getMinutes()}`;
 
