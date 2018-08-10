@@ -64,7 +64,7 @@ export default class SlackbotController {
 				if(parsedData.type === "interactive_message") {
 					const existingUser = await User.find({slackId: data.user})
 					if(existingUser.length > 0) {
-							this.answerTheUser(youDontExist, parsedData.response_url)
+						return this.answerTheUser(youDontExist, parsedData.response_url)
 					}
 
 					let threeQ = await threeIntroQuestions(parsedData.trigger_id, parsedData.callback_id)
