@@ -43,6 +43,7 @@ export default class SlackbotController {
 							user: userId,
 							[parsedMessage.name]: [parsedMessage['selected_options'][0].value]
 						})
+						console.log("DOES THIS RETURN EMPTY")
 						return ""
 					}
 				} catch(e) {
@@ -52,9 +53,9 @@ export default class SlackbotController {
 				if(parsedMessage.value === "submit") {
 					let matches: Match | null = await this.getMatches(userId)
 					console.log("MATCHES ARE: ", await matches)
-					if(!matches) {
-						return "no matches"
-					}
+					if(!matches) return "no matches"
+					console.log("DOES IT GET TO TRIM USERS")
+
 					return this.trimMatchedUsers(matches.users, userId)
 				}
 				break;
@@ -113,12 +114,18 @@ export default class SlackbotController {
 
 	trimMatchedUsers = (users, currentUserSlackId: string): string  => {
 		if(!users || users.length < 1) return noMatchesText
+		console.log("DOES IT GET HERE? TRIM USERS LINE 117")
+
 		const newUsers = users.filter(user => user.slackId !== currentUserSlackId)
+
 		if( users.length > newUsers.length) {
 			return this.trimMatchedUsers(newUsers, currentUserSlackId)
 		}
+		console.log("DOES IT GET HERE? TRIM USERS LINE 124")
+
 		const message = users.length < 2 ? yourMatch : yourMatches 
 		const usersString = users.length < 2 ? users[0].slackId : users.map(user => user.slackId).join(", ")
+		console.log("DOES IT GET HERE?", message, usersString)
 		return `${message} <@${usersString}>`
 	}
 
