@@ -10,7 +10,7 @@ import MatchController from "../matches/controller";
 import Company from "../companies/entity";
 import User from "../users/entity"
 import WeeklyUpdateController from '../weeklyUpdates/controller'
-import { threeIntroQuestions, noMatchesText, yourMatch, yourMatches, ollyIntroQuestionsThanks, ollyIntroQuestionsFailed, youDontExist } from './bot-lib';
+import { threeIntroQuestions, noMatchesText, yourMatch, yourMatches, ollyIntroQuestionsThanks, ollyIntroQuestionsFailed } from './bot-lib';
 import * as request from "superagent"
 import Match from "../matches/entity";
 
@@ -62,11 +62,6 @@ export default class SlackbotController {
 
 			case 'intro_me':
 				if(parsedData.type === "interactive_message") {
-					const existingUser = await User.find({slackId: data.user})
-					if(existingUser.length > 0) {
-						return this.answerTheUser(youDontExist, parsedData.response_url)
-					}
-
 					let threeQ = await threeIntroQuestions(parsedData.trigger_id, parsedData.callback_id)
 		
 					await request
@@ -101,7 +96,13 @@ export default class SlackbotController {
 	}
 
 	async saveUser(dept, funFact, interest, userId) {
-		let entity = new User()
+		const existingUsers = await User.find({slackId: userId})
+		let entity
+		if(await existingUsers.length > 0) {
+			entity = await existingUsers[0]
+		} else {
+			entity = new User()
+		}
 		entity.slackId = userId
 		entity.department = await dept
 		entity.funFact = await funFact
