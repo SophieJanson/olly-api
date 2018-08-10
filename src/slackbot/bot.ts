@@ -20,7 +20,7 @@ bot.on("start", () => {
     
     console.log(`Olly's server is running @ ${time}`)
 
-    bot.postMessageToChannel(
+		bot.postMessageToChannel(
         "olly-status",
         `${ollyOnStart}`,
         `${params.icon_emoji}`
@@ -37,7 +37,8 @@ bot.on("message", (data) => {
 })
 
 function handleMessage(data) {
-    if(!data.text) return;
+
+	if(!data.text) return;
 
 	if (data.text.includes("goals")) {
 		return ollyMatch(data)
@@ -57,7 +58,7 @@ async function ollyIntro(data) {
 
     bot.postMessage(
         data.channel,
-        `${ollyOnIntro}`,
+		`${ollyOnIntro}`,			
         {
             attachments: await JSON.stringify(await introButton)
         }
@@ -67,6 +68,7 @@ async function ollyIntro(data) {
 }
 
 async function ollyMatch(data) {
+	console.log("hey")
   bot.postMessage(
     data.channel, 
     `${ollyOnMatch}`,

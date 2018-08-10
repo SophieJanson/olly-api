@@ -10,8 +10,9 @@ import MatchController from "../matches/controller";
 import Company from "../companies/entity";
 import User from "../users/entity"
 import WeeklyUpdateController from '../weeklyUpdates/controller'
-import { threeIntroQuestions, noMatchesText, yourMatch, yourMatches, ollyIntroQuestionsThanks } from './bot-lib';
+import { threeIntroQuestions, noMatchesText, yourMatch, yourMatches, ollyIntroQuestionsThanks, ollyIntroQuestionsFailed } from './bot-lib';
 import * as request from "superagent"
+import Match from "../matches/entity";
 
 const token = process.env.BOT_ID
 const Matches = new MatchController()
@@ -29,97 +30,76 @@ export default class SlackbotController {
     @HttpCode(200)
     @Body() body: any
   ) {
-	const data = body.payload
-	console.log(data)
+		const data = body.payload,
+					parsedData = JSON.parse(data),
+					userId = parsedData.user.id
 
-  if(JSON.parse(data).callback_id === "weekly_update") {
-		const userId = JSON.parse(data).user.id
-		const parsedMessage = JSON.parse(data)['actions'][0]
-		try {
-			if(parsedMessage['selected_options']) {
-			await WeeklyUpdates.newWeeklyGoals({
-				user: userId,
-				[parsedMessage.name]: [parsedMessage['selected_options'][0].value]
-			})
-			}
-		} catch(e) {
-			console.error("ERROR_________", e)
-		} 
+		switch(parsedData.callback_id) {
+			case 'weekly_update':
+				const parsedMessage = parsedData['actions'][0]
+				try {
+					if(parsedMessage['selected_options']) {
+						await WeeklyUpdates.newWeeklyGoals({
+							user: userId,
+							[parsedMessage.name]: [parsedMessage['selected_options'][0].value]
+						})
+						return ""
+					}
+				} catch(e) {
+					console.error("ERROR_________", e)
+				} 
 
-		if(parsedMessage.value === "submit") {
-			let matches: any = await this.getMatches(userId)
+				if(parsedMessage.value === "submit") {
+					let matches: Match | null = await this.getMatches(userId)
+					console.log("MATCHES ARE: ", await matches)
+					if(!matches) {
+						return "no matches"
+					}
+					return this.trimMatchedUsers(matches.users, userId)
+				}
+				break;
+
+			case 'intro_me':
+				if(parsedData.type === "interactive_message") {
+					let threeQ = await threeIntroQuestions(parsedData.trigger_id, parsedData.callback_id)
+		
+					await request
+						.post("https://slack.com/api/dialog.open")
+						.set({
+							'Content-Type': 'application/json; charset=utf8',
+							'Authorization': `Bearer ${token}`
+						})
+						.send( await threeQ )
+						.then(res => console.log("threeQ answer: ", res.status, " ", res.body) )
+						.catch(err => console.log("			ERROR FROM intro_me CALLBACK:   " + err));
+				}
+		
+				if (parsedData.type === "dialog_submission") {
+					const dept = parsedData.submission.choose_dept,
+								funFact = parsedData.submission.fun_fact,
+								interests = parsedData.submission.your_interests,
+								userId = parsedData.user.id
 			
-			if(await matches === null || undefined) {
-				return `${noMatchesText}`
-			} 
-
-			let matchedUsers = await matches.users.filter(match => match.slackId !== userId)
-			
-			if (await matchedUsers.length === 1) {
-				return `${yourMatch}`  + await `<@${matchedUsers[0].slackId}>`
-			} else if (await matchedUsers.length > 1) {
-				return `${yourMatches}` + await matchedUsers.map(user => `<@${user.slackId}>`)
-					.join(", ")
-			}
-		}
-    return ""
-	}
-
-	if(JSON.parse(data).callback_id === "intro_me") {
-
-		if(JSON.parse(data).type === "interactive_message") {
-			let triggerId = JSON.parse(data).trigger_id
-			let callbackId = JSON.parse(data).callback_id
-			let threeQ = await threeIntroQuestions(triggerId, callbackId)
-
-			await request
-				.post("https://slack.com/api/dialog.open")
-				.set({
-					'Content-Type': 'application/json; charset=utf8',
-					'Authorization': `Bearer ${token}`
-				})
-				.send( await threeQ )
-				.then(res => console.log("threeQ answer: ", res.status, " ", res.body) )
-				.catch(err => console.log("			ERROR FROM intro_me CALLBACK:   " + err));
-		}
-
-		if (JSON.parse(data).type === "dialog_submission") {
-
-			const dept = JSON.parse(data).submission.choose_dept
-			const funFact = JSON.parse(data).submission.fun_fact
-			const interests = JSON.parse(data).submission.your_interests
-			const userId = JSON.parse(data).user.id
-
-			let answerTheUser = async (message) => {
-				await request
-				.post("https://slack.com/api/chat.postMessage")
-				.set({
-					'Content-Type': 'application/json; charset=utf8',
-					'Authorization': `Bearer ${token}`
-				})
-				.send({
-					"token": `${token}`,
-					"channel": `${JSON.parse(data).channel.id}`,
-					"text": `${message}`
-				})
-				.then(res => console.log("_____ RES from chat.postMessage__ : ", res.status, " ", res.body))
-				.catch(err => console.log("_____ RES from chat.postMessage__ : ", err))
-			}
-
-			const okayMessage = `${ollyIntroQuestionsThanks}`
-
-			let entity = new User()
-
-			entity.slackId = userId
-			entity.department = await dept
-			entity.funFact = await funFact
-			entity.interests = await interests
-			await entity.save()			
-			answerTheUser(okayMessage)
+					this.saveUser(dept, funFact, interests, userId)
+						.then(_ => this.answerTheUser(ollyIntroQuestionsThanks, parsedData.response_url))
+						.catch(err => {
+							console.error(err)
+							this.answerTheUser(ollyIntroQuestionsFailed, parsedData.response_url)
+						})
+				}
+				return ""
+			default: 
+				return ollyIntroQuestionsFailed
 		}
 	}
 
-	return ""
+	async saveUser(dept, funFact, interest, userId) {
+		let entity = new User()
+		entity.slackId = userId
+		entity.department = await dept
+		entity.funFact = await funFact
+		entity.interests = await interest
+		await entity.save()	
 	}
 
 	async getMatches(
@@ -131,11 +111,28 @@ export default class SlackbotController {
 		return await Matches.createMatch({department, activityId, category, id: update.id})
 	}
 
-	@Post("/")
-	async getPost(
-		@HttpCode(200)
-		@Body() body: any
-	) {
-		return body
+	trimMatchedUsers = (users, currentUserSlackId: string): string  => {
+		if(!users || users.length < 1) return noMatchesText
+		const newUsers = users.filter(user => user.slackId !== currentUserSlackId)
+		if( users.length > newUsers.length) {
+			return this.trimMatchedUsers(newUsers, currentUserSlackId)
+		}
+		const message = users.length < 2 ? yourMatch : yourMatches 
+		const usersString = users.length < 2 ? users[0].slackId : users.map(user => user.slackId).join(", ")
+		return `${message} <@${usersString}>`
+	}
+
+	answerTheUser = async (message, responseUrl) => {
+		await request
+		.post(responseUrl)
+		.set({
+			'Content-Type': 'application/json; charset=utf8',
+			'Authorization': `Bearer ${token}`
+		})
+		.send({
+			"text": `${message}`
+		})
+		.then(res => console.log("_____ RES from chat.postMessage__ : ", res.status, " ", res.body))
+		.catch(err => console.log("_____ RES from chat.postMessage__ : ", err))
 	}
 }
