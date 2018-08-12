@@ -14,7 +14,7 @@ export default class Activity extends BaseEntity {
 
   @IsString()
   @MinLength(2)
-  @Column("text")
+  @Column("text", {unique: true})
   activityName: string;
 
   @OneToMany(_ => WeeklyUpdate, WeeklyUpdate => WeeklyUpdate.activityId)

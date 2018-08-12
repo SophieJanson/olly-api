@@ -26,7 +26,7 @@ export const yourMatches = "Your matches are "
 
 // that's the message Olly sends when you already exist in the database
 export const youDontExist = "You already exist"
-
+export const activities = ["Talking JS", "Climbing", "Organizing a Potluck dinner", "Camel riding", "Nude yoga"]
 export const departments = ["Development", "Marketing", "Customer Success", "Human Resources", "Analytics", "Legal"]
 export const categories = ["socialize", "network"] 
 export const channel = "your-olly"

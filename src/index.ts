@@ -8,7 +8,6 @@ import LoginController from "./logins/controller";
 import WeeklyUpdateController from "./weeklyUpdates/controller";
 import SlackbotController from "./slackbot/controller";
 import CompanyController from "./companies/controller";
-import { bot } from './slackbot/bot'
 require('dotenv').config()
 
 const app = new Koa();
@@ -42,7 +41,6 @@ setupDb()
   .then(_ => {
     app.listen(port);
     console.log(`Listening on port ${port}  @ ${time}`);
-    bot
   })
   .catch(err => console.error(err));
 
