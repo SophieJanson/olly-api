@@ -52,6 +52,9 @@ export default class SlackbotController {
 		@HttpCode(200)
 		@Body() body: any
 	) {
+		//Slack needs this to validate the request URL. 
+		if(body.challenge) return body.challenge
+		
 		if(!body.event || body.event.type !== 'message' || body.event.bot_id || !body.event.text) return "Error"
 		
 		if(body.event.text.includes('goals')) {
@@ -73,7 +76,7 @@ export default class SlackbotController {
 			return ""
 		}
 
-		return body.challenge ? body.challenge : "Hello"
+		return ""
 	}
 
   @Post('/slacktest')
