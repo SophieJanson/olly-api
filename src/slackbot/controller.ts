@@ -95,7 +95,7 @@ export default class SlackbotController {
 							user: userId,
 							[parsedMessage.name]: [parsedMessage['selected_options'][0].value]
 						})
-						return ""
+						return " "
 					}
 				} catch(e) {
 					console.error("ERROR_________", e)
