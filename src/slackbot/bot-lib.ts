@@ -4,6 +4,9 @@ import Activity from "../activities/entity"
 // that's the message Olly sends away when the server running Olly starts
 export const ollyOnStart = "Olly is here for you!"
 
+// that's the message Olly sends away when a new user joins the team
+export const ollyNewUserJoinTeam = " HEY-YO! You just joined this team, I saw you! Type '@Olly intro' so we can start, then type '@Olly set activities', then type '@Olly goals' "
+
 // that's the message Olly sends away when the user types "@Olly intro"
 export const ollyOnIntro = "Let me know about yourself"
 

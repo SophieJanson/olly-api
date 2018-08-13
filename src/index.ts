@@ -11,7 +11,8 @@ import CompanyController from "./companies/controller";
 require('dotenv').config()
 
 const app = new Koa();
-const port = process.env.PORT || 4000;
+// const port = process.env.PORT || 4000;
+const port = 4000;
 let time = `${new Date().getHours()}:${new Date().getMinutes()}`;
 
 useKoaServer(app, {
