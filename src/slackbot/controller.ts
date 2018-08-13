@@ -28,7 +28,11 @@ export default class SlackbotController {
     return Company.findOne({"teamId": teamId})
 	}
 	
-	postMessage = (messageText, channel, attachments) => {
+	postMessage = (
+		messageText: string, 
+		channel: string, 
+		attachments: object = {}
+	): Promise<string> => {
 		return request
 			.post('https://slack.com/api/chat.postMessage')
 			.set({
@@ -54,7 +58,7 @@ export default class SlackbotController {
 	) {
 		//Slack needs this to validate the request URL. 
 		if(body.challenge) return body.challenge
-		
+
 		if(!body.event || body.event.type !== 'message' || body.event.bot_id || !body.event.text) return "Error"
 		
 		if(body.event.text.includes('goals')) {
@@ -73,13 +77,11 @@ export default class SlackbotController {
 					return this.postMessage("Activities are set, woohoo!", body.event.channel, [])
 				})
 				.catch(err => console.error(err))
-			return ""
 		}
-
 		return ""
 	}
 
-  @Post('/slacktest')
+  @Post('/slack/response')
   async getInfo(
     @HttpCode(200)
 		@Body() body: any
