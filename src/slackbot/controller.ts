@@ -15,7 +15,7 @@ import MatchController from "../matches/controller";
 import Company from "../companies/entity";
 import User from "../users/entity"
 import WeeklyUpdateController from '../weeklyUpdates/controller'
-import { threeIntroQuestions, introButton, noMatchesText, yourMatch, yourMatches, ollyIntroQuestionsThanks, ollyIntroQuestionsFailed, threeButtonsFunc, activities, ollyOnMatch, ollyOnIntro } from './bot-lib';
+import { threeIntroQuestions, introButton, noMatchesText, yourMatch, yourMatches, ollyIntroQuestionsThanks, ollyIntroQuestionsFailed, threeButtonsFunc, activities, ollyOnMatch, ollyOnIntro, ollyNewUserJoinTeam } from './bot-lib';
 import * as request from "superagent"
 import Match from "../matches/entity";
 import ActivityController from "../activities/controller";
@@ -29,17 +29,18 @@ const ActivityClass = new ActivityController()
 @JsonController()
 export default class SlackbotController {
   
-  getTeam = (teamId) => {
+  	getTeam = (teamId) => {
     return Company.findOne({"teamId": teamId})
 	}
 	
 	postMessage = (
 		messageText: string, 
-		channel: string, 
-		attachments: object = {}
+		channel: string = "", 
+		attachments: object = {},
+		responseUrl: string = ""
 	): Promise<string> => {
 		return request
-			.post('https://slack.com/api/chat.postMessage')
+			.post(responseUrl)
 			.set({
 				'Content-Type': 'application/json; charset=utf8',
 				'Authorization': `Bearer ${token}`
@@ -47,7 +48,8 @@ export default class SlackbotController {
 			.send({
 				"channel": channel,
 				"text": `${messageText}`,
-				"attachments": attachments
+				"attachments": attachments,
+				"as_user": true
 			})
 			.then(_ => "request has been sent")
 			.catch(err => {
@@ -64,18 +66,23 @@ export default class SlackbotController {
 		@HeaderParam('X-Slack-Signature') requestSignature: string,
 		@Ctx() context: any
 	) {
+		console.log(body)
 		//Slack needs this to validate the request URL. 
-		if(body.challenge) return body.challenge
+		if(body.challenge) return await body.challenge
 
-		if(!body.event || body.event.type !== 'message' || body.event.bot_id || !body.event.text) return "Error"
+		if(!body.event || body.event.bot_id) return "Error"
 		const validated = await validateSlackMessage(context.request.rawBody, requestSignature, requestTimeStamp)
-		console.log("VALIDATED", validated)
-		if(!validated) throw new UnauthorizedError
+
+    if(body.event.type.includes("team_join")) {
+			console.log(await body.event.user.id)
+			console.log(await " ___ Congrats, JUST JOINED THE TEAM!")
+			return await this.postMessage(ollyNewUserJoinTeam, body.event.user.id, [{"text":""}], "https://slack.com/api/chat.postMessage") 
+		}
 
 		if(body.event.text.includes('goals')) {
-			return this.postMessage(ollyOnMatch, body.event.channel, await threeButtonsFunc())
+			return this.postMessage(ollyOnMatch, body.event.channel, await threeButtonsFunc(), body.response_url)
 		} else if(body.event.text.includes('intro')) {
-			return this.postMessage(ollyOnIntro, body.event.channel, await introButton)
+			return this.postMessage(ollyOnIntro, body.event.channel, await introButton, body.response_url)
 		} else if(body.event.text.includes('set activities')) {
 			const addedActivities = async() => {
 				return await activities.forEach(activ => {
@@ -85,10 +92,11 @@ export default class SlackbotController {
 
 			addedActivities()
 				.then(_ => {
-					return this.postMessage("Activities are set, woohoo!", body.event.channel, [])
+					return this.postMessage("Activities are set, woohoo!", body.event.channel, [], body.response_url)
 				})
 				.catch(err => console.error(err))
 		}
+
 		return ""
 	}
 
