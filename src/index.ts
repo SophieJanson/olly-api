@@ -1,8 +1,7 @@
 import "reflect-metadata";
-import { Action, BadRequestError, useKoaServer } from "routing-controllers";
+import { useKoaServer } from "routing-controllers";
 import setupDb from "./db";
 import * as Koa from "koa";
-import { verify } from "./jwt";
 import UserController from "./users/controller";
 import LoginController from "./logins/controller";
 import WeeklyUpdateController from "./weeklyUpdates/controller";
@@ -22,20 +21,8 @@ useKoaServer(app, {
     LoginController,
     WeeklyUpdateController,
     CompanyController,
-	SlackbotController
-  ],
-  authorizationChecker: (action: Action) => {
-    const header: string = action.request.headers.authorization;
-    if (header && header.startsWith("Bearer ")) {
-      const [, token] = header.split(" ");
-      try {
-        return !!(token && verify(token));
-      } catch (e) {
-        throw new BadRequestError(e);
-      }
-    }
-    return false;
-  }
+	  SlackbotController
+  ]
 });
 
 setupDb()
