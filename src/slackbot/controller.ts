@@ -5,6 +5,10 @@ import {
   JsonController,
   NotFoundError,
 	BadRequestError,
+	HeaderParam,
+	Req,
+	Ctx,
+	UnauthorizedError
 } from "routing-controllers";
 
 import MatchController from "../matches/controller";
@@ -15,8 +19,9 @@ import { threeIntroQuestions, introButton, noMatchesText, yourMatch, yourMatches
 import * as request from "superagent"
 import Match from "../matches/entity";
 import ActivityController from "../activities/controller";
+import { validateSlackMessage } from './validation'
 
-const token = process.env.BOT_ID
+const token = process.env.BOT_ID || "xoxb-215618382279-413739306564-JXfUm6Hwp1zcvuOXoKv2EfNp"
 const Matches = new MatchController()
 const WeeklyUpdates = new WeeklyUpdateController()
 const ActivityClass = new ActivityController()
@@ -54,13 +59,19 @@ export default class SlackbotController {
 	@Post('/slack/message')
 	async parseResponse(
 		@HttpCode(200)
-		@Body() body: any
+		@Body() body: any,
+		@HeaderParam('X-Slack-Request-Timestamp') requestTimeStamp: string,
+		@HeaderParam('X-Slack-Signature') requestSignature: string,
+		@Ctx() context: any
 	) {
 		//Slack needs this to validate the request URL. 
 		if(body.challenge) return body.challenge
 
 		if(!body.event || body.event.type !== 'message' || body.event.bot_id || !body.event.text) return "Error"
-		
+		const validated = await validateSlackMessage(context.request.rawBody, requestSignature, requestTimeStamp)
+		console.log("VALIDATED", validated)
+		if(!validated) throw new UnauthorizedError
+
 		if(body.event.text.includes('goals')) {
 			return this.postMessage(ollyOnMatch, body.event.channel, await threeButtonsFunc())
 		} else if(body.event.text.includes('intro')) {
@@ -84,8 +95,13 @@ export default class SlackbotController {
   @Post('/slack/response')
   async getInfo(
     @HttpCode(200)
-		@Body() body: any
+		@Body() body: any,
+		@Ctx() context: any,
+		@HeaderParam('X-Slack-Request-Timestamp') requestTimeStamp: string,
+		@HeaderParam('X-Slack-Signature') requestSignature: string,
   ) {
+		const validated = await validateSlackMessage(context.request.rawBody, requestSignature, requestTimeStamp)
+		if(!validated) throw new UnauthorizedError
 		if(!body || !body.payload) throw new BadRequestError("Incorrect body")
 		const parsedData = this.tryParseJson(body.payload)
 		if (!parsedData) throw new BadRequestError("Incorrect body")
