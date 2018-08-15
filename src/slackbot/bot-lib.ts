@@ -1,40 +1,39 @@
 
 import Activity from "../activities/entity"
 
-// that's the message Olly sends away when the server running Olly starts
-export const ollyOnStart = "Olly is here for you!"
-
-// that's the message Olly sends away when a new user joins the team
-export const ollyNewUserJoinTeam = " HEY-YO! You just joined this team, I saw you! Type '@Olly intro' so we can start, then type '@Olly set activities', then type '@Olly goals' "
-
-// that's the message Olly sends away when the user types "@Olly intro"
-export const ollyOnIntro = "Let me know about yourself"
-
-// that's the message Olly sends when the user submits answers to the 3 intro questions
-export const ollyIntroQuestionsThanks = "Thanks! Now, I'll be able to match you with the right people!"
-
-export const ollyIntroQuestionsFailed = "Sorry, I'm afraid something went wrong. Can you try again?"
-
-// that's the message Olly sends away when the user types "@Olly match", it appears above the 3 drop-down questions
-export const ollyOnMatch = "While you’re here, can you let me know what you’re up for this week?"
-
-// that's the message Olly sends when there are no available matches
-export const noMatchesText = "No matches available. Try again next week"
-
-// that's the message Olly sends when there is ONE SINGLE match found
-export const yourMatch = "You matched with "
-
-// that's the message Olly sends when there are MULTIPLE matches found
-export const yourMatches = "Your matches are "
-
-// that's the message Olly sends when you already exist in the database
-export const youDontExist = "You already exist"
 export const activities = ["Talking JS", "Climbing", "Organizing a Potluck dinner", "Camel riding", "Nude yoga"]
 export const departments = ["Development", "Marketing", "Customer Success", "Human Resources", "Analytics", "Legal"]
 export const categories = ["socialize", "network"] 
-export const channel = "your-olly"
 
-export const threeButtonsFunc = async () => {
+export const ollyCopy = {
+	join: {
+		newUser: " HEY-YO! You just joined this team, I saw you! Type '@Olly intro' so we can start, then type '@Olly set activities', then type '@Olly goals' "
+	},
+	introduction: {
+		onStart: "Let me know about yourself",
+		onThanks: "Thanks! Now, I'll be able to match you with the right people!",
+		onFailed: "Sorry, I'm afraid something went wrong. Can you try again?"
+	},
+	match: {
+		onStart: "While you’re here, can you let me know what you’re up for this week?",
+		onNoMatch: "No matches available. Try again next week",
+		onOneMatch: "You matched with ",
+		onManyMatches: "Your matches are "
+	},
+	followUp: {
+		onStart: `, just wanted to check if you managed to meet up?`,
+		onYes: "That’s great! How was your meeting?",
+		onNo: "I'm sorry to hear that! Let's try again next week."
+	}
+}
+
+export const ollyConfig = {
+	activities: ["Talking JS", "Climbing", "Organizing a Potluck dinner", "Camel riding"],
+	departments: ["Development", "Marketing", "Customer Success", "Human Resources", "Analytics", "Legal"],
+	categories: ["socialize", "network"] 
+}
+
+export const weeklyUpdateQuestions = async () => {
     const activities = await Activity.find()
     const fallback = "If you could read this message, you'd be choosing something fun to do right now."
     const callbackId = "weekly_update"
@@ -51,7 +50,7 @@ export const threeButtonsFunc = async () => {
                         "name": "category",
                         "text": "Pick a category",
                         "type": "select",
-                        "options": categories.map(cat => ({
+                        "options": ollyConfig.categories.map(cat => ({
                             text: cat,
                             value: cat
                         }))                 
@@ -88,11 +87,11 @@ export const threeButtonsFunc = async () => {
                         "name": "department",
                         "text": "Pick buddy/buddies",
                         "type": "select",
-                        "options": await departments.map(dept => { return {
-                                    text: dept,
-                                    value: dept.toLowerCase().split(" ").join("_")
-                                } 
-                            } )
+                        "options": await ollyConfig.departments.map(dept => ({
+                                     text: dept,
+                                     value: dept.toLowerCase().split(" ").join("_")
+                         					 }) 
+                         )
                     }
                 ]
             },
@@ -168,8 +167,93 @@ export const threeIntroQuestions = async (trgId, callbId) => {
 						"placeholder": "Interested in knitting, javascript or sustainability? Let me know what you are most passionate about!"
 					}
 				]
-
 			}
 		}
 	return await threeQ
+}
+
+export const getFollowUpHappenedQuestion = () => {
+	return [
+		{
+			"fallback": "Did your meeting happen?",
+			"callback_id": "follow_up_happened",
+			"attachment_type": "default",
+			"actions": [
+				{
+					"name": "yes",
+					"text": "Yes",
+					"type": "button",
+					"value": "yes",
+					"style": "primary"
+				},
+				{
+					"name": "no",
+					"text": "No",
+					"type": "button",
+					"value": "no",
+					"style": "primary"
+				}
+			]
+		}
+	]
+}
+
+export const getFollowUpFeedbackQuestion = () => {
+	return [
+		{
+			"fallback": "Add some comments please",
+			"attachment_type": "default",
+			"callback_id": "follow_up_feedback",
+			"actions": [
+				{
+					"name": "great",
+					"text": "Great",
+					"type": "button",
+					"value": "2",
+					"color": "#3AA3E3",
+					"style": "primary"
+				},
+				{
+					"name": "okay",
+					"text": "It was okay",
+					"type": "button",
+					"value": "1",
+					"style": "primary"
+				},
+				{
+					"name": "bad",
+					"text": "It could have been better",
+					"type": "button",
+					"value": "0",
+					"style": "primary"
+				}
+			]
+		}
+	]
+}
+
+export const getFollowUpRepeat = () => {
+	return [
+		{
+			"fallback": "Add some comments please",
+			"attachment_type": "default",
+			"callback_id": "follow_up_reschedule",
+			"actions": [
+				{
+					"name": "yes",
+					"text": "Yes",
+					"type": "button",
+					"value": "yes",
+					"style": "primary"
+				},
+				{
+					"name": "no",
+					"text": "No",
+					"type": "button",
+					"value": "no",
+					"style": "primary"
+				}
+			]
+		}
+	]
 }
