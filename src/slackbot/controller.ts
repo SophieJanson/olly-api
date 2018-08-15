@@ -121,7 +121,8 @@ export default class SlackbotController {
 					this.postMessage(ollyCopy.followUp.onNo, "", {}, parsedData.response_url) 
 				return ""
 			case 'follow_up_feedback':
-
+				this.postMessage(ollyCopy.followUp.onThanks, "", {}, parsedData.response_url)
+				return ""
 			default: 
 				break
 		}

@@ -23,7 +23,8 @@ export const ollyCopy = {
 	followUp: {
 		onStart: `, just wanted to check if you managed to meet up?`,
 		onYes: "That’s great! How was your meeting?",
-		onNo: "I'm sorry to hear that! Let's try again next week."
+		onNo: "I'm sorry to hear that! Let's try again next week.",
+		onThanks: "Thank you for your feedback!"
 	}
 }
 
