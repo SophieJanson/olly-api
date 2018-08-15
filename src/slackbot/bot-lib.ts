@@ -7,7 +7,7 @@ export const categories = ["socialize", "network"]
 
 export const ollyCopy = {
 	join: {
-		newUser: " HEY-YO! You just joined this team, I saw you! Type '@Olly intro' so we can start, then type '@Olly set activities', then type '@Olly goals' "
+		newUser: " HEY-YO! You just joined this team, I saw you! Type `intro` so we can start, then type `set activities`, then type `goals` "
 	},
 	introduction: {
 		onStart: "Let me know about yourself",
@@ -225,32 +225,6 @@ export const getFollowUpFeedbackQuestion = () => {
 					"text": "It could have been better",
 					"type": "button",
 					"value": "0",
-					"style": "primary"
-				}
-			]
-		}
-	]
-}
-
-export const getFollowUpRepeat = () => {
-	return [
-		{
-			"fallback": "Add some comments please",
-			"attachment_type": "default",
-			"callback_id": "follow_up_reschedule",
-			"actions": [
-				{
-					"name": "yes",
-					"text": "Yes",
-					"type": "button",
-					"value": "yes",
-					"style": "primary"
-				},
-				{
-					"name": "no",
-					"text": "No",
-					"type": "button",
-					"value": "no",
 					"style": "primary"
 				}
 			]

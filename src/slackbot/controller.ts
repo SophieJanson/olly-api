@@ -65,12 +65,13 @@ export default class SlackbotController {
 		@HeaderParam('X-Slack-Request-Timestamp') requestTimeStamp: string,
 		@Ctx() context: any
 	) {
-		if(!requestSignature || !requestTimeStamp) throw new UnauthorizedError
-		const validated = await validateSlackMessage(context.request.rawBody, requestSignature, requestTimeStamp)
-		if(!validated) throw new UnauthorizedError
 
 		//Slack needs this to validate the request URL. 
 		if(body.challenge) return await body.challenge
+
+		if(!requestSignature || !requestTimeStamp) throw new UnauthorizedError
+		const validated = await validateSlackMessage(context.request.rawBody, requestSignature, requestTimeStamp)
+		if(!validated) throw new UnauthorizedError
 
 		if(!body.event || body.event.bot_id) return "Error"
 
