@@ -1,7 +1,7 @@
 import * as crypto from 'crypto'
 import * as moment from 'moment'
 
-const secret = process.env.SIGNING_SECRET || "077bb600036e3c7fa3ff233ba8c29789"
+const secret = process.env.SIGNING_SECRET
 moment().format()
 const currentTime = moment()
 export const validateSlackMessage = (rawBody: string, signature: string, requestTimestamp: string): boolean => {
@@ -11,6 +11,7 @@ export const validateSlackMessage = (rawBody: string, signature: string, request
 }
 
 const hash = (signatureBaseString) => {
+  if(!secret) return false
   return "v0=" + crypto.createHmac('sha256', secret).update(signatureBaseString).digest("hex")
 }
 

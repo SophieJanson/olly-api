@@ -20,7 +20,7 @@ import ActivityController from "../activities/controller";
 
 import { validateSlackMessage } from './validation'
 
-const token = process.env.BOT_ID || "xoxb-215618382279-413739306564-JXfUm6Hwp1zcvuOXoKv2EfNp"
+const token = process.env.BOT_ID
 const MatchClass = new MatchController()
 const WeeklyUpdateClass = new WeeklyUpdateController()
 const ActivityClass = new ActivityController()
