@@ -1,7 +1,7 @@
 
 import Activity from "../activities/entity"
 
-export const activities = ["Talking JS", "Climbing", "Organizing a Potluck dinner", "Camel riding", "Nude yoga"]
+export const activities = ["Talking JS", "Climbing", "Organizing a Potluck dinner", "Camel riding"]
 export const departments = ["Development", "Marketing", "Customer Success", "Human Resources", "Analytics", "Legal"]
 export const categories = ["socialize", "network"] 
 

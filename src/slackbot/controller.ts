@@ -168,9 +168,9 @@ export default class SlackbotController {
 		}
 
 		const message = users.length < 2 ? ollyCopy.match.onOneMatch : ollyCopy.match.onManyMatches
-		const usersString = users.length < 2 ? users[0].slackId : users.map(user => user.slackId).join(", ")
+		const usersString = users.length < 2 ? `<@${users[0].slackId}>` : users.map(user => `<@${user.slackId}>`).join(", ")
 
-		return `${message} <@${usersString}>`
+		return `${message} ${usersString}`
 	}
 
 	tryParseJson = (payload: string) => {
@@ -190,7 +190,7 @@ export default class SlackbotController {
 					user: userId,
 					[parsedMessage.name]: [parsedMessage['selected_options'][0].value]
 				})
-				return " " 
+				return "" 
 			}
 		} catch(e) {
 			console.error("ERROR_________", e)
