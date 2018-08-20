@@ -1,7 +1,7 @@
 import * as crypto from 'crypto'
 import * as moment from 'moment'
 
-const secret = process.env.SIGNING_SECRET
+const secret = process.env.SIGNING_SECRET 
 moment().format()
 const currentTime = moment()
 export const validateSlackMessage = (rawBody: string, signature: string, requestTimestamp: string): boolean => {

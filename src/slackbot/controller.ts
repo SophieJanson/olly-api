@@ -20,7 +20,7 @@ import ActivityController from "../activities/controller";
 
 import { validateSlackMessage } from './validation'
 
-const token = process.env.BOT_ID
+const token = process.env.BOT_ID 
 const MatchClass = new MatchController()
 const WeeklyUpdateClass = new WeeklyUpdateController()
 const ActivityClass = new ActivityController()
@@ -77,11 +77,13 @@ export default class SlackbotController {
 
 		if(body.event.type === "team_join") {
 			return await this.postMessage(ollyCopy.join.newUser, body.event.user.id, [{"text":""}]) 
-		} else if(body.event.text.includes('goals')) {
+		} 
+		const message = body.event.text.toLowerCase()
+		if(message.includes('goals')) {
 			return this.postMessage(ollyCopy.match.onStart, body.event.channel, await weeklyUpdateQuestions())
-		} else if(body.event.text.includes('intro')) {
+		} else if(message.includes('intro')) {
 			return this.postMessage(ollyCopy.introduction.onStart, body.event.channel, await introButton)
-		} else if(body.event.text.includes('set activities')) {
+		} else if(message.includes('set activities')) {
 			this.addedActivities()
 				.then(_ => {
 					return this.postMessage("Activities are set, woohoo!", body.event.channel, [], body.response_url)
@@ -90,7 +92,6 @@ export default class SlackbotController {
 		} else if(body.event.text.includes('follow up')) {
 			return this.postMessage(`<@${body.event.user}>${ollyCopy.followUp.onStart}`, body.event.channel, await getFollowUpHappenedQuestion(), body.response_url)
 		}
-
 		return ""
 	}
 
