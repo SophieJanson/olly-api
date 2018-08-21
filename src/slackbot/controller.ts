@@ -70,8 +70,9 @@ export default class SlackbotController {
 		@HeaderParam('X-Slack-Request-Timestamp') requestTimeStamp: string,
 		@Ctx() context: any
 	) {
+		if(body) console.log("THIS IS THE BODY: ", body)
 		if(!body) {
-			console.error("There is no body! So lonely!")
+			console.log("There is no body! So lonely!")
 			throw new Error("Error in the body! Body is missing.")
 		}
 		//Slack needs this to validate the request URL. 
@@ -183,7 +184,7 @@ export default class SlackbotController {
 
 		const message = users.length < 2 ? ollyCopy.match.onOneMatch : ollyCopy.match.onManyMatches
 		const usersString = users.length < 2 ? `<@${users[0].slackId}>` : users.map(user => `<@${user.slackId}>`).join(", ")
-
+		console.log("USERS", usersString)
 		return `${message} ${usersString}`
 	}
 
