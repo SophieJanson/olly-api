@@ -72,9 +72,6 @@ export default class SlackbotController {
 	) {
 		if (body) {
 			console.log("THIS IS THE BODY: ", body)
-			if (body.event.message.bot_id) {
-				console.log("Hey, this is body.event.message.bot_id!!!", body.event.message.bot_id)
-			}
 		}
 		if (!body) {
 			console.log("There is no body! So lonely!")
