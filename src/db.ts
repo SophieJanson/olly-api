@@ -38,8 +38,7 @@ export default () =>
   createConnection({
     type: "postgres",
     url:
-      process.env.DATABASE_URL ||
-      "postgres://postgres:secret@localhost:5432/postgres",
+      process.env.DATABASE_URL,
     entities: [WeeklyUpdate, Match, Activity, User, FollowUp, Company],
     synchronize: true,
     logging: true,

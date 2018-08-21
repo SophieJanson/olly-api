@@ -65,13 +65,13 @@ export default class SlackbotController {
 		@HeaderParam('X-Slack-Request-Timestamp') requestTimeStamp: string,
 		@Ctx() context: any
 	) {
-
+		
 		//Slack needs this to validate the request URL. 
 		if(body.challenge) return await body.challenge
 
-		if(!requestSignature || !requestTimeStamp) throw new UnauthorizedError
+		if(!requestSignature || !requestTimeStamp) throw new UnauthorizedError("Timestamp or Request signature is missing.")
 		const validated = await validateSlackMessage(context.request.rawBody, requestSignature, requestTimeStamp)
-		if(!validated) throw new UnauthorizedError
+		if(!validated) throw new UnauthorizedError("You are not authorized.")
 
 		if(!body.event || body.event.bot_id) return "Error"
 
@@ -80,6 +80,7 @@ export default class SlackbotController {
 		} 
 		const message = body.event.text.toLowerCase()
 		if(message.includes('goals')) {
+			console.log("RESPONSE URL", body)
 			return this.postMessage(ollyCopy.match.onStart, body.event.channel, await weeklyUpdateQuestions())
 		} else if(message.includes('intro')) {
 			return this.postMessage(ollyCopy.introduction.onStart, body.event.channel, await introButton)
@@ -89,7 +90,7 @@ export default class SlackbotController {
 					return this.postMessage("Activities are set, woohoo!", body.event.channel, [], body.response_url)
 				})
 				.catch(err => console.error(err))
-		} else if(body.event.text.includes('follow up')) {
+		} else if(message.includes('follow up')) {
 			return this.postMessage(`<@${body.event.user}>${ollyCopy.followUp.onStart}`, body.event.channel, await getFollowUpHappenedQuestion(), body.response_url)
 		}
 		return ""
@@ -140,6 +141,7 @@ export default class SlackbotController {
 			entity = new User()
 		}
 		entity.slackId = userId
+		entity.t
 		entity.department = await dept
 		entity.funFact = await funFact
 		entity.interests = await interest
@@ -224,7 +226,7 @@ export default class SlackbotController {
 						funFact = parsedData.submission.fun_fact,
 						interests = parsedData.submission.your_interests,
 						userId = parsedData.user.id
-	
+
 			this.saveUser(dept, funFact, interests, userId)
 				.then(_ => this.postMessage(ollyCopy.introduction.onThanks, parsedData.channel, {}, parsedData.response_url))
 				.catch(err => {
