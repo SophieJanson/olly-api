@@ -70,7 +70,16 @@ export default class SlackbotController {
 		@HeaderParam('X-Slack-Request-Timestamp') requestTimeStamp: string,
 		@Ctx() context: any
 	) {
-
+		if (body) {
+			console.log("THIS IS THE BODY: ", body)
+			if (body.event.message.bot_id) {
+				console.log("Hey, this is body.event.message.bot_id!!!", body.event.message.bot_id)
+			}
+		}
+		if (!body) {
+			console.log("There is no body! So lonely!")
+			throw new Error("Error in the body! Body is missing.")
+		}
 		//Slack needs this to validate the request URL. 
 		if (body.challenge) return await body.challenge
 
@@ -78,15 +87,24 @@ export default class SlackbotController {
 		const validated = await validateSlackMessage(context.request.rawBody, requestSignature, requestTimeStamp)
 		if (!validated) throw new UnauthorizedError("You are not authorized.")
 
-		if (!body.event || body.event.bot_id) return "Error"
+		if (!body.event || body.event.bot_id) {
+			console.log("IT's the bot speaking, ignore!")
+			return "Error"
+		}
 
 		if (body.event.type === "team_join") {
 			return await this.postMessage(ollyCopy.join.newUser, body.event.user.id, [{ "text": "" }])
 		}
+
 		const message = body.event.text.toLowerCase()
+
 		if (message.includes('goals')) {
-			console.log("RESPONSE URL", body)
-			return this.postMessage(ollyCopy.match.onStart, body.event.channel, await weeklyUpdateQuestions())
+			const updateQuestions = weeklyUpdateQuestions()
+			updateQuestions
+				.then(questions => {
+					return this.postMessage(ollyCopy.match.onStart, body.event.channel, questions)
+				})
+				.catch(err => console.log("ERROR IN GETTING UPDATES", err))
 		} else if (message.includes('intro')) {
 			return this.postMessage(ollyCopy.introduction.onStart, body.event.channel, await introButton)
 		} else if (message.includes('set activities')) {
@@ -177,7 +195,7 @@ export default class SlackbotController {
 
 		const message = users.length < 2 ? ollyCopy.match.onOneMatch : ollyCopy.match.onManyMatches
 		const usersString = users.length < 2 ? `<@${users[0].slackId}>` : users.map(user => `<@${user.slackId}>`).join(", ")
-
+		console.log("USERS", usersString)
 		return `${message} ${usersString}`
 	}
 
