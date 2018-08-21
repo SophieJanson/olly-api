@@ -87,7 +87,7 @@ export const weeklyUpdateQuestions = async () => {
 			"actions": [
 				{
 					"name": "department",
-					"text": "Pick buddy/buddies",
+					"text": "Choose department",
 					"type": "select",
 					"options": await ollyConfig.departments.map(dept => ({
 						text: dept,
