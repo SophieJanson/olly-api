@@ -74,9 +74,15 @@ export default class SlackbotController {
 		//Slack needs this to validate the request URL. 
 		if (body.challenge) return await body.challenge
 
+<<<<<<< HEAD
 		if (!requestSignature || !requestTimeStamp) throw new UnauthorizedError
 		const validated = await validateSlackMessage(context.request.rawBody, requestSignature, requestTimeStamp)
 		if (!validated) throw new UnauthorizedError
+=======
+		if(!requestSignature || !requestTimeStamp) throw new UnauthorizedError("Timestamp or Request signature is missing.")
+		const validated = await validateSlackMessage(context.request.rawBody, requestSignature, requestTimeStamp)
+		if(!validated) throw new UnauthorizedError("You are not authorized.")
+>>>>>>> 5a8fe205cef7638dcf63c5d070c8743e6141922b
 
 		if (!body.event || body.event.bot_id) return "Error"
 
@@ -84,7 +90,12 @@ export default class SlackbotController {
 			return await this.postMessage(ollyCopy.join.newUser, body.event.user.id, [{ "text": "" }])
 		}
 		const message = body.event.text.toLowerCase()
+<<<<<<< HEAD
 		if (message.includes('goals')) {
+=======
+		if(message.includes('goals')) {
+			console.log("RESPONSE URL", body)
+>>>>>>> 5a8fe205cef7638dcf63c5d070c8743e6141922b
 			return this.postMessage(ollyCopy.match.onStart, body.event.channel, await weeklyUpdateQuestions())
 		} else if (message.includes('intro')) {
 			return this.postMessage(ollyCopy.introduction.onStart, body.event.channel, await introButton)
@@ -94,7 +105,11 @@ export default class SlackbotController {
 					return this.postMessage("Activities are set, woohoo!", body.event.channel, [], body.response_url)
 				})
 				.catch(err => console.error(err))
+<<<<<<< HEAD
 		} else if (body.event.text.includes('follow up')) {
+=======
+		} else if(message.includes('follow up')) {
+>>>>>>> 5a8fe205cef7638dcf63c5d070c8743e6141922b
 			return this.postMessage(`<@${body.event.user}>${ollyCopy.followUp.onStart}`, body.event.channel, await getFollowUpHappenedQuestion(), body.response_url)
 		}
 		return ""
@@ -145,6 +160,7 @@ export default class SlackbotController {
 			entity = new User()
 		}
 		entity.slackId = userId
+		entity.t
 		entity.department = await dept
 		entity.funFact = await funFact
 		entity.interests = await interest

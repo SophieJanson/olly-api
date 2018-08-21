@@ -13,6 +13,8 @@ const app = new Koa();
 const port = process.env.PORT || 4000;
 let time = `${new Date().getHours()}:${new Date().getMinutes()}`;
 
+app.on('error', err => console.error(err))
+
 useKoaServer(app, {
   cors: true,
   controllers: [
