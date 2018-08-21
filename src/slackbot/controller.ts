@@ -93,7 +93,12 @@ export default class SlackbotController {
 		const message = body.event.text.toLowerCase()
 
 		if(message.includes('goals')) {
-			return this.postMessage(ollyCopy.match.onStart, body.event.channel, await weeklyUpdateQuestions())
+			const updateQuestions = weeklyUpdateQuestions()
+			updateQuestions
+				.then(questions => {
+					return this.postMessage(ollyCopy.match.onStart, body.event.channel, questions)
+				})
+				.catch(err => console.log("ERROR IN GETTING UPDATES", err))
 		} else if (message.includes('intro')) {
 			return this.postMessage(ollyCopy.introduction.onStart, body.event.channel, await introButton)
 		} else if (message.includes('set activities')) {
