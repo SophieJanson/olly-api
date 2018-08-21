@@ -11,7 +11,7 @@ export const ollyCopy = {
 		departmentPlaceholder: "Choose Your Department",
 		interestsPlaceholder: "Just the first 3 things that come to mind (e.g. sports, books, movies)",
 		onStart: "Let me know a bit about you!",
-		onThanks: "Thanks! Now, I'll be able to match you with the right people!",
+		onThanks: "Thanks! Now, type `goals` whenever you're ready to be intro'd to the right people!",
 		onFailed: "Sorry, something went wrong. Can you try again?"
 	},
 	match: {
