@@ -70,7 +70,10 @@ export default class SlackbotController {
 		@HeaderParam('X-Slack-Request-Timestamp') requestTimeStamp: string,
 		@Ctx() context: any
 	) {
-
+		if(!body) {
+			console.error("There is no body! So lonely!")
+			throw new Error("Error in the body! Body is missing.")
+		}
 		//Slack needs this to validate the request URL. 
 		if (body.challenge) return await body.challenge
 
@@ -78,12 +81,16 @@ export default class SlackbotController {
 		const validated = await validateSlackMessage(context.request.rawBody, requestSignature, requestTimeStamp)
 		if (!validated) throw new UnauthorizedError
 
-		if (!body.event || body.event.bot_id) return "Error"
-
+		if (!body.event || body.event.bot_id) {
+			console.log("IT's the bot speaking, ignore!")
+			return "Error"
+		}
 		if (body.event.type === "team_join") {
 			return await this.postMessage(ollyCopy.join.newUser, body.event.user.id, [{ "text": "" }])
 		}
+
 		const message = body.event.text.toLowerCase()
+
 		if(message.includes('goals')) {
 			return this.postMessage(ollyCopy.match.onStart, body.event.channel, await weeklyUpdateQuestions())
 		} else if (message.includes('intro')) {
