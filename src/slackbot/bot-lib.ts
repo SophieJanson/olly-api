@@ -1,21 +1,21 @@
 
 import Activity from "../activities/entity"
 
-export const activities = ["Talking JS", "Climbing", "Organizing a Potluck dinner", "Camel riding"]
-export const departments = ["Development", "Marketing", "Customer Success", "Human Resources", "Analytics", "Legal"]
-export const categories = ["socialize", "network"] 
-
 export const ollyCopy = {
 	join: {
-		newUser: " HEY-YO! You just joined this team, I saw you! Type `intro` so we can start, then type `set activities`, then type `goals` "
+		newUser: "Hey, I'm Olly! A friendly little bot that lives inside your Slack who can intro you to people here. Type 'intro' to start, then 'goals' to see what I can do."
 	},
 	introduction: {
-		onStart: "Let me know about yourself",
+		mainHeader: "About You",
+		funFactPlaceholder: "Not many people know this but ...",
+		departmentPlaceholder: "Choose Your Department",
+		interestsPlaceholder: "Just the first 3 things that come to mind (e.g. sports, books, movies)",
+		onStart: "Let me know a bit about you!",
 		onThanks: "Thanks! Now, I'll be able to match you with the right people!",
-		onFailed: "Sorry, I'm afraid something went wrong. Can you try again?"
+		onFailed: "Sorry, something went wrong. Can you try again?"
 	},
 	match: {
-		onStart: "While you’re here, can you let me know what you’re up for this week?",
+		onStart: "While you’re here, let me know what you’re up for this week!",
 		onNoMatch: "No matches available. Try again next week",
 		onOneMatch: "You matched with ",
 		onManyMatches: "Your matches are "
@@ -29,147 +29,150 @@ export const ollyCopy = {
 }
 
 export const ollyConfig = {
-	activities: ["Talking JS", "Climbing", "Organizing a Potluck dinner", "Camel riding"],
-	departments: ["Development", "Marketing", "Customer Success", "Human Resources", "Analytics", "Legal"],
-	categories: ["socialize", "network"] 
+	activities: ["Coffee", "Lunch", "Breakfast", "Sports", "Drinks"],
+	departments: ["Development", "Marketing + Growth", "Entrepreneur", "Support", "Analytics", "Legal", "Business Development", "Product", "Design", "Operations", "Events, Workshops + Sprints"],
+	categories: ["socialize", "network"] // always keep these the same
 }
 
 export const weeklyUpdateQuestions = async () => {
-    const activities = await Activity.find()
-    const fallback = "If you could read this message, you'd be choosing something fun to do right now."
-    const callbackId = "weekly_update"
+	const activities = await Activity.find()
+	const fallback = "If you could read this message, you'd be choosing something fun to do right now."
+	const callbackId = "weekly_update"
 
-    let threeButtons: any = await [
-            {
-                "text": "I want to ...",
-                "fallback": fallback,
-                "color": "#3AA3E3",
-                "attachment_type": "default",
-                "callback_id": callbackId,
-                "actions": [
-                    {
-                        "name": "category",
-                        "text": "Pick a category",
-                        "type": "select",
-                        "options": ollyConfig.categories.map(cat => ({
-                            text: cat,
-                            value: cat
-                        }))                 
-                    }
-                ]
-            },
-                    {
-                "text": "... by doing ...",
-                "fallback": fallback,
-                "color": "#3AA3E3",
-                "attachment_type": "default",
-                "callback_id": callbackId,
-                "actions": [
-                    {
-                        "name": "activity",
-                        "text": "Pick an activity",
-                        "type": "select",
-                        "options": await activities.map(activ => { return {
-                                    text: activ.activityName,
-                                    value: activ.id
-                                } 
-                            } )
-                    }
-                ]
-            },
-            {
-                "text": " ... with ...",
-                "fallback": fallback,
-                "color": "#3AA3E3",
-                "attachment_type": "default",
-                "callback_id": callbackId,
-                "actions": [
-                    {
-                        "name": "department",
-                        "text": "Pick buddy/buddies",
-                        "type": "select",
-                        "options": await ollyConfig.departments.map(dept => ({
-                                     text: dept,
-                                     value: dept.toLowerCase().split(" ").join("_")
-                         					 }) 
-                         )
-                    }
-                ]
-            },
-            {
-                "fallback": fallback,
-                "title": "Submit Your Answer",
-                "callback_id": callbackId,
-                "color": "#66BD96",
-                "attachment_type": "default",
-                "actions": [
-                    {
-                        "name": "submit",
-                        "style": "primary",
-                        "text": "Submit Answers",
-                        "type": "button",
-                        "value": "submit"
-                    }
-                ]
-            }
-    ]
-    return await threeButtons
+	let threeButtons: any = await [
+		{
+			"text": "I want to ...",
+			"fallback": fallback,
+			"color": "#3AA3E3",
+			"attachment_type": "default",
+			"callback_id": callbackId,
+			"actions": [
+				{
+					"name": "category",
+					"text": "Pick a category",
+					"type": "select",
+					"options": ollyConfig.categories.map(cat => ({
+						text: cat,
+						value: cat
+					}))
+				}
+			]
+		},
+		{
+			"text": "... by doing ...",
+			"fallback": fallback,
+			"color": "#3AA3E3",
+			"attachment_type": "default",
+			"callback_id": callbackId,
+			"actions": [
+				{
+					"name": "activity",
+					"text": "Pick an activity",
+					"type": "select",
+					"options": await activities.map(activ => {
+						return {
+							text: activ.activityName,
+							value: activ.id
+						}
+					})
+				}
+			]
+		},
+		{
+			"text": " ... with ...",
+			"fallback": fallback,
+			"color": "#3AA3E3",
+			"attachment_type": "default",
+			"callback_id": callbackId,
+			"actions": [
+				{
+					"name": "department",
+					"text": "Pick buddy/buddies",
+					"type": "select",
+					"options": await ollyConfig.departments.map(dept => ({
+						text: dept,
+						value: dept.toLowerCase().split(" ").join("_")
+					})
+					)
+				}
+			]
+		},
+		{
+			"fallback": fallback,
+			"title": "Submit Your Answer",
+			"callback_id": callbackId,
+			"color": "#66BD96",
+			"attachment_type": "default",
+			"actions": [
+				{
+					"name": "submit",
+					"style": "primary",
+					"text": "Submit Answers",
+					"type": "button",
+					"value": "submit"
+				}
+			]
+		}
+	]
+	return await threeButtons
 }
-       
+
 export const introButton = [
+	{
+		"text": "Tell Me More",
+		"fallback": "You can't click on this button at the moment",
+		"callback_id": "intro_me",
+		"color": "#3AA3E3",
+		"attachment_type": "default",
+		"actions": [
 			{
+				"name": "Tell Me More",
 				"text": "Tell Me More",
-				"fallback": "You can't click on this button at the moment",
-				"callback_id": "intro_me",
-				"color": "#3AA3E3",
-				"attachment_type": "default",
-				"actions": [
-					{
-						"name": "Tell Me More",
-						"text": "Tell Me More",
-						"type": "button",
-						"value": "intro",
-						"style": "primary"
-					}
-				]
+				"type": "button",
+				"value": "intro",
+				"style": "primary"
 			}
+		]
+	}
 ]
 
 export const threeIntroQuestions = async (trgId, callbId) => {
-	let threeQ = 
-		{
-			"trigger_id": `${trgId}`,
-			"dialog": {
-				"callback_id": `${callbId}`,
-				"title": "Your Department",
-				"submit_label": "Submit",
-				"notify_on_cancel": true,
-				"elements": [
-					{
-						"label": "Your Department",
-						"type": "select",
-						"name": "choose_dept",
-						"options": await departments.map(dept => { return {
+	let threeQ =
+	{
+		"trigger_id": `${trgId}`,
+		"dialog": {
+			"callback_id": `${callbId}`,
+			"title": ollyCopy.introduction.mainHeader,
+			"submit_label": "Submit",
+			"notify_on_cancel": true,
+			"elements": [
+				{
+					"label": "Your Department",
+					"type": "select",
+					"placeholder": ollyCopy.introduction.departmentPlaceholder,
+					"name": "choose_dept",
+					"options": await ollyConfig.departments.map(dept => {
+						return {
 							label: dept,
 							value: dept.toLowerCase().split(" ").join("_")
-							}
-						})
-					},
-					{
-						"label": "Funfact About You",
-						"name": "fun_fact",
-						"type": "text",
-						"placeholder": "Once, I ate the whole birthday cake of Joanna from Marketing ..."
-					},
-					{
-						"label": "Your Interests",
-						"name": "your_interests",
-						"type": "text",
-						"placeholder": "Interested in knitting, javascript or sustainability? Let me know what you are most passionate about!"
-					}
-				]
-			}
+						}
+					})
+				},
+				{
+					"label": "Fun Fact About You",
+					"name": "fun_fact",
+					"type": "text",
+					"placeholder": ollyCopy.introduction.funFactPlaceholder
+				},
+				{
+					"label": "Your Interests",
+					"name": "your_interests",
+					"type": "text",
+					"placeholder": ollyCopy.introduction.interestsPlaceholder
+				}
+			]
 		}
+	}
 	return await threeQ
 }
 
