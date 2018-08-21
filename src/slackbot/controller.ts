@@ -195,6 +195,7 @@ export default class SlackbotController {
 		return `${message} ${usersString}`
 	}
 
+
 	tryParseJson = (payload: string) => {
 		try {
 			return JSON.parse(payload)
