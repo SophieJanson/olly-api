@@ -70,7 +70,12 @@ export default class SlackbotController {
 		@HeaderParam('X-Slack-Request-Timestamp') requestTimeStamp: string,
 		@Ctx() context: any
 	) {
-		if(body) console.log("THIS IS THE BODY: ", body)
+		if(body) {
+			console.log("THIS IS THE BODY: ", body)
+			if (body.event.message.bot_id) {
+				console.log("Hey, this is body.event.message.bot_id!!!", body.event.message.bot_id)
+			}
+		} 
 		if(!body) {
 			console.log("There is no body! So lonely!")
 			throw new Error("Error in the body! Body is missing.")
@@ -86,6 +91,7 @@ export default class SlackbotController {
 			console.log("IT's the bot speaking, ignore!")
 			return "Error"
 		}
+
 		if (body.event.type === "team_join") {
 			return await this.postMessage(ollyCopy.join.newUser, body.event.user.id, [{ "text": "" }])
 		}
